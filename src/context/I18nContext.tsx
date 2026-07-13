@@ -268,9 +268,6 @@ const DICT: Record<string, Localized> = {
     zh: "公司名称（选填）",
     iban: "Nama Kompeni (pilih)",
   },
-  createPin: { en: "Create a 4–6 digit PIN", bm: "Cipta PIN 4–6 digit", zh: "设置 4–6 位 PIN 码", iban: "Ngaga PIN 4–6 digit" },
-  confirmPin: { en: "Confirm PIN", bm: "Sahkan PIN", zh: "确认 PIN 码", iban: "Sahka PIN" },
-  pinMismatch: { en: "PINs do not match.", bm: "PIN tidak sepadan.", zh: "PIN 码不一致。", iban: "PIN nadai sama." },
   mobileExists: {
     en: "This mobile number is already registered. Please log in.",
     bm: "Nombor telefon ini telah didaftarkan. Sila log masuk.",
