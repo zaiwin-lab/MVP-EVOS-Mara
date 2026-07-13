@@ -36,9 +36,12 @@
 }
 
 @layer components {
-  /* Mobile-first app shell centered on wider screens */
+  /* App shell for task/flow pages (check-in, profile, assessment, results…).
+     Full-bleed on phones; a clean, wider centered card on tablet/desktop —
+     a normal web layout, not a phone frame. The marketing Landing page uses
+     its own full-width responsive layout instead of this shell. */
   .app-shell {
-    @apply relative mx-auto w-full max-w-app min-h-dvh bg-white shadow-lift;
+    @apply relative mx-auto flex w-full max-w-app min-h-dvh flex-col bg-white;
   }
 
   .field-label {
@@ -103,37 +106,31 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   Desktop / tablet "device on a stage".
-   The participant app is intentionally phone-width. On wider screens
-   we frame that column on a branded navy backdrop so the empty gutters
-   read as deliberate presentation, not dead space — ideal for a laptop
-   or projector demo. Phones (< 40rem) are completely unaffected.
-   No rounding/overflow tricks, so sticky headers & footers keep working.
+   Tablet / desktop treatment for the flow pages.
+   The task screens (check-in, profile, assessment, results, journey…)
+   read best as a single focused column, so on wider screens we present
+   them as a comfortable centered card on a light page — a normal web
+   layout, never a phone. Phones (< 40rem) are completely unaffected.
    ───────────────────────────────────────────────────────────── */
 @media (min-width: 40rem) {
   body {
-    background:
-      radial-gradient(900px 520px at 50% -8%, rgba(217, 173, 69, 0.14), transparent 55%),
-      linear-gradient(180deg, #0a1428 0%, #0e1a34 55%, #0a1428 100%);
-    background-attachment: fixed;
-    min-height: 100dvh;
+    @apply bg-sand-100;
   }
 
   .app-shell {
-    box-shadow: 0 40px 100px -40px rgba(0, 0, 0, 0.65);
-    outline: 1px solid rgba(255, 255, 255, 0.06);
+    max-width: 40rem;
+    min-height: auto;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 1.25rem;
+    box-shadow: 0 24px 60px -32px rgba(10, 20, 40, 0.35);
+    border: 1px solid rgba(21, 36, 71, 0.08);
+    overflow: hidden;
   }
 
-  /* Slim gold bezel accent along the very top of the column */
-  .app-shell::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #c8952c, #e2c069 50%, #c8952c);
-    z-index: 40;
-    pointer-events: none;
+  /* Sticky bars must anchor to the viewport, not the rounded card,
+     so they keep working when the card has overflow/rounded corners. */
+  .app-shell .sticky {
+    position: static;
   }
 }
