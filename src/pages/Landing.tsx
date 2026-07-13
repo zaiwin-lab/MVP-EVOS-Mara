@@ -4,7 +4,7 @@ import { PROGRAMME_DAYS, TRAINERS, RESOURCES } from "../content/programme";
 import { INDICATORS } from "../content/assessment";
 import { Wordmark, BrandFooter } from "../components/Brand";
 import { Icon } from "../components/Icon";
-import { LanguagePicker } from "../components/LanguagePicker";
+import { LangToggle } from "../components/LangToggle";
 import { useI18n } from "../context/I18nContext";
 import { useParticipant } from "../context/ParticipantContext";
 
@@ -41,9 +41,26 @@ export default function Landing() {
         <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-gold-500/20 blur-3xl" />
 
         <div className={`relative ${WRAP} pb-12 pt-5`}>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <Wordmark inverted />
-            <LanguagePicker tone="dark" />
+            <div className="flex items-center gap-2">
+              <LangToggle tone="dark" />
+              <Link
+                to={participantId ? "/my" : "/login"}
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/20 px-3 py-1.5 text-xs font-bold text-white/90 hover:bg-white/10"
+              >
+                <Icon name="users" className="h-4 w-4" />
+                <span>{t("myAttendify")}</span>
+              </Link>
+              <Link
+                to="/admin"
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/20 px-3 py-1.5 text-xs font-bold text-white/70 hover:bg-white/10"
+                title={t("admin")}
+              >
+                <Icon name="lock" className="h-4 w-4" />
+                <span className="hidden sm:inline">{t("admin")}</span>
+              </Link>
+            </div>
           </div>
 
           <div className="mt-10 grid items-center gap-8 lg:mt-14 lg:grid-cols-2 lg:gap-12">
@@ -58,7 +75,7 @@ export default function Landing() {
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <button
-                  onClick={() => navigate(participantId ? "/journey" : "/check-in")}
+                  onClick={() => navigate(participantId ? "/my" : "/register")}
                   className="btn-gold text-base sm:px-8"
                 >
                   {participantId ? t("continue") : t("startJourney")}

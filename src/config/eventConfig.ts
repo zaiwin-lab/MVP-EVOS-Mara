@@ -25,6 +25,14 @@ export interface EventConfig {
   footerSecondary: string;
   collaboratorUrl: string;
   resourcesDriveUrl: string;
+  attendanceSessions: AttendanceSession[];
+}
+
+export interface AttendanceSession {
+  id: string; // e.g. "day-1"
+  label: string; // e.g. "Day 1"
+  date: string; // e.g. "14 July 2026"
+  weekday: string; // e.g. "Tuesday"
 }
 
 export const eventConfig: EventConfig = {
@@ -35,7 +43,7 @@ export const eventConfig: EventConfig = {
   eventNameLocal: "Program Pembangunan Usahawan Kontraktor Bumiputera",
   slug: "vdp-frontier-miri",
   dates: "14–16 July 2026",
-  venue: "MARA Miri",
+  venue: "Dynasty Hotel Miri",
   organiser: "Majlis Amanah Rakyat — MARA",
   collaborator: "KOBIS Berhad",
   theme: "navy-gold",
@@ -54,14 +62,22 @@ export const eventConfig: EventConfig = {
   collaboratorUrl: "https://www.kobisberhad.com",
   resourcesDriveUrl:
     "https://drive.google.com/drive/folders/1qQHuowoSiAQVAFxDThQQZR_eVEWF5AYq?usp=sharing",
+  // Attendance sessions — future-proof: add more entries for extra sessions.
+  attendanceSessions: [
+    { id: "day-1", label: "Day 1", date: "14 July 2026", weekday: "Tuesday" },
+    { id: "day-2", label: "Day 2", date: "15 July 2026", weekday: "Wednesday" },
+    { id: "day-3", label: "Day 3", date: "16 July 2026", weekday: "Thursday" },
+  ],
 };
 
 // Route base for this event (keeps deep links / QR targets consistent)
 export const eventBase = `/event/${eventConfig.slug}`;
 
-// Admin gate — password may be overridden via VITE_ADMIN_PASSWORD.
+// Admin gate — username + password (overridable via env for production).
+export const ADMIN_USERNAME =
+  (import.meta.env.VITE_ADMIN_USERNAME as string | undefined) || "admin";
 export const ADMIN_PASSWORD =
-  (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined) || "attendify2026";
+  (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined) || "123456";
 
 // Public origin used when generating QR codes / share links.
 export function publicOrigin(): string {

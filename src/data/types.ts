@@ -19,18 +19,26 @@ export interface Participant {
   eventSlug: string;
   fullName: string;
   mobile: string;
+  pin: string; // 4–6 digit PIN for returning login
   email?: string;
   position?: string;
   ageRange?: string;
   district?: string;
   companyName: string;
-  checkedInAt: string; // ISO timestamp
+  checkedInAt: string; // registration/first-seen ISO timestamp
   createdAt: string;
   updatedAt: string;
   // completion flags derived on read, but cached for convenience
   profileCompleted?: boolean;
   assessmentCompleted?: boolean;
   actionPlanCompleted?: boolean;
+}
+
+// One attendance mark per participant per session (Day 1/2/3, …).
+export interface AttendanceRecord {
+  participantId: string;
+  session: string; // e.g. "day-1"
+  markedAt: string; // ISO timestamp
 }
 
 export interface CompanyProfile {
@@ -101,4 +109,5 @@ export interface ParticipantRecord {
   result?: AssessmentResult;
   actionPlan?: ActionPlan;
   reflections: Reflection[];
+  attendance: AttendanceRecord[];
 }

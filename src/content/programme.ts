@@ -5,13 +5,27 @@
 
 import type { Localized } from "../context/I18nContext";
 
+export interface ScheduleItem {
+  time: string; // e.g. "2:00 PM"
+  activity: string;
+  trainer?: string;
+  kind?: "session" | "break" | "meal" | "admin"; // affects styling
+}
+
 export interface ProgrammeDay {
   day: number;
   date: string;
+  weekday: string;
+  timeRange: string;
+  journeyWord: string; // BUILD / COMPETE / GROW
+  trainer: string;
   title: string;
   titleI18n?: Localized;
   theme: string;
   topics: string[];
+  /** Detailed session-by-session schedule. Populate from the official
+   *  Tentatif Program; falls back to `topics` in the UI when empty. */
+  schedule: ScheduleItem[];
 }
 
 export interface Trainer {
@@ -36,6 +50,10 @@ export const PROGRAMME_DAYS: ProgrammeDay[] = [
   {
     day: 1,
     date: "14 July 2026",
+    weekday: "Tuesday",
+    timeRange: "2:00 PM – 10:00 PM",
+    journeyWord: "BUILD",
+    trainer: "Ts. Nizam Dato Khalid",
     title: "Building Strong Business Foundations",
     titleI18n: {
       en: "Building Strong Business Foundations",
@@ -51,10 +69,15 @@ export const PROGRAMME_DAYS: ProgrammeDay[] = [
       "Capability statement",
       "Business credibility",
     ],
+    schedule: [],
   },
   {
     day: 2,
     date: "15 July 2026",
+    weekday: "Wednesday",
+    timeRange: "8:00 AM – 10:30 PM",
+    journeyWord: "COMPETE",
+    trainer: "Ts. Nizam Dato Khalid",
     title: "Winning Business Opportunities",
     titleI18n: {
       en: "Winning Business Opportunities",
@@ -70,10 +93,15 @@ export const PROGRAMME_DAYS: ProgrammeDay[] = [
       "Client engagement",
       "Business presentation",
     ],
+    schedule: [],
   },
   {
     day: 3,
     date: "16 July 2026",
+    weekday: "Thursday",
+    timeRange: "8:00 AM – 12:00 PM",
+    journeyWord: "GROW",
+    trainer: "Zaiwin Kassim",
     title: "Digital Transformation and AI",
     titleI18n: {
       en: "Digital Transformation and AI",
@@ -89,6 +117,7 @@ export const PROGRAMME_DAYS: ProgrammeDay[] = [
       "Digital marketing",
       "90-day business action plan",
     ],
+    schedule: [],
   },
 ];
 

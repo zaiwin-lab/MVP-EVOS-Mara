@@ -2,26 +2,33 @@ import { Link, useNavigate } from "react-router-dom";
 import { AppShell } from "../components/AppShell";
 import { BrandFooter } from "../components/Brand";
 import { Icon } from "../components/Icon";
+import { ScoreRing } from "../components/ScoreRing";
 import { useParticipant } from "../context/ParticipantContext";
+import { useI18n } from "../context/I18nContext";
 import { eventConfig } from "../config/eventConfig";
-
-interface StepCard {
-  to: string;
-  icon: string;
-  title: string;
-  subtitle: string;
-  done: boolean;
-  locked?: boolean;
-}
 
 export default function Journey() {
   const { record, loading, participantId, signOut } = useParticipant();
   const navigate = useNavigate();
+  const { t } = useI18n();
 
   if (!loading && !participantId) {
     return (
-      <AppShell header title="My Journey">
-        <EmptyState onCheckIn={() => navigate("/check-in")} />
+      <AppShell header title={t("myAttendify")}>
+        <div className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
+          <Icon name="lock" className="h-10 w-10 text-navy-300" />
+          <h2 className="mt-4 font-display text-lg font-extrabold text-navy-900">
+            {t("myAttendify")}
+          </h2>
+          <p className="mt-2 max-w-xs text-sm text-navy-500">{t("loginIntro")}</p>
+          <button onClick={() => navigate("/login")} className="btn-gold mt-6 w-full">
+            {t("logIn")}
+            <Icon name="arrowRight" className="h-5 w-5" />
+          </button>
+          <button onClick={() => navigate("/register")} className="btn-outline mt-3 w-full">
+            {t("registerHere")}
+          </button>
+        </div>
       </AppShell>
     );
   }
@@ -30,100 +37,119 @@ export default function Journey() {
   const hasProfile = Boolean(record?.profile);
   const hasAssessment = Boolean(record?.result);
   const hasPlan = Boolean(record?.actionPlan);
+  const attendedSessions = new Set((record?.attendance ?? []).map((a) => a.session));
 
-  const steps: StepCard[] = [
-    {
-      to: "/profile",
-      icon: "clipboard",
-      title: "Contractor Profile",
-      subtitle: hasProfile ? "Completed — tap to review" : "Tell us about your company",
-      done: hasProfile,
-    },
-    {
-      to: "/assessment",
-      icon: "chart",
-      title: "Readiness Assessment",
-      subtitle: hasAssessment ? "Completed — view your result" : "20 questions · 5–8 minutes",
-      done: hasAssessment,
-    },
-    {
-      to: "/result",
-      icon: "target",
-      title: "My Readiness Result",
-      subtitle: hasAssessment ? "Your score & recommendations" : "Complete the assessment first",
-      done: false,
-      locked: !hasAssessment,
-    },
-    {
-      to: "/action-plan",
-      icon: "spark",
-      title: "90-Day Action Plan",
-      subtitle: hasPlan ? "Completed — tap to review" : "Plan your next three months",
-      done: hasPlan,
-    },
-    {
-      to: "/reflection",
-      icon: "book",
-      title: "Daily Reflection",
-      subtitle: "Capture your key takeaways",
-      done: false,
-    },
-    {
-      to: "/resources",
-      icon: "download",
-      title: "Programme Resources",
-      subtitle: "Templates, checklists & tools",
-      done: false,
-    },
+  const steps = [
+    { to: "/profile", icon: "clipboard", label: t("myProfile"), done: hasProfile },
+    { to: "/assessment", icon: "chart", label: t("assessment"), done: hasAssessment },
+    { to: "/result", icon: "target", label: t("results"), done: hasAssessment, locked: !hasAssessment },
+    { to: "/action-plan", icon: "spark", label: t("actionPlan"), done: hasPlan },
+    { to: "/reflection", icon: "book", label: t("reflection"), done: false },
+    { to: "/resources", icon: "download", label: t("resources"), done: false },
   ];
 
-  const doneCount = [hasProfile, hasAssessment, hasPlan].filter(Boolean).length;
-  const pct = Math.round((doneCount / 3) * 100);
+  // "Continue Journey" points at the first incomplete core step.
+  const nextStep = !hasProfile
+    ? "/profile"
+    : !hasAssessment
+      ? "/assessment"
+      : !hasPlan
+        ? "/action-plan"
+        : "/result";
 
   return (
-    <AppShell>
-      {/* Personalised header */}
+    <AppShell
+      footer={
+        <button onClick={() => navigate(nextStep)} className="btn-gold w-full">
+          {t("continueJourney")}
+          <Icon name="arrowRight" className="h-5 w-5" />
+        </button>
+      }
+    >
+      {/* Welcome header */}
       <section className="bg-navy-950 px-5 pb-8 pt-6 text-white">
         <div className="flex items-start justify-between">
-          <div>
-            <span className="section-eyebrow text-gold-300">Welcome back</span>
-            <h1 className="mt-1 font-display text-2xl font-extrabold leading-tight">
-              {p?.fullName ?? "Participant"}
+          <div className="min-w-0">
+            <span className="section-eyebrow text-gold-300">{t("welcomeBack")}</span>
+            <h1 className="mt-1 truncate font-display text-2xl font-extrabold leading-tight">
+              {p?.fullName ?? ""}
             </h1>
-            <p className="mt-0.5 text-sm text-navy-200">{p?.companyName}</p>
+            {p?.companyName && <p className="mt-0.5 truncate text-sm text-navy-200">{p.companyName}</p>}
           </div>
           <button
             onClick={() => {
               signOut();
               navigate("/");
             }}
-            className="rounded-full border border-white/20 px-3 py-1 text-xs font-semibold text-white/70"
+            className="shrink-0 rounded-full border border-white/20 px-3 py-1 text-xs font-semibold text-white/70"
           >
-            Exit
+            {t("exit")}
           </button>
         </div>
 
-        <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="flex items-center justify-between text-xs font-semibold">
-            <span className="text-navy-100">Core journey progress</span>
-            <span className="text-gold-300">{pct}%</span>
-          </div>
-          <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/10">
-            <div
-              className="h-full rounded-full bg-gold-400 transition-all duration-500"
-              style={{ width: `${pct}%` }}
-            />
-          </div>
-          {p?.ref && (
-            <div className="mt-3 text-[11px] text-navy-300">
-              Reference: <span className="font-bold text-white">{p.ref}</span>
+        {/* Readiness score */}
+        {record?.result ? (
+          <div className="mt-5 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+            <ScoreRing score={record.result.totalScore} size={92} />
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-wide text-gold-300">
+                {t("overallReadiness")}
+              </div>
+              <div className="mt-1 font-display text-lg font-extrabold">
+                {record.result.readinessCategory}
+              </div>
+              <Link to="/result" className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-navy-100 hover:text-white">
+                {t("results")} <Icon name="arrowRight" className="h-3.5 w-3.5" />
+              </Link>
             </div>
-          )}
+          </div>
+        ) : (
+          <Link
+            to="/assessment"
+            className="mt-5 flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4"
+          >
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-wide text-gold-300">
+                {t("overallReadiness")}
+              </div>
+              <div className="mt-1 text-sm text-navy-100">{t("assessment")} →</div>
+            </div>
+            <Icon name="chart" className="h-8 w-8 text-gold-300" />
+          </Link>
+        )}
+      </section>
+
+      {/* Attendance */}
+      <section className="px-5 pt-6">
+        <h2 className="section-eyebrow">{t("myAttendance")}</h2>
+        <div className="mt-3 grid grid-cols-3 gap-3">
+          {eventConfig.attendanceSessions.map((s) => {
+            const present = attendedSessions.has(s.id);
+            return (
+              <div
+                key={s.id}
+                className={`rounded-2xl border p-3 text-center ${
+                  present ? "border-green-200 bg-green-50" : "border-navy-100 bg-white"
+                }`}
+              >
+                <div
+                  className={`mx-auto flex h-9 w-9 items-center justify-center rounded-full ${
+                    present ? "bg-green-500 text-white" : "bg-navy-100 text-navy-400"
+                  }`}
+                >
+                  <Icon name={present ? "check" : "clock"} className="h-5 w-5" />
+                </div>
+                <div className="mt-2 text-sm font-bold text-navy-900">{s.label}</div>
+                <div className="text-[10px] text-navy-400">{s.date.replace(" 2026", "")}</div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
-      {/* Step cards */}
+      {/* Journey checklist */}
       <section className="space-y-3 px-5 py-6">
+        <h2 className="section-eyebrow">{t("yourJourney")}</h2>
         {steps.map((s) => {
           const inner = (
             <>
@@ -138,12 +164,9 @@ export default function Journey() {
               >
                 <Icon name={s.done ? "check" : s.icon} className="h-5 w-5" />
               </div>
-              <div className="min-w-0 flex-1">
-                <div className="font-bold text-navy-900">{s.title}</div>
-                <div className="truncate text-xs text-navy-400">{s.subtitle}</div>
-              </div>
+              <span className="flex-1 font-bold text-navy-900">{s.label}</span>
               {s.done ? (
-                <span className="chip shrink-0 bg-green-50 text-green-700">Done</span>
+                <Icon name="checkCircle" className="h-5 w-5 shrink-0 text-green-500" />
               ) : s.locked ? (
                 <Icon name="lock" className="h-4 w-4 shrink-0 text-navy-300" />
               ) : (
@@ -151,52 +174,17 @@ export default function Journey() {
               )}
             </>
           );
-
           return s.locked ? (
-            <div
-              key={s.to}
-              className="card flex items-center gap-4 p-4 opacity-60"
-              aria-disabled
-            >
-              {inner}
-            </div>
+            <div key={s.to} className="card flex items-center gap-4 p-4 opacity-60">{inner}</div>
           ) : (
-            <Link
-              key={s.to}
-              to={s.to}
-              className="card flex items-center gap-4 p-4 transition hover:shadow-lift"
-            >
+            <Link key={s.to} to={s.to} className="card flex items-center gap-4 p-4 transition hover:shadow-lift">
               {inner}
             </Link>
           );
         })}
       </section>
 
-      <div className="px-5 pb-2 text-center text-xs text-navy-400">
-        {eventConfig.eventName}
-      </div>
       <BrandFooter />
     </AppShell>
-  );
-}
-
-function EmptyState({ onCheckIn }: { onCheckIn: () => void }) {
-  return (
-    <div className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
-      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-navy-50 text-navy-500">
-        <Icon name="qr" className="h-8 w-8" />
-      </div>
-      <h2 className="mt-5 font-display text-xl font-extrabold text-navy-900">
-        Check in to begin
-      </h2>
-      <p className="mt-2 max-w-xs text-sm text-navy-500">
-        Your participant journey starts with a quick check-in at the registration
-        area.
-      </p>
-      <button onClick={onCheckIn} className="btn-gold mt-6 w-full">
-        Check In Now
-        <Icon name="arrowRight" className="h-5 w-5" />
-      </button>
-    </div>
   );
 }

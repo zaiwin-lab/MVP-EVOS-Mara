@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Wordmark } from "./Brand";
 import { Icon } from "./Icon";
-import { LanguagePicker } from "./LanguagePicker";
+import { LangToggle } from "./LangToggle";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -43,7 +43,7 @@ export function AppShell({
           ) : (
             <div className="flex-1" />
           )}
-          <LanguagePicker tone="light" />
+          <LangToggle tone="light" />
         </header>
       )}
 

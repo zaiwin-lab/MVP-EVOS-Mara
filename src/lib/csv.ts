@@ -1,5 +1,6 @@
 import type { ParticipantRecord } from "../data/types";
 import { INDICATORS } from "../content/assessment";
+import { eventConfig } from "../config/eventConfig";
 
 function esc(value: unknown): string {
   const s = value === undefined || value === null ? "" : String(value);
@@ -23,10 +24,12 @@ export function recordsToCsv(records: ParticipantRecord[]): string {
     "Readiness Category",
     ...INDICATORS.map((i) => i.titleShort),
     "Action Plan Completed",
+    ...eventConfig.attendanceSessions.map((s) => `Attendance ${s.label}`),
   ];
 
   const rows = records.map((r) => {
-    const { participant: p, profile, result, actionPlan } = r;
+    const { participant: p, profile, result, actionPlan, attendance } = r;
+    const attended = new Set(attendance.map((a) => a.session));
     return [
       p.ref,
       p.fullName,
@@ -42,6 +45,7 @@ export function recordsToCsv(records: ParticipantRecord[]): string {
       result ? result.readinessCategory : "",
       ...INDICATORS.map((i) => (result ? result.indicatorScores[i.id] ?? "" : "")),
       actionPlan ? "Yes" : "No",
+      ...eventConfig.attendanceSessions.map((s) => (attended.has(s.id) ? "Present" : "")),
     ]
       .map(esc)
       .join(",");

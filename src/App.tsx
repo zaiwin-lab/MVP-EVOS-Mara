@@ -4,7 +4,9 @@ import Landing from "./pages/Landing";
 import Programme from "./pages/Programme";
 import Trainers from "./pages/Trainers";
 import Resources from "./pages/Resources";
-import CheckIn from "./pages/CheckIn";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import Attend from "./pages/Attend";
 import Journey from "./pages/Journey";
 import Profile from "./pages/Profile";
 import Assessment from "./pages/Assessment";
@@ -23,21 +25,27 @@ export default function App() {
       {/* Public landing + event-scoped QR entry points */}
       <Route path="/" element={<Landing />} />
       <Route path={`/event/${slug}`} element={<Landing />} />
-      <Route path={`/event/${slug}/check-in`} element={<CheckIn />} />
+      {/* Registration QR (new + legacy check-in path both register) */}
+      <Route path={`/event/${slug}/register`} element={<Register />} />
+      <Route path={`/event/${slug}/check-in`} element={<Register />} />
 
-      {/* Programme information */}
-      <Route path="/programme" element={<Programme />} />
-      <Route path="/trainers" element={<Trainers />} />
-      <Route path="/resources" element={<Resources />} />
-
-      {/* Participant journey */}
-      <Route path="/check-in" element={<CheckIn />} />
+      {/* Participant portal */}
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/check-in" element={<Navigate to="/register" replace />} />
+      <Route path="/my" element={<Journey />} />
       <Route path="/journey" element={<Journey />} />
+      <Route path="/attend/:session" element={<Attend />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/assessment" element={<Assessment />} />
       <Route path="/result" element={<Results />} />
       <Route path="/action-plan" element={<ActionPlan />} />
       <Route path="/reflection" element={<Reflection />} />
+
+      {/* Programme information */}
+      <Route path="/programme" element={<Programme />} />
+      <Route path="/trainers" element={<Trainers />} />
+      <Route path="/resources" element={<Resources />} />
 
       {/* Utilities */}
       <Route path="/qr" element={<QRPage />} />

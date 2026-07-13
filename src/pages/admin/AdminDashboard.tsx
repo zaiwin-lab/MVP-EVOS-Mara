@@ -1,12 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ADMIN_PASSWORD, eventConfig } from "../../config/eventConfig";
+import {
+  ADMIN_PASSWORD,
+  ADMIN_USERNAME,
+  eventBase,
+  eventConfig,
+  publicOrigin,
+} from "../../config/eventConfig";
 import { INDICATORS } from "../../content/assessment";
 import { store, storageMode } from "../../data/store";
 import type { ParticipantRecord } from "../../data/types";
 import { recordsToCsv, downloadCsv } from "../../lib/csv";
 import { Icon } from "../../components/Icon";
 import { LogoMark } from "../../components/Brand";
+import { QRCodeCard } from "../../components/QRCode";
 
 const AUTH_KEY = "attendify:adminAuthed";
 
@@ -20,12 +27,13 @@ export default function AdminDashboard() {
 }
 
 function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
+    if (username.trim() === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
       sessionStorage.setItem(AUTH_KEY, "1");
       onSuccess();
     } else {
@@ -45,22 +53,37 @@ function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
             {eventConfig.eventName} · Event Dashboard
           </p>
         </div>
-        <div className="mt-6">
-          <label className="field-label">Password</label>
-          <input
-            type="password"
-            className="field-input"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setError(false);
-            }}
-            placeholder="Enter admin password"
-            autoFocus
-          />
+        <div className="mt-6 space-y-4">
+          <div>
+            <label className="field-label">Username</label>
+            <input
+              className="field-input"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setError(false);
+              }}
+              placeholder="admin"
+              autoFocus
+              autoCapitalize="none"
+            />
+          </div>
+          <div>
+            <label className="field-label">Password</label>
+            <input
+              type="password"
+              className="field-input"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError(false);
+              }}
+              placeholder="Enter admin password"
+            />
+          </div>
           {error && (
-            <p className="mt-2 text-sm font-semibold text-red-600">
-              Incorrect password. Please try again.
+            <p className="text-sm font-semibold text-red-600">
+              Incorrect username or password. Please try again.
             </p>
           )}
         </div>
@@ -155,13 +178,40 @@ function Dashboard() {
           <>
             {/* Summary cards */}
             <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-              <StatCard label="Expected" value={eventConfig.expectedParticipants} icon="users" />
-              <StatCard label="Checked In" value={stats.total} icon="checkCircle" accent />
-              <StatCard label="Profiles" value={stats.profiles} icon="clipboard" />
+              <StatCard label="Participants" value={stats.total} icon="users" accent />
+              <StatCard label="Attendance" value={stats.attendanceTotal} icon="checkCircle" accent />
+              <StatCard label="Completed Profiles" value={stats.profiles} icon="clipboard" />
               <StatCard label="Assessments" value={stats.assessments} icon="chart" />
               <StatCard label="Action Plans" value={stats.actionPlans} icon="target" />
               <StatCard label="Avg Score" value={stats.avgScore} suffix="/100" icon="spark" accent />
             </section>
+
+            {/* Attendance by session */}
+            <section className="mt-6">
+              <h2 className="section-eyebrow">Attendance by Session</h2>
+              <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                {eventConfig.attendanceSessions.map((s) => (
+                  <div key={s.id} className="card p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-navy-700">
+                        {s.label} · {s.weekday}
+                      </span>
+                      <Icon name="calendar" className="h-4 w-4 text-navy-300" />
+                    </div>
+                    <div className="mt-1 text-2xl font-extrabold text-navy-900">
+                      {stats.attendanceBySession[s.id] ?? 0}
+                      <span className="text-sm font-semibold text-navy-400">
+                        {" "}/ {stats.total}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-navy-400">{s.date}</div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Attendance QR generator */}
+            <QRGenerator />
 
             {/* Group readiness averages */}
             <section className="mt-6">
@@ -236,6 +286,7 @@ function Dashboard() {
                       <th className="px-4 py-3">Name</th>
                       <th className="px-4 py-3">Company</th>
                       <th className="px-4 py-3">Mobile</th>
+                      <th className="px-4 py-3">Att.</th>
                       <th className="px-4 py-3">CIDB</th>
                       <th className="px-4 py-3">Profile</th>
                       <th className="px-4 py-3">Score</th>
@@ -250,6 +301,9 @@ function Dashboard() {
                         <td className="px-4 py-3 font-semibold text-navy-900">{r.participant.fullName}</td>
                         <td className="px-4 py-3 text-navy-600">{r.participant.companyName}</td>
                         <td className="px-4 py-3 text-navy-600">{r.participant.mobile}</td>
+                        <td className="px-4 py-3 font-semibold text-navy-700">
+                          {r.attendance.length}/{eventConfig.attendanceSessions.length}
+                        </td>
                         <td className="px-4 py-3">{r.profile?.cidbGrade ?? "—"}</td>
                         <td className="px-4 py-3">
                           <StatusDot ok={Boolean(r.profile)} />
@@ -298,6 +352,9 @@ function Dashboard() {
                     </div>
                     <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
                       <span className="chip bg-navy-50 text-navy-600">{r.participant.mobile}</span>
+                      <span className="chip bg-navy-50 text-navy-600">
+                        Att {r.attendance.length}/{eventConfig.attendanceSessions.length}
+                      </span>
                       {r.profile?.cidbGrade && (
                         <span className="chip bg-navy-50 text-navy-600">{r.profile.cidbGrade}</span>
                       )}
@@ -396,6 +453,16 @@ function computeStats(records: ParticipantRecord[]) {
   const assessments = withResult.length;
   const actionPlans = records.filter((r) => r.actionPlan).length;
 
+  const attendanceBySession: Record<string, number> = {};
+  for (const s of eventConfig.attendanceSessions) attendanceBySession[s.id] = 0;
+  let attendanceTotal = 0;
+  for (const r of records) {
+    for (const a of r.attendance) {
+      attendanceTotal += 1;
+      if (a.session in attendanceBySession) attendanceBySession[a.session] += 1;
+    }
+  }
+
   const avgScore =
     withResult.length > 0
       ? Math.round(withResult.reduce((s, r) => s + (r.result?.totalScore ?? 0), 0) / withResult.length)
@@ -438,6 +505,8 @@ function computeStats(records: ParticipantRecord[]) {
     assessments,
     actionPlans,
     avgScore,
+    attendanceTotal,
+    attendanceBySession,
     indicatorAverages,
     noWebsite,
     profileNeedsWork,
@@ -446,6 +515,40 @@ function computeStats(records: ParticipantRecord[]) {
     commonGrade: commonGrade ?? "—",
     commonCategory: commonCategory ?? "—",
   };
+}
+
+// ── Attendance / registration QR generator ───────────────────
+function QRGenerator() {
+  const origin = publicOrigin();
+  const registrationUrl = `${origin}${eventBase}/register`;
+  return (
+    <section className="mt-6">
+      <h2 className="section-eyebrow">QR Generator</h2>
+      <p className="mt-1 text-xs text-navy-400">
+        Print or display these. The Registration QR creates accounts; each
+        Attendance QR records presence for that day (duplicates are prevented).
+      </p>
+      <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <QRCodeCard
+          value={registrationUrl}
+          label="Registration"
+          caption="Register & Enter Attendify"
+          downloadName="attendify-registration-qr.png"
+          size={190}
+        />
+        {eventConfig.attendanceSessions.map((s) => (
+          <QRCodeCard
+            key={s.id}
+            value={`${origin}/attend/${s.id}`}
+            label={`Attendance · ${s.label}`}
+            caption={`${s.weekday}, ${s.date}`}
+            downloadName={`attendify-attendance-${s.id}-qr.png`}
+            size={190}
+          />
+        ))}
+      </div>
+    </section>
+  );
 }
 
 function mostCommon(items: string[]): string | null {

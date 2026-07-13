@@ -54,6 +54,18 @@ create table if not exists reflections (
   submitted_at   timestamptz not null default now()
 );
 
+-- One row per participant per attendance session. The `id`
+-- (`${participant_id}:${session}`) primary key enforces duplicate
+-- prevention: a second scan of the same day's QR simply conflicts.
+create table if not exists attendance (
+  id             text primary key,               -- `${participant_id}:${session}`
+  participant_id text references participants (id) on delete cascade,
+  session        text not null,
+  data           jsonb not null,
+  marked_at      timestamptz not null default now()
+);
+create index if not exists attendance_session_idx on attendance (session);
+
 -- ── Row Level Security ────────────────────────────────────────
 -- The MVP uses the anon key from the browser. For a 3-day supervised
 -- event with ~20 participants, we allow anon read/write on these
@@ -64,12 +76,13 @@ alter table company_profiles    enable row level security;
 alter table assessment_results  enable row level security;
 alter table action_plans        enable row level security;
 alter table reflections         enable row level security;
+alter table attendance          enable row level security;
 
 do $$
 declare t text;
 begin
   foreach t in array array[
-    'participants','company_profiles','assessment_results','action_plans','reflections'
+    'participants','company_profiles','assessment_results','action_plans','reflections','attendance'
   ] loop
     execute format('drop policy if exists anon_all on %I;', t);
     execute format(

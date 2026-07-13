@@ -15,7 +15,7 @@ export const LANGS: LangMeta[] = [
   { code: "en", label: "English", short: "EN" },
   { code: "bm", label: "Bahasa Melayu", short: "BM" },
   { code: "zh", label: "中文", short: "中" },
-  { code: "iban", label: "Bahasa Iban", short: "IBAN" },
+  { code: "iban", label: "Bahasa Iban", short: "IB" },
 ];
 
 export type Localized = Partial<Record<Lang, string>>;
@@ -232,6 +232,90 @@ const DICT: Record<string, Localized> = {
     zh: "标记为“即将推出”的内容将在课程期间发布。",
     iban: "Bahan ke betanda “Deka Datai” deka dikeluarka lebuh program.",
   },
+
+  // ── Portal: My Attendify / Admin / registration / login ──
+  myAttendify: { en: "My Attendify", bm: "My Attendify", zh: "My Attendify", iban: "My Attendify" },
+  admin: { en: "Admin", bm: "Admin", zh: "管理", iban: "Admin" },
+  register: { en: "Register", bm: "Daftar", zh: "注册", iban: "Daftar" },
+  registerEnter: {
+    en: "Register & Enter Attendify",
+    bm: "Daftar & Masuk Attendify",
+    zh: "注册并进入 Attendify",
+    iban: "Daftar & Tama Attendify",
+  },
+  createAccount: {
+    en: "Create your account",
+    bm: "Cipta akaun anda",
+    zh: "创建您的账户",
+    iban: "Ngaga akaun nuan",
+  },
+  registerIntro: {
+    en: "Register once, then use your mobile number and PIN to log in during the programme.",
+    bm: "Daftar sekali, kemudian guna nombor telefon dan PIN anda untuk log masuk sepanjang program.",
+    zh: "注册一次，之后使用您的手机号码和 PIN 在课程期间登录。",
+    iban: "Daftar sekali, udah nya ngena no. telefon enggau PIN nuan kena login lebuh program.",
+  },
+  emailLabel: { en: "Email", bm: "E-mel", zh: "电子邮箱", iban: "E-mel" },
+  companyOptional: {
+    en: "Company Name (optional)",
+    bm: "Nama Syarikat (pilihan)",
+    zh: "公司名称（选填）",
+    iban: "Nama Kompeni (pilih)",
+  },
+  createPin: { en: "Create a 4–6 digit PIN", bm: "Cipta PIN 4–6 digit", zh: "设置 4–6 位 PIN 码", iban: "Ngaga PIN 4–6 digit" },
+  confirmPin: { en: "Confirm PIN", bm: "Sahkan PIN", zh: "确认 PIN 码", iban: "Sahka PIN" },
+  pinMismatch: { en: "PINs do not match.", bm: "PIN tidak sepadan.", zh: "PIN 码不一致。", iban: "PIN nadai sama." },
+  mobileExists: {
+    en: "This mobile number is already registered. Please log in.",
+    bm: "Nombor telefon ini telah didaftarkan. Sila log masuk.",
+    zh: "此手机号码已注册，请登录。",
+    iban: "No. telefon tu udah didaftar. Login dulu.",
+  },
+  createMyAccount: { en: "Create My Account", bm: "Cipta Akaun Saya", zh: "创建我的账户", iban: "Ngaga Akaun Aku" },
+  alreadyRegistered: {
+    en: "Already registered?",
+    bm: "Sudah berdaftar?",
+    zh: "已注册？",
+    iban: "Udah daftar?",
+  },
+  logIn: { en: "Log in", bm: "Log masuk", zh: "登录", iban: "Login" },
+  welcomeBack: { en: "Welcome Back", bm: "Selamat Kembali", zh: "欢迎回来", iban: "Selamat Pulai" },
+  loginIntro: {
+    en: "Enter your mobile number and PIN to continue your journey.",
+    bm: "Masukkan nombor telefon dan PIN anda untuk meneruskan perjalanan.",
+    zh: "输入您的手机号码和 PIN 码以继续您的旅程。",
+    iban: "Tama no. telefon enggau PIN nuan kena neruska pejalai.",
+  },
+  pinLabel: { en: "PIN", bm: "PIN", zh: "PIN 码", iban: "PIN" },
+  wrongLogin: {
+    en: "Mobile number or PIN is incorrect.",
+    bm: "Nombor telefon atau PIN tidak betul.",
+    zh: "手机号码或 PIN 码不正确。",
+    iban: "No. telefon tauka PIN nadai betul.",
+  },
+  notRegistered: {
+    en: "Not registered yet?",
+    bm: "Belum berdaftar?",
+    zh: "还没注册？",
+    iban: "Apin daftar?",
+  },
+  registerHere: { en: "Register here", bm: "Daftar di sini", zh: "在此注册", iban: "Daftar ditu" },
+  continueJourney: { en: "Continue Journey", bm: "Teruskan Perjalanan", zh: "继续旅程", iban: "Terus Pejalai" },
+  overallReadiness: { en: "Overall Readiness", bm: "Kesediaan Keseluruhan", zh: "整体准备度", iban: "Kesediaan Semua" },
+  myAttendance: { en: "My Attendance", bm: "Kehadiran Saya", zh: "我的出席", iban: "Kehadiran Aku" },
+  attendanceMarked: {
+    en: "Attendance recorded",
+    bm: "Kehadiran direkodkan",
+    zh: "出席已记录",
+    iban: "Kehadiran udah direkod",
+  },
+  alreadyMarked: {
+    en: "You are already marked present for this session.",
+    bm: "Anda sudah ditanda hadir untuk sesi ini.",
+    zh: "您已在本场次被标记为出席。",
+    iban: "Nuan udah ditanda datai ke sesi tu.",
+  },
+  exit: { en: "Exit", bm: "Keluar", zh: "退出", iban: "Pansut" },
 };
 
 // Short domain terms used as tags (programme topics, trainer focus areas).

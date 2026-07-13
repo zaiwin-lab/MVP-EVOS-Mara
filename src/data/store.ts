@@ -11,26 +11,36 @@ import { supabase, supabaseEnabled } from "./supabaseClient";
 import type {
   ActionPlan,
   AssessmentResult,
+  AttendanceRecord,
   CompanyProfile,
   Participant,
   ParticipantRecord,
   Reflection,
 } from "./types";
 
+export interface RegistrationInput {
+  fullName: string;
+  mobile: string;
+  pin: string;
+  email?: string;
+  companyName?: string;
+}
+
 export interface Store {
   mode: "local" | "supabase";
   listRecords(): Promise<ParticipantRecord[]>;
   getRecord(participantId: string): Promise<ParticipantRecord | null>;
   findByMobile(mobile: string): Promise<Participant | null>;
-  createParticipant(
-    input: Pick<Participant, "fullName" | "mobile" | "companyName">
-  ): Promise<Participant>;
+  /** Returns the participant if mobile+PIN match, else null. */
+  login(mobile: string, pin: string): Promise<Participant | null>;
+  createParticipant(input: RegistrationInput): Promise<Participant>;
   updateParticipant(id: string, patch: Partial<Participant>): Promise<Participant | null>;
   saveProfile(profile: CompanyProfile): Promise<void>;
   saveResult(result: AssessmentResult): Promise<void>;
   saveActionPlan(plan: ActionPlan): Promise<void>;
   saveReflection(reflection: Reflection): Promise<void>;
-  seedIfEmpty(records: ParticipantRecord[]): Promise<void>;
+  /** Mark attendance for a session; no-op (returns false) if already marked. */
+  markAttendance(participantId: string, session: string): Promise<boolean>;
 }
 
 const now = () => new Date().toISOString();
@@ -58,7 +68,7 @@ const K = {
   results: `${NS}:results`,
   actionPlans: `${NS}:actionPlans`,
   reflections: `${NS}:reflections`,
-  seeded: `${NS}:seeded`,
+  attendance: `${NS}:attendance`,
 };
 
 function read<T>(key: string, fallback: T): T {
@@ -83,7 +93,8 @@ function assemble(
   profiles: CompanyProfile[],
   results: AssessmentResult[],
   actionPlans: ActionPlan[],
-  reflections: Reflection[]
+  reflections: Reflection[],
+  attendance: AttendanceRecord[]
 ): ParticipantRecord[] {
   return participants
     .map((participant) => ({
@@ -92,6 +103,7 @@ function assemble(
       result: results.find((r) => r.participantId === participant.id),
       actionPlan: actionPlans.find((a) => a.participantId === participant.id),
       reflections: reflections.filter((r) => r.participantId === participant.id),
+      attendance: attendance.filter((a) => a.participantId === participant.id),
     }))
     .sort(
       (a, b) =>
@@ -109,7 +121,8 @@ class LocalAdapter implements Store {
       read<CompanyProfile[]>(K.profiles, []),
       read<AssessmentResult[]>(K.results, []),
       read<ActionPlan[]>(K.actionPlans, []),
-      read<Reflection[]>(K.reflections, [])
+      read<Reflection[]>(K.reflections, []),
+      read<AttendanceRecord[]>(K.attendance, [])
     );
   }
 
@@ -124,9 +137,12 @@ class LocalAdapter implements Store {
     return list.find((p) => normalizeMobile(p.mobile) === target) ?? null;
   }
 
-  async createParticipant(
-    input: Pick<Participant, "fullName" | "mobile" | "companyName">
-  ): Promise<Participant> {
+  async login(mobile: string, pin: string): Promise<Participant | null> {
+    const p = await this.findByMobile(mobile);
+    return p && p.pin === pin.trim() ? p : null;
+  }
+
+  async createParticipant(input: RegistrationInput): Promise<Participant> {
     const list = read<Participant[]>(K.participants, []);
     const participant: Participant = {
       id: makeId(),
@@ -134,13 +150,27 @@ class LocalAdapter implements Store {
       eventSlug: eventConfig.slug,
       fullName: input.fullName.trim(),
       mobile: input.mobile.trim(),
-      companyName: input.companyName.trim(),
+      pin: input.pin.trim(),
+      email: input.email?.trim() || undefined,
+      companyName: input.companyName?.trim() || "",
       checkedInAt: now(),
       createdAt: now(),
       updatedAt: now(),
     };
     write(K.participants, [participant, ...list]);
     return participant;
+  }
+
+  async markAttendance(participantId: string, session: string): Promise<boolean> {
+    const list = read<AttendanceRecord[]>(K.attendance, []);
+    if (list.some((a) => a.participantId === participantId && a.session === session)) {
+      return false; // already marked — duplicate prevented
+    }
+    write(K.attendance, [
+      ...list,
+      { participantId, session, markedAt: now() },
+    ]);
+    return true;
   }
 
   async updateParticipant(
@@ -192,30 +222,6 @@ class LocalAdapter implements Store {
     );
     write(K.reflections, [...list, reflection]);
   }
-
-  async seedIfEmpty(records: ParticipantRecord[]): Promise<void> {
-    if (localStorage.getItem(K.seeded)) return;
-    const existing = read<Participant[]>(K.participants, []);
-    if (existing.length > 0) {
-      localStorage.setItem(K.seeded, "1");
-      return;
-    }
-    write(K.participants, records.map((r) => r.participant));
-    write(
-      K.profiles,
-      records.map((r) => r.profile).filter(Boolean) as CompanyProfile[]
-    );
-    write(
-      K.results,
-      records.map((r) => r.result).filter(Boolean) as AssessmentResult[]
-    );
-    write(
-      K.actionPlans,
-      records.map((r) => r.actionPlan).filter(Boolean) as ActionPlan[]
-    );
-    write(K.reflections, records.flatMap((r) => r.reflections));
-    localStorage.setItem(K.seeded, "1");
-  }
 }
 
 // ── Supabase adapter ─────────────────────────────────────────
@@ -226,20 +232,22 @@ class SupabaseAdapter implements Store {
   private db = supabase!;
 
   async listRecords(): Promise<ParticipantRecord[]> {
-    const [participants, profiles, results, actionPlans, reflections] =
+    const [participants, profiles, results, actionPlans, reflections, attendance] =
       await Promise.all([
         this.db.from("participants").select("data").eq("event_slug", eventConfig.slug),
         this.db.from("company_profiles").select("data"),
         this.db.from("assessment_results").select("data"),
         this.db.from("action_plans").select("data"),
         this.db.from("reflections").select("data"),
+        this.db.from("attendance").select("data"),
       ]);
     return assemble(
       (participants.data ?? []).map((r) => r.data as Participant),
       (profiles.data ?? []).map((r) => r.data as CompanyProfile),
       (results.data ?? []).map((r) => r.data as AssessmentResult),
       (actionPlans.data ?? []).map((r) => r.data as ActionPlan),
-      (reflections.data ?? []).map((r) => r.data as Reflection)
+      (reflections.data ?? []).map((r) => r.data as Reflection),
+      (attendance.data ?? []).map((r) => r.data as AttendanceRecord)
     );
   }
 
@@ -258,16 +266,21 @@ class SupabaseAdapter implements Store {
     return data && data[0] ? (data[0].data as Participant) : null;
   }
 
-  async createParticipant(
-    input: Pick<Participant, "fullName" | "mobile" | "companyName">
-  ): Promise<Participant> {
+  async login(mobile: string, pin: string): Promise<Participant | null> {
+    const p = await this.findByMobile(mobile);
+    return p && p.pin === pin.trim() ? p : null;
+  }
+
+  async createParticipant(input: RegistrationInput): Promise<Participant> {
     const participant: Participant = {
       id: makeId(),
       ref: makeRef(),
       eventSlug: eventConfig.slug,
       fullName: input.fullName.trim(),
       mobile: input.mobile.trim(),
-      companyName: input.companyName.trim(),
+      pin: input.pin.trim(),
+      email: input.email?.trim() || undefined,
+      companyName: input.companyName?.trim() || "",
       checkedInAt: now(),
       createdAt: now(),
       updatedAt: now(),
@@ -279,6 +292,16 @@ class SupabaseAdapter implements Store {
       data: participant,
     });
     return participant;
+  }
+
+  async markAttendance(participantId: string, session: string): Promise<boolean> {
+    const id = `${participantId}:${session}`;
+    const record: AttendanceRecord = { participantId, session, markedAt: now() };
+    const { error } = await this.db
+      .from("attendance")
+      .insert({ id, participant_id: participantId, session, data: record });
+    // Unique PK on id → a duplicate insert errors, which is our dup-prevention.
+    return !error;
   }
 
   async updateParticipant(
@@ -333,11 +356,6 @@ class SupabaseAdapter implements Store {
       },
       { onConflict: "id" }
     );
-  }
-
-  async seedIfEmpty(): Promise<void> {
-    // Seeding a shared backend is a deliberate admin action, not automatic.
-    return;
   }
 }
 
