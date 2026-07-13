@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --ring-circumference: 339.292;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-sand-50 text-navy-900 font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Comfortable defaults for readers aged 35–65 */
+  p {
+    @apply leading-relaxed;
+  }
+
+  /* Larger, forgiving touch targets on inputs */
+  input,
+  select,
+  textarea,
+  button {
+    @apply text-base;
+  }
+
+  ::selection {
+    @apply bg-gold-200 text-navy-900;
+  }
+}
+
+@layer components {
+  /* Mobile-first app shell centered on wider screens */
+  .app-shell {
+    @apply mx-auto w-full max-w-app min-h-dvh bg-white shadow-lift;
+  }
+
+  .field-label {
+    @apply block text-sm font-semibold text-navy-700 mb-1.5;
+  }
+
+  .field-input {
+    @apply w-full rounded-xl border border-navy-100 bg-white px-4 py-3 text-navy-900
+      placeholder:text-navy-300 shadow-sm transition
+      focus:border-navy-400 focus:ring-4 focus:ring-navy-100 focus:outline-none;
+  }
+
+  .field-hint {
+    @apply text-xs text-navy-400 mt-1;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3.5
+      font-semibold transition active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none
+      focus-visible:outline-none focus-visible:ring-4;
+  }
+
+  .btn-primary {
+    @apply btn bg-navy-800 text-white shadow-card hover:bg-navy-700 focus-visible:ring-navy-200;
+  }
+
+  .btn-gold {
+    @apply btn bg-gold-400 text-navy-900 shadow-gold hover:bg-gold-300 focus-visible:ring-gold-200;
+  }
+
+  .btn-ghost {
+    @apply btn bg-navy-50 text-navy-800 hover:bg-navy-100 focus-visible:ring-navy-200;
+  }
+
+  .btn-outline {
+    @apply btn border border-navy-200 bg-white text-navy-800 hover:bg-navy-50 focus-visible:ring-navy-100;
+  }
+
+  .card {
+    @apply rounded-2xl border border-navy-100/70 bg-white shadow-card;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
+  }
+
+  .section-eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.18em] text-gold-600;
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

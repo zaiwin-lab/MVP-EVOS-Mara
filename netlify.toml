@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# SPA fallback — all routes render index.html so deep links
+# (e.g. /event/vdp-frontier-miri/check-in from the QR code) work.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
