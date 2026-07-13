@@ -8,16 +8,18 @@
 // templates without code changes — swap this config object.
 // ─────────────────────────────────────────────────────────────
 
+import type { Localized } from "../context/I18nContext";
+
 export interface AnswerOption {
   value: number; // 1–5
-  label: string;
-  labelLocal?: string; // Bahasa Malaysia
+  label: Localized;
 }
 
 export interface Question {
   id: string;
-  text: string;
-  textLocal?: string;
+  text: string; // English (base)
+  textLocal?: string; // Bahasa Melayu (also the Iban fallback)
+  textZh?: string; // 中文
 }
 
 export interface Indicator {
@@ -46,16 +48,13 @@ export interface ResultCategory {
 }
 
 // Shared, consistent 5-point maturity scale (spec §10).
+// Iban answer labels are best-effort and flagged for native review.
 export const ANSWER_SCALE: AnswerOption[] = [
-  { value: 1, label: "Not available", labelLocal: "Tiada lagi" },
-  { value: 2, label: "Early stage", labelLocal: "Peringkat awal" },
-  { value: 3, label: "Partially established", labelLocal: "Sebahagian sedia" },
-  { value: 4, label: "Established", labelLocal: "Telah tersedia" },
-  {
-    value: 5,
-    label: "Strong & consistently practised",
-    labelLocal: "Kukuh & konsisten",
-  },
+  { value: 1, label: { en: "Not available", bm: "Tiada lagi", zh: "尚未具备", iban: "Nadai agi" } },
+  { value: 2, label: { en: "Early stage", bm: "Peringkat awal", zh: "起步阶段", iban: "Baru berengkah" } },
+  { value: 3, label: { en: "Partially established", bm: "Sebahagian sedia", zh: "部分建立", iban: "Udah sebagi" } },
+  { value: 4, label: { en: "Established", bm: "Telah tersedia", zh: "已建立", iban: "Udah tetap" } },
+  { value: 5, label: { en: "Strong & consistently practised", bm: "Kukuh & konsisten", zh: "稳固且持续实践", iban: "Kering & sarurus" } },
 ];
 
 export const ASSESSMENT = {
@@ -89,24 +88,32 @@ export const INDICATORS: Indicator[] = [
         text: "Is your company properly registered and compliant with the required licences and certifications (e.g. SSM, CIDB)?",
         textLocal:
           "Adakah syarikat anda berdaftar dan mematuhi lesen serta pensijilan yang diperlukan (cth. SSM, CIDB)?",
+        textZh:
+          "贵公司是否已正确注册，并符合所需的执照与认证要求（如 SSM、CIDB）？",
       },
       {
         id: "foundation_q2",
         text: "Does your company have a clear organisational structure that shows roles and responsibilities?",
         textLocal:
           "Adakah syarikat anda mempunyai struktur organisasi yang jelas menunjukkan peranan dan tanggungjawab?",
+        textZh:
+          "贵公司是否拥有清晰的组织架构，明确各岗位的角色与职责？",
       },
       {
         id: "foundation_q3",
         text: "Does your company have an updated professional company profile that clearly explains your services, capabilities, experience and completed projects?",
         textLocal:
           "Adakah syarikat anda mempunyai profil syarikat profesional yang dikemas kini menerangkan perkhidmatan, keupayaan, pengalaman dan projek?",
+        textZh:
+          "贵公司是否拥有一份更新且专业的公司简介，清楚说明您的服务、能力、经验与已完成的项目？",
       },
       {
         id: "foundation_q4",
         text: "Are your key business documents (profile, certificates, registration) well organised and easy to share when needed?",
         textLocal:
           "Adakah dokumen perniagaan utama anda tersusun dan mudah dikongsi apabila diperlukan?",
+        textZh:
+          "贵公司的重要商业文件（公司简介、证书、注册文件）是否整理妥善，需要时易于分享？",
       },
     ],
   },
@@ -132,24 +139,32 @@ export const INDICATORS: Indicator[] = [
         text: "Do you understand the typical requirements and documents needed to submit a tender?",
         textLocal:
           "Adakah anda memahami keperluan dan dokumen biasa yang diperlukan untuk menyertai tender?",
+        textZh:
+          "您是否了解投标通常所需的要求与文件？",
       },
       {
         id: "tender_q2",
         text: "Does your company have a ready capability statement that presents your strengths to clients?",
         textLocal:
           "Adakah syarikat anda mempunyai penyata keupayaan yang menyampaikan kekuatan anda kepada pelanggan?",
+        textZh:
+          "贵公司是否备有能力说明书，向客户展示您的优势？",
       },
       {
         id: "tender_q3",
         text: "Are you confident in preparing a clear, well-structured proposal and quotation?",
         textLocal:
           "Adakah anda yakin menyediakan cadangan dan sebut harga yang jelas dan tersusun?",
+        textZh:
+          "您是否有信心准备清晰且结构完整的建议书与报价？",
       },
       {
         id: "tender_q4",
         text: "Do you have a consistent way to cost and price your work so your quotations are reliable?",
         textLocal:
           "Adakah anda mempunyai cara konsisten untuk mengira kos dan harga kerja supaya sebut harga anda tepat?",
+        textZh:
+          "您是否有一致的方式来计算成本与定价，使报价可靠？",
       },
     ],
   },
@@ -175,24 +190,32 @@ export const INDICATORS: Indicator[] = [
         text: "Does your company have relevant project experience that demonstrates your delivery track record?",
         textLocal:
           "Adakah syarikat anda mempunyai pengalaman projek relevan yang membuktikan rekod penyampaian anda?",
+        textZh:
+          "贵公司是否拥有相关的项目经验，能证明您的交付业绩？",
       },
       {
         id: "capability_q2",
         text: "Do you have a capable technical workforce and a clear team structure with the right competencies?",
         textLocal:
           "Adakah anda mempunyai tenaga kerja teknikal yang berkebolehan dan struktur pasukan yang jelas dengan kompetensi yang betul?",
+        textZh:
+          "贵公司是否拥有有能力的技术团队，以及具备适当技能的清晰团队架构？",
       },
       {
         id: "capability_q3",
         text: "Do you plan your projects properly and invest in training so your team can deliver reliably?",
         textLocal:
           "Adakah anda merancang projek dengan baik dan melabur dalam latihan supaya pasukan anda dapat menyampaikan dengan boleh dipercayai?",
+        textZh:
+          "您是否妥善规划项目并投资培训，使团队能可靠地交付？",
       },
       {
         id: "capability_q4",
         text: "Does your company follow safety and quality practices on your projects?",
         textLocal:
           "Adakah syarikat anda mengamalkan amalan keselamatan dan kualiti dalam projek anda?",
+        textZh:
+          "贵公司是否在项目中遵循安全与质量规范？",
       },
     ],
   },
@@ -218,24 +241,32 @@ export const INDICATORS: Indicator[] = [
         text: "Does your company keep basic financial records that are up to date and reliable?",
         textLocal:
           "Adakah syarikat anda menyimpan rekod kewangan asas yang dikemas kini dan boleh dipercayai?",
+        textZh:
+          "贵公司是否保存及时且可靠的基本财务记录？",
       },
       {
         id: "financial_q2",
         text: "Are you aware of your company's cash-flow and able to plan for upcoming commitments?",
         textLocal:
           "Adakah anda sedar tentang aliran tunai syarikat dan mampu merancang untuk komitmen akan datang?",
+        textZh:
+          "您是否掌握公司的现金流，并能为即将到来的开支做规划？",
       },
       {
         id: "financial_q3",
         text: "Do you cost and budget each project, then monitor spending as the work progresses?",
         textLocal:
           "Adakah anda mengira kos dan belanjawan setiap projek, kemudian memantau perbelanjaan semasa kerja berjalan?",
+        textZh:
+          "您是否为每个项目计算成本与预算，并在工程进行时监控开支？",
       },
       {
         id: "financial_q4",
         text: "Do you have management processes that help you deliver project commitments on time?",
         textLocal:
           "Adakah anda mempunyai proses pengurusan yang membantu anda menyampaikan komitmen projek tepat pada masa?",
+        textZh:
+          "贵公司是否有管理流程，帮助您按时履行项目承诺？",
       },
     ],
   },
@@ -262,24 +293,32 @@ export const INDICATORS: Indicator[] = [
         text: "Does your company have a website or an active digital presence (e.g. Google Business, social media)?",
         textLocal:
           "Adakah syarikat anda mempunyai laman web atau kehadiran digital yang aktif (cth. Google Business, media sosial)?",
+        textZh:
+          "贵公司是否拥有网站或活跃的数字平台（如 Google 商家、社交媒体）？",
       },
       {
         id: "digital_q2",
         text: "Do you use cloud tools and digital communication to run your business day to day?",
         textLocal:
           "Adakah anda menggunakan alat awan dan komunikasi digital untuk menjalankan perniagaan setiap hari?",
+        textZh:
+          "您是否使用云端工具与数字通讯来管理日常业务？",
       },
       {
         id: "digital_q3",
         text: "Are you aware of, and beginning to use, AI tools to improve productivity (e.g. proposals, marketing)?",
         textLocal:
           "Adakah anda sedar dan mula menggunakan alat AI untuk meningkatkan produktiviti (cth. cadangan, pemasaran)?",
+        textZh:
+          "您是否了解并开始使用人工智能工具来提升生产力（如建议书、营销）？",
       },
       {
         id: "digital_q4",
         text: "Does your company actively plan for growth, innovation and business improvement?",
         textLocal:
           "Adakah syarikat anda merancang secara aktif untuk pertumbuhan, inovasi dan penambahbaikan perniagaan?",
+        textZh:
+          "贵公司是否积极规划成长、创新与业务改进？",
       },
     ],
   },

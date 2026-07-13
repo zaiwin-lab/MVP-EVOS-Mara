@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Wordmark } from "./Brand";
 import { Icon } from "./Icon";
-import { useI18n } from "../context/I18nContext";
+import { LanguagePicker } from "./LanguagePicker";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -23,7 +23,6 @@ export function AppShell({
   className = "",
 }: AppShellProps) {
   const navigate = useNavigate();
-  const { lang, toggle } = useI18n();
 
   return (
     <div className="app-shell flex flex-col">
@@ -44,14 +43,7 @@ export function AppShell({
           ) : (
             <div className="flex-1" />
           )}
-          <button
-            type="button"
-            onClick={toggle}
-            className="flex h-9 min-w-9 items-center justify-center rounded-full px-2 text-xs font-bold text-navy-500 hover:bg-navy-50"
-            aria-label="Toggle language"
-          >
-            {lang === "en" ? "BM" : "EN"}
-          </button>
+          <LanguagePicker tone="light" />
         </header>
       )}
 

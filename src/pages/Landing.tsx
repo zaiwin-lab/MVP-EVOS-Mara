@@ -4,6 +4,7 @@ import { PROGRAMME_DAYS, TRAINERS, RESOURCES } from "../content/programme";
 import { INDICATORS } from "../content/assessment";
 import { Wordmark, BrandFooter } from "../components/Brand";
 import { Icon } from "../components/Icon";
+import { LanguagePicker } from "../components/LanguagePicker";
 import { useI18n } from "../context/I18nContext";
 import { useParticipant } from "../context/ParticipantContext";
 
@@ -21,7 +22,7 @@ const JOURNEY = [
 const WRAP = "mx-auto w-full max-w-6xl px-5 sm:px-8";
 
 export default function Landing() {
-  const { t, lang, toggle } = useI18n();
+  const { t } = useI18n();
   const { participantId } = useParticipant();
   const navigate = useNavigate();
 
@@ -43,12 +44,7 @@ export default function Landing() {
           {/* top bar */}
           <div className="flex items-center justify-between">
             <Wordmark inverted />
-            <button
-              onClick={toggle}
-              className="rounded-full border border-white/20 px-3 py-1 text-xs font-bold text-white/80 hover:bg-white/10"
-            >
-              {lang === "en" ? "BM" : "EN"}
-            </button>
+            <LanguagePicker tone="dark" />
           </div>
 
           {/* hero grid: text + event card side-by-side on desktop */}

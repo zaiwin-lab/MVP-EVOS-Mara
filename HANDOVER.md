@@ -74,6 +74,30 @@ in Excel / Google Sheets.
 
 ---
 
+## 4b. Languages (English · Bahasa Melayu · 中文 · Bahasa Iban)
+
+A language picker (globe icon, top-right of every screen) lets participants
+switch between the four languages; the choice is remembered on their device.
+
+What is translated in all four languages today:
+- The interface: navigation, buttons, the check-in flow, and the assessment
+  **answer options**.
+- The 20 assessment **questions**: English, Bahasa Melayu and 中文 are fully
+  translated. For **Bahasa Iban**, the long questions currently fall back to
+  Bahasa Melayu (which Iban speakers in Sarawak read fluently) — the Iban
+  answer labels and interface labels are best-effort and **should be reviewed
+  by a native Iban speaker** (your Sarawak trainers can do this quickly).
+- Still in English for now (can be expanded later): the marketing landing
+  copy, and the results narrative (personalised summary + recommendations).
+
+Where to edit translations:
+- Interface labels: `src/context/I18nContext.tsx` (the `DICT` object —
+  each entry has `en`, `bm`, `zh`, `iban`).
+- Assessment questions & answers: `src/content/assessment.ts`
+  (`ANSWER_SCALE` labels, and each question's `text` / `textLocal` / `textZh`).
+
+Add or correct a language string, rebuild, redeploy — the picker does the rest.
+
 ## 5. How to create another event from the same platform
 
 Attendify is built to be reused. To stand up a new programme:

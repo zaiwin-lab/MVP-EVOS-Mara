@@ -21,7 +21,7 @@ const FLAT = INDICATORS.flatMap((ind) =>
 export default function Assessment() {
   const navigate = useNavigate();
   const { participantId, refresh, loading } = useParticipant();
-  const { lang } = useI18n();
+  const { pick } = useI18n();
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [idx, setIdx] = useState(0);
   const [saving, setSaving] = useState(false);
@@ -31,8 +31,11 @@ export default function Assessment() {
   const pct = Math.round((answered / TOTAL_QUESTIONS) * 100);
 
   const questionText = useMemo(
-    () => (lang === "bm" && current?.textLocal ? current.textLocal : current?.text),
-    [current, lang]
+    () =>
+      current
+        ? pick({ en: current.text, bm: current.textLocal, zh: current.textZh })
+        : "",
+    [current, pick]
   );
 
   if (!loading && !participantId) {
@@ -173,9 +176,7 @@ export default function Assessment() {
                 >
                   {opt.value}
                 </span>
-                <span className="text-sm font-semibold">
-                  {lang === "bm" && opt.labelLocal ? opt.labelLocal : opt.label}
-                </span>
+                <span className="text-sm font-semibold">{pick(opt.label)}</span>
                 {active && <Icon name="check" className="ml-auto h-5 w-5 text-gold-300" />}
               </button>
             );
