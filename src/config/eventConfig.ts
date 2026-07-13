@@ -20,6 +20,7 @@ export interface EventConfig {
   assessmentTemplate: string;
   expectedParticipants: number;
   intro: string;
+  introLocalized: Record<string, string>;
   footer: string;
   footerSecondary: string;
   collaboratorUrl: string;
@@ -41,6 +42,12 @@ export const eventConfig: EventConfig = {
   expectedParticipants: 20,
   intro:
     "Welcome to Attendify™, the digital participant experience supporting VDP Frontier MARA Miri. Check in, complete your contractor profile, discover your readiness level, access programme resources, and prepare your 90-day business action plan — all in one place.",
+  introLocalized: {
+    en: "Welcome to Attendify™, the digital participant experience supporting VDP Frontier MARA Miri. Check in, complete your contractor profile, discover your readiness level, access programme resources, and prepare your 90-day business action plan — all in one place.",
+    bm: "Selamat datang ke Attendify™, pengalaman peserta digital yang menyokong VDP Frontier MARA Miri. Daftar kehadiran, lengkapkan profil kontraktor anda, ketahui tahap kesediaan anda, akses bahan program, dan sediakan pelan tindakan perniagaan 90 hari anda — semuanya di satu tempat.",
+    zh: "欢迎使用 Attendify™——支持 VDP Frontier MARA Miri 的数字参与者体验。签到、完善您的承包商资料、了解您的准备度水平、获取课程资源，并制定您的 90 天商业行动计划，一切尽在一处。",
+    iban: "Selamat datai ke Attendify™, pengalaman peserta digital ke nyukung VDP Frontier MARA Miri. Daftar kehadiran, ngaga profil kontraktor nuan, nemu tinggi kesediaan nuan, ngambi bahan program, lalu nyendia pelan tindakan bisnis 90 hari nuan — semua ba siti endur.",
+  } as Record<string, string>,
   footer: "Powered by KBT EventOS — Attendify™ · An Innovation by KOBIS Berhad",
   footerSecondary: "Smart Digital Solutions. Sustainable Impact.",
   collaboratorUrl: "https://www.kobisberhad.com",

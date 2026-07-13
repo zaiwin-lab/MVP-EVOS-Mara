@@ -115,6 +115,145 @@ const DICT: Record<string, Localized> = {
     zh: "确认参考编号",
     iban: "Rujukan Pengesahan",
   },
+
+  // ── Landing: hero meta ──
+  programmeSupported: { en: "Programme Supported", bm: "Program Disokong", zh: "支持的项目", iban: "Program Disokong" },
+  datesLabel: { en: "Dates", bm: "Tarikh", zh: "日期", iban: "Tarikh" },
+  venueLabel: { en: "Venue", bm: "Tempat", zh: "地点", iban: "Endur" },
+  configuredNote: {
+    en: "Attendify™ configured to support the VDP Frontier MARA Miri participant journey.",
+    bm: "Attendify™ dikonfigurasikan untuk menyokong perjalanan peserta VDP Frontier MARA Miri.",
+    zh: "Attendify™ 已配置以支持 VDP Frontier MARA Miri 参与者旅程。",
+    iban: "Attendify™ disediaka kena nyukung pejalai peserta VDP Frontier MARA Miri.",
+  },
+  organisedBy: { en: "Organised by", bm: "Dianjurkan oleh", zh: "主办单位：", iban: "Diatur ulih" },
+  inCollaborationWith: { en: "In collaboration with", bm: "dengan kerjasama", zh: "协办：", iban: "enggau kerjasama" },
+
+  // ── Landing: programme overview ──
+  programmeOverview: { en: "Programme Overview", bm: "Gambaran Program", zh: "课程概览", iban: "Gambar Program" },
+  threeDaysHeading: {
+    en: "Three days. One transformation.",
+    bm: "Tiga hari. Satu transformasi.",
+    zh: "三天，一次蜕变。",
+    iban: "Tiga hari. Siti perubahan.",
+  },
+  programmeOverviewDesc: {
+    en: "A practical programme to strengthen Bumiputera contractors — from business foundations to winning tenders and digital growth.",
+    bm: "Program praktikal untuk memperkukuh kontraktor Bumiputera — daripada asas perniagaan kepada memenangi tender dan pertumbuhan digital.",
+    zh: "一项实用课程，助力土著承包商——从业务基础到赢得标书与数字化成长。",
+    iban: "Program praktikal kena ngeringka kontraktor Bumiputera — ari dasar bisnis ngagai menang tender enggau pemansang digital.",
+  },
+  dayLabel: { en: "Day", bm: "Hari", zh: "天", iban: "Hari" },
+  viewDay: { en: "View day", bm: "Lihat hari", zh: "查看当天", iban: "Peda hari" },
+
+  // ── Landing: journey ──
+  yourJourney: { en: "Your Journey", bm: "Perjalanan Anda", zh: "您的旅程", iban: "Pejalai Nuan" },
+  oneScanHeading: {
+    en: "One scan starts everything",
+    bm: "Satu imbasan memulakan segalanya",
+    zh: "一次扫描，开启一切",
+    iban: "Siti imbas berengkahka semua utai",
+  },
+  stepLabel: { en: "Step", bm: "Langkah", zh: "步骤", iban: "Langkah" },
+  jScanQr: { en: "Scan QR", bm: "Imbas QR", zh: "扫描二维码", iban: "Imbas QR" },
+  jConfirm: { en: "Confirm Attendance", bm: "Sahkan Kehadiran", zh: "确认出席", iban: "Sahka Kehadiran" },
+  jProfile: { en: "Complete Profile", bm: "Lengkapkan Profil", zh: "完善资料", iban: "Ngaga Profil" },
+  jAssessment: { en: "Readiness Assessment", bm: "Penilaian Kesediaan", zh: "准备度评估", iban: "Penilaian Kesediaan" },
+  jResults: { en: "Personalised Results", bm: "Keputusan Diperibadikan", zh: "个性化结果", iban: "Keputusan Nuan Empu" },
+  jResources: { en: "Programme Resources", bm: "Bahan Program", zh: "课程资源", iban: "Bahan Program" },
+  jActionPlan: { en: "90-Day Action Plan", bm: "Pelan Tindakan 90 Hari", zh: "90天行动计划", iban: "Pelan Tindakan 90 Hari" },
+
+  // ── Landing: readiness indicators ──
+  contractorReadinessAssessment: {
+    en: "Contractor Readiness Assessment",
+    bm: "Penilaian Kesediaan Kontraktor",
+    zh: "承包商准备度评估",
+    iban: "Penilaian Kesediaan Kontraktor",
+  },
+  knowWhereYouStand: {
+    en: "Know exactly where you stand",
+    bm: "Ketahui kedudukan sebenar anda",
+    zh: "清楚了解您的现状",
+    iban: "Nemu endur nuan bediri",
+  },
+  indicatorsDesc: {
+    en: "Five indicators. A score out of 100. Personalised, developmental recommendations you can act on immediately.",
+    bm: "Lima penunjuk. Skor daripada 100. Cadangan pembangunan diperibadikan yang boleh anda laksanakan segera.",
+    zh: "五项指标。满分 100。可立即执行的个性化发展建议。",
+    iban: "Lima penunjuk. Skor ari 100. Saran pemansang ke ulih digaga nuan tekala nya.",
+  },
+  scoredOutOf20: { en: "Scored out of 20", bm: "Skor daripada 20", zh: "满分 20", iban: "Skor ari 20" },
+
+  // ── Landing: trainers & resources ──
+  learnFromLeaders: {
+    en: "Learn from industry leaders",
+    bm: "Belajar daripada pemimpin industri",
+    zh: "向行业领袖学习",
+    iban: "Belajar ari tuai industri",
+  },
+  quickAccess: { en: "Quick Access", bm: "Akses Pantas", zh: "快速访问", iban: "Akses Chelap" },
+  programmeResourcesTitle: { en: "Programme resources", bm: "Bahan Program", zh: "课程资源", iban: "Bahan Program" },
+  allResources: { en: "All resources", bm: "Semua bahan", zh: "全部资源", iban: "Semua bahan" },
+
+  // ── Sub-pages ──
+  programmeTitle: { en: "Programme", bm: "Program", zh: "课程", iban: "Program" },
+  threeDayLearningJourney: {
+    en: "The Three-Day Learning Journey",
+    bm: "Perjalanan Pembelajaran Tiga Hari",
+    zh: "三天学习旅程",
+    iban: "Pejalai Belajar Tiga Hari",
+  },
+  meetTrainersTitle: { en: "Meet the Trainers", bm: "Kenali Jurulatih", zh: "认识讲师", iban: "Temu Pengajar" },
+  programmeFaculty: { en: "Programme Faculty", bm: "Fakulti Program", zh: "课程讲师团", iban: "Fakulti Program" },
+  focusAreas: { en: "Focus Areas", bm: "Bidang Fokus", zh: "专注领域", iban: "Bidang Fokus" },
+  resourceCentre: { en: "Resource Centre", bm: "Pusat Bahan", zh: "资源中心", iban: "Pusat Bahan" },
+  everythingYouNeed: {
+    en: "Everything you need",
+    bm: "Segala yang anda perlukan",
+    zh: "您所需的一切",
+    iban: "Semua utai ke dikinginka nuan",
+  },
+  resourcesIntro: {
+    en: "Templates, checklists and tools to apply what you learn. New items are released during the programme.",
+    bm: "Templat, senarai semak dan alat untuk mengaplikasikan pembelajaran anda. Bahan baharu dikeluarkan sepanjang program.",
+    zh: "模板、清单与工具，帮助您应用所学。新内容将在课程期间发布。",
+    iban: "Templat, senarai semak enggau alat kena ngena utai ti dipelajar nuan. Bahan baru dikeluarka lebuh program.",
+  },
+  comingChip: { en: "Coming", bm: "Akan Datang", zh: "即将推出", iban: "Deka Datai" },
+  comingNote: {
+    en: "Items marked “Coming” will be released during the programme.",
+    bm: "Bahan bertanda “Akan Datang” akan dikeluarkan sepanjang program.",
+    zh: "标记为“即将推出”的内容将在课程期间发布。",
+    iban: "Bahan ke betanda “Deka Datai” deka dikeluarka lebuh program.",
+  },
+};
+
+// Short domain terms used as tags (programme topics, trainer focus areas).
+// Looked up by their English phrase; unknown terms pass through unchanged.
+const GLOSSARY: Record<string, Localized> = {
+  "Contractor mindset": { bm: "Minda kontraktor", zh: "承包商思维" },
+  "Industry expectations": { bm: "Jangkaan industri", zh: "行业期望" },
+  "Corporate profile": { bm: "Profil korporat", zh: "公司简介" },
+  "Capability statement": { bm: "Penyata keupayaan", zh: "能力说明书" },
+  "Business credibility": { bm: "Kredibiliti perniagaan", zh: "商业信誉" },
+  "Project management": { bm: "Pengurusan projek", zh: "项目管理" },
+  "Tender readiness": { bm: "Kesediaan tender", zh: "投标准备度" },
+  "Proposal excellence": { bm: "Kecemerlangan cadangan", zh: "卓越提案" },
+  "Client engagement": { bm: "Penglibatan pelanggan", zh: "客户互动" },
+  "Business presentation": { bm: "Pembentangan perniagaan", zh: "商业演示" },
+  "AI for contractors": { bm: "AI untuk kontraktor", zh: "承包商的人工智能" },
+  "Business automation": { bm: "Automasi perniagaan", zh: "业务自动化" },
+  "AI proposal writing": { bm: "Penulisan cadangan AI", zh: "AI 提案撰写" },
+  "Digital marketing": { bm: "Pemasaran digital", zh: "数字营销" },
+  "90-day business action plan": { bm: "Pelan tindakan perniagaan 90 hari", zh: "90天商业行动计划" },
+  "Contractor development": { bm: "Pembangunan kontraktor", zh: "承包商发展" },
+  "Tender & proposal excellence": { bm: "Kecemerlangan tender & cadangan", zh: "投标与提案卓越" },
+  "Business strategy": { bm: "Strategi perniagaan", zh: "商业策略" },
+  "Industry best practices": { bm: "Amalan terbaik industri", zh: "行业最佳实践" },
+  "Artificial intelligence": { bm: "Kecerdasan buatan", zh: "人工智能" },
+  "Digital transformation": { bm: "Transformasi digital", zh: "数字化转型" },
+  "AI productivity": { bm: "Produktiviti AI", zh: "AI 生产力" },
+  "Business innovation": { bm: "Inovasi perniagaan", zh: "商业创新" },
 };
 
 interface I18nValue {
@@ -122,6 +261,7 @@ interface I18nValue {
   setLang: (l: Lang) => void;
   t: (key: keyof typeof DICT) => string;
   pick: (value: Localized) => string;
+  term: (phrase: string) => string;
 }
 
 const I18nContext = createContext<I18nValue | null>(null);
@@ -147,6 +287,8 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
       setLang: setLangState,
       t: (key) => (DICT[key] ? pick(DICT[key], lang) : String(key)),
       pick: (value) => pick(value, lang),
+      term: (phrase) =>
+        GLOSSARY[phrase] ? pick({ en: phrase, ...GLOSSARY[phrase] }, lang) : phrase,
     }),
     [lang]
   );

@@ -4,17 +4,19 @@ import { BrandFooter } from "../components/Brand";
 import { Icon } from "../components/Icon";
 import { PROGRAMME_DAYS } from "../content/programme";
 import { eventConfig } from "../config/eventConfig";
+import { useI18n } from "../context/I18nContext";
 
 export default function Programme() {
   const navigate = useNavigate();
+  const { t, pick, term } = useI18n();
   return (
-    <AppShell header title="Programme">
+    <AppShell header title={t("programmeTitle")}>
       <section className="bg-navy-950 px-5 pb-8 pt-6 text-white">
         <span className="section-eyebrow text-gold-300">
           {eventConfig.eventName}
         </span>
         <h1 className="mt-1 font-display text-2xl font-extrabold">
-          The Three-Day Learning Journey
+          {t("threeDayLearningJourney")}
         </h1>
         <p className="mt-2 text-sm text-navy-100">
           {eventConfig.eventNameLocal} · {eventConfig.dates} · {eventConfig.venue}
@@ -31,7 +33,7 @@ export default function Programme() {
               <div className="card p-4">
                 <div className="text-xs font-semibold text-gold-600">{d.date}</div>
                 <h2 className="mt-0.5 font-display text-lg font-extrabold text-navy-900">
-                  {d.title}
+                  {d.titleI18n ? pick(d.titleI18n) : d.title}
                 </h2>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {d.topics.map((topic) => (
@@ -39,7 +41,7 @@ export default function Programme() {
                       key={topic}
                       className="chip bg-navy-50 text-navy-700"
                     >
-                      {topic}
+                      {term(topic)}
                     </span>
                   ))}
                 </div>
@@ -52,7 +54,7 @@ export default function Programme() {
           onClick={() => navigate("/check-in")}
           className="btn-gold mt-8 w-full"
         >
-          Start My Journey
+          {t("startJourney")}
           <Icon name="arrowRight" className="h-5 w-5" />
         </button>
       </section>

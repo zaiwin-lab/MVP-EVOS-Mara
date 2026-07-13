@@ -26,6 +26,7 @@ export interface Indicator {
   id: string;
   index: number;
   title: string;
+  titleI18n?: Localized;
   titleShort: string;
   radarLabel: string; // very short label for tight radar-chart axes
   purpose: string;
@@ -70,6 +71,7 @@ export const INDICATORS: Indicator[] = [
     id: "foundation",
     index: 1,
     title: "Business Foundation",
+    titleI18n: { en: "Business Foundation", bm: "Asas Perniagaan", zh: "业务基础", iban: "Dasar Bisnis" },
     titleShort: "Business Foundation",
     radarLabel: "Foundation",
     icon: "building",
@@ -121,6 +123,7 @@ export const INDICATORS: Indicator[] = [
     id: "tender",
     index: 2,
     title: "Tender & Commercial Readiness",
+    titleI18n: { en: "Tender & Commercial Readiness", bm: "Kesediaan Tender & Komersial", zh: "投标与商业准备度", iban: "Kesediaan Tender & Komersial" },
     titleShort: "Tender Readiness",
     radarLabel: "Tender",
     icon: "document",
@@ -172,6 +175,7 @@ export const INDICATORS: Indicator[] = [
     id: "capability",
     index: 3,
     title: "Project & People Capability",
+    titleI18n: { en: "Project & People Capability", bm: "Keupayaan Projek & Tenaga Kerja", zh: "项目与人才能力", iban: "Kereja Projek & Pekerja" },
     titleShort: "Project & People",
     radarLabel: "Project",
     icon: "team",
@@ -223,6 +227,7 @@ export const INDICATORS: Indicator[] = [
     id: "financial",
     index: 4,
     title: "Financial & Management Readiness",
+    titleI18n: { en: "Financial & Management Readiness", bm: "Kesediaan Kewangan & Pengurusan", zh: "财务与管理准备度", iban: "Kesediaan Duit & Pengurus" },
     titleShort: "Financial & Mgmt",
     radarLabel: "Financial",
     icon: "chart",
@@ -274,6 +279,7 @@ export const INDICATORS: Indicator[] = [
     id: "digital",
     index: 5,
     title: "Digital Growth & Future Readiness",
+    titleI18n: { en: "Digital Growth & Future Readiness", bm: "Pertumbuhan Digital & Kesediaan Masa Depan", zh: "数字成长与未来准备度", iban: "Pemansang Digital & Kesediaan Ila" },
     titleShort: "Digital & Future",
     radarLabel: "Digital",
     icon: "spark",

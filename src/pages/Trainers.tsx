@@ -2,19 +2,17 @@ import { AppShell } from "../components/AppShell";
 import { BrandFooter } from "../components/Brand";
 import { Icon } from "../components/Icon";
 import { TRAINERS } from "../content/programme";
+import { useI18n } from "../context/I18nContext";
 
 export default function Trainers() {
+  const { t, pick, term } = useI18n();
   return (
-    <AppShell header title="Meet the Trainers">
+    <AppShell header title={t("meetTrainersTitle")}>
       <section className="bg-navy-950 px-5 pb-8 pt-6 text-white">
-        <span className="section-eyebrow text-gold-300">Programme Faculty</span>
+        <span className="section-eyebrow text-gold-300">{t("programmeFaculty")}</span>
         <h1 className="mt-1 font-display text-2xl font-extrabold">
-          Learn from industry leaders
+          {t("learnFromLeaders")}
         </h1>
-        <p className="mt-2 text-sm text-navy-100">
-          Two experienced trainers guiding you across foundations, opportunities,
-          and digital transformation.
-        </p>
       </section>
 
       <section className="space-y-5 px-5 py-6">
@@ -28,19 +26,21 @@ export default function Trainers() {
                 <h2 className="font-display text-lg font-extrabold leading-tight text-navy-900">
                   {tr.name}
                 </h2>
-                <div className="mt-0.5 text-xs font-bold text-gold-600">{tr.role}</div>
+                <div className="mt-0.5 text-xs font-bold text-gold-600">
+                  {tr.roleI18n ? pick(tr.roleI18n) : tr.role}
+                </div>
               </div>
             </div>
             <div className="p-5">
               <p className="text-sm leading-relaxed text-navy-600">{tr.title}</p>
               <div className="mt-4 text-xs font-bold uppercase tracking-wide text-navy-400">
-                Focus Areas
+                {t("focusAreas")}
               </div>
               <ul className="mt-2 space-y-1.5">
                 {tr.focusAreas.map((f) => (
                   <li key={f} className="flex items-center gap-2 text-sm text-navy-700">
                     <Icon name="check" className="h-4 w-4 shrink-0 text-gold-500" />
-                    {f}
+                    {term(f)}
                   </li>
                 ))}
               </ul>
