@@ -22,6 +22,7 @@ export interface EventConfig {
   intro: string;
   footer: string;
   footerSecondary: string;
+  collaboratorUrl: string;
 }
 
 export const eventConfig: EventConfig = {
@@ -42,6 +43,7 @@ export const eventConfig: EventConfig = {
     "Welcome to Attendify™, the digital participant experience supporting VDP Frontier MARA Miri. Check in, complete your contractor profile, discover your readiness level, access programme resources, and prepare your 90-day business action plan — all in one place.",
   footer: "Powered by KBT EventOS — Attendify™ · An Innovation by KOBIS Berhad",
   footerSecondary: "Smart Digital Solutions. Sustainable Impact.",
+  collaboratorUrl: "https://www.kobisberhad.com",
 };
 
 // Route base for this event (keeps deep links / QR targets consistent)

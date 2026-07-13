@@ -102,7 +102,15 @@ export default function Landing() {
             <span>Organised by {eventConfig.organiser}</span>
           </div>
           <div className="text-center text-[11px] text-navy-300">
-            In collaboration with {eventConfig.collaborator}
+            In collaboration with{" "}
+            <a
+              href={eventConfig.collaboratorUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-gold-300 underline decoration-gold-300/40 underline-offset-2 hover:text-gold-200"
+            >
+              {eventConfig.collaborator}
+            </a>
           </div>
         </div>
       </section>

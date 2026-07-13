@@ -10,3 +10,4 @@ dist-types
 .vscode/*
 !.vscode/extensions.json
 npm-debug.log*
+.netlify
