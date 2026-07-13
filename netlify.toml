@@ -1,5 +1,7 @@
 [build]
-  command = "npm run build"
+  # Type-checking (tsc -b) runs locally / in CI via `npm run build`.
+  # On Netlify we run vite directly for a fast, robust production build.
+  command = "npx vite build"
   publish = "dist"
 
 [build.environment]
