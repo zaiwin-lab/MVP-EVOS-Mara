@@ -38,7 +38,7 @@
 @layer components {
   /* Mobile-first app shell centered on wider screens */
   .app-shell {
-    @apply mx-auto w-full max-w-app min-h-dvh bg-white shadow-lift;
+    @apply relative mx-auto w-full max-w-app min-h-dvh bg-white shadow-lift;
   }
 
   .field-label {
@@ -99,5 +99,41 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Desktop / tablet "device on a stage".
+   The participant app is intentionally phone-width. On wider screens
+   we frame that column on a branded navy backdrop so the empty gutters
+   read as deliberate presentation, not dead space — ideal for a laptop
+   or projector demo. Phones (< 40rem) are completely unaffected.
+   No rounding/overflow tricks, so sticky headers & footers keep working.
+   ───────────────────────────────────────────────────────────── */
+@media (min-width: 40rem) {
+  body {
+    background:
+      radial-gradient(900px 520px at 50% -8%, rgba(217, 173, 69, 0.14), transparent 55%),
+      linear-gradient(180deg, #0a1428 0%, #0e1a34 55%, #0a1428 100%);
+    background-attachment: fixed;
+    min-height: 100dvh;
+  }
+
+  .app-shell {
+    box-shadow: 0 40px 100px -40px rgba(0, 0, 0, 0.65);
+    outline: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  /* Slim gold bezel accent along the very top of the column */
+  .app-shell::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #c8952c, #e2c069 50%, #c8952c);
+    z-index: 40;
+    pointer-events: none;
   }
 }
