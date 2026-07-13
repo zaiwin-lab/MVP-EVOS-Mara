@@ -25,18 +25,18 @@ export default function Login() {
   const { t } = useI18n();
 
   const [mobile, setMobile] = useState("");
-  const [pin, setPin] = useState("");
+  const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const canSubmit = mobile.trim().length >= 7 && pin.trim().length >= 4;
+  const canSubmit = mobile.trim().length >= 7 && email.trim().length >= 3;
 
   async function submit() {
     if (!canSubmit || submitting) return;
     setSubmitting(true);
     setError(null);
     try {
-      const p = await store.login(mobile, pin);
+      const p = await store.login(mobile, email);
       if (!p) {
         setError(t("wrongLogin"));
         setSubmitting(false);
@@ -84,14 +84,15 @@ export default function Login() {
           />
         </div>
         <div>
-          <label className="field-label">{t("pinLabel")}</label>
+          <label className="field-label">{t("emailLabel")}</label>
           <input
-            className="field-input tracking-[0.4em]"
-            value={pin}
-            type="password"
-            inputMode="numeric"
-            placeholder="••••"
-            onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
+            className="field-input"
+            value={email}
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            placeholder="you@company.com"
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 

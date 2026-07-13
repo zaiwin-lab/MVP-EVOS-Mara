@@ -21,8 +21,7 @@ import type {
 export interface RegistrationInput {
   fullName: string;
   mobile: string;
-  pin: string;
-  email?: string;
+  email: string;
   companyName?: string;
 }
 
@@ -31,8 +30,8 @@ export interface Store {
   listRecords(): Promise<ParticipantRecord[]>;
   getRecord(participantId: string): Promise<ParticipantRecord | null>;
   findByMobile(mobile: string): Promise<Participant | null>;
-  /** Returns the participant if mobile+PIN match, else null. */
-  login(mobile: string, pin: string): Promise<Participant | null>;
+  /** Returns the participant if mobile + email match, else null. */
+  login(mobile: string, email: string): Promise<Participant | null>;
   createParticipant(input: RegistrationInput): Promise<Participant>;
   updateParticipant(id: string, patch: Partial<Participant>): Promise<Participant | null>;
   saveProfile(profile: CompanyProfile): Promise<void>;
@@ -137,9 +136,9 @@ class LocalAdapter implements Store {
     return list.find((p) => normalizeMobile(p.mobile) === target) ?? null;
   }
 
-  async login(mobile: string, pin: string): Promise<Participant | null> {
+  async login(mobile: string, email: string): Promise<Participant | null> {
     const p = await this.findByMobile(mobile);
-    return p && p.pin === pin.trim() ? p : null;
+    return p && p.email.trim().toLowerCase() === email.trim().toLowerCase() ? p : null;
   }
 
   async createParticipant(input: RegistrationInput): Promise<Participant> {
@@ -150,8 +149,7 @@ class LocalAdapter implements Store {
       eventSlug: eventConfig.slug,
       fullName: input.fullName.trim(),
       mobile: input.mobile.trim(),
-      pin: input.pin.trim(),
-      email: input.email?.trim() || undefined,
+      email: input.email.trim(),
       companyName: input.companyName?.trim() || "",
       checkedInAt: now(),
       createdAt: now(),
@@ -266,9 +264,9 @@ class SupabaseAdapter implements Store {
     return data && data[0] ? (data[0].data as Participant) : null;
   }
 
-  async login(mobile: string, pin: string): Promise<Participant | null> {
+  async login(mobile: string, email: string): Promise<Participant | null> {
     const p = await this.findByMobile(mobile);
-    return p && p.pin === pin.trim() ? p : null;
+    return p && p.email.trim().toLowerCase() === email.trim().toLowerCase() ? p : null;
   }
 
   async createParticipant(input: RegistrationInput): Promise<Participant> {
@@ -278,8 +276,7 @@ class SupabaseAdapter implements Store {
       eventSlug: eventConfig.slug,
       fullName: input.fullName.trim(),
       mobile: input.mobile.trim(),
-      pin: input.pin.trim(),
-      email: input.email?.trim() || undefined,
+      email: input.email.trim(),
       companyName: input.companyName?.trim() || "",
       checkedInAt: now(),
       createdAt: now(),

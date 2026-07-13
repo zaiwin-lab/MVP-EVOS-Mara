@@ -27,17 +27,12 @@ export default function Register() {
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [companyName, setCompanyName] = useState("");
-  const [pin, setPin] = useState("");
-  const [pin2, setPin2] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const pinOk = /^\d{4,6}$/.test(pin);
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const canSubmit =
-    fullName.trim().length > 1 &&
-    mobile.trim().length >= 7 &&
-    pinOk &&
-    pin === pin2;
+    fullName.trim().length > 1 && mobile.trim().length >= 7 && emailOk;
 
   async function submit() {
     if (!canSubmit || submitting) return;
@@ -50,7 +45,7 @@ export default function Register() {
         setSubmitting(false);
         return;
       }
-      const p = await store.createParticipant({ fullName, mobile, email, companyName, pin });
+      const p = await store.createParticipant({ fullName, mobile, email, companyName });
       setParticipantId(p.id);
       await refresh();
       navigate(nextRoute());
@@ -88,13 +83,7 @@ export default function Register() {
         <Field label={t("emailLabel")} value={email} onChange={setEmail} type="email" placeholder="you@company.com" autoComplete="email" />
         <Field label={t("companyOptional")} value={companyName} onChange={setCompanyName} placeholder="e.g. Faizal Bina Sdn. Bhd." autoComplete="organization" />
 
-        <div className="grid grid-cols-2 gap-3">
-          <Field label={t("createPin")} value={pin} onChange={(v) => setPin(v.replace(/\D/g, "").slice(0, 6))} placeholder="••••" inputMode="numeric" type="password" />
-          <Field label={t("confirmPin")} value={pin2} onChange={(v) => setPin2(v.replace(/\D/g, "").slice(0, 6))} placeholder="••••" inputMode="numeric" type="password" />
-        </div>
-        {pin2.length > 0 && pin !== pin2 && (
-          <p className="text-xs font-semibold text-red-600">{t("pinMismatch")}</p>
-        )}
+        <p className="text-xs text-navy-400">{t("emailPhoneNote")}</p>
 
         {error && (
           <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>

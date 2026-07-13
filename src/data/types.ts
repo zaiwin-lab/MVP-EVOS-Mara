@@ -19,8 +19,7 @@ export interface Participant {
   eventSlug: string;
   fullName: string;
   mobile: string;
-  pin: string; // 4–6 digit PIN for returning login
-  email?: string;
+  email: string; // required — used with mobile to log in / verify attendance
   position?: string;
   ageRange?: string;
   district?: string;
