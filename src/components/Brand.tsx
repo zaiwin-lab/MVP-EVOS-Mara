@@ -56,14 +56,6 @@ export function BrandFooter() {
       <p className="mt-1 text-[11px] font-medium tracking-wide text-gold-400">
         {eventConfig.footerSecondary}
       </p>
-      <a
-        href={eventConfig.collaboratorUrl}
-        target="_blank"
-        rel="noreferrer"
-        className="mt-3 inline-block text-[11px] font-semibold text-navy-200 hover:text-white"
-      >
-        www.kobisberhad.com →
-      </a>
       <p className="mt-4 text-[10px] text-navy-400">
         Attendify™ has been configured to support the {eventConfig.eventName}{" "}
         participant journey.
