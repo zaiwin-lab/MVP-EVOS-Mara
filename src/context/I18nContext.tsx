@@ -219,6 +219,12 @@ const DICT: Record<string, Localized> = {
     zh: "模板、清单与工具，帮助您应用所学。新内容将在课程期间发布。",
     iban: "Templat, senarai semak enggau alat kena ngena utai ti dipelajar nuan. Bahan baru dikeluarka lebuh program.",
   },
+  openResourcesFolder: {
+    en: "Open Resources Folder (Google Drive)",
+    bm: "Buka Folder Bahan (Google Drive)",
+    zh: "打开资源文件夹（Google Drive）",
+    iban: "Buka Folder Bahan (Google Drive)",
+  },
   comingChip: { en: "Coming", bm: "Akan Datang", zh: "即将推出", iban: "Deka Datai" },
   comingNote: {
     en: "Items marked “Coming” will be released during the programme.",

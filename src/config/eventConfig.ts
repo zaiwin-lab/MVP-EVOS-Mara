@@ -24,6 +24,7 @@ export interface EventConfig {
   footer: string;
   footerSecondary: string;
   collaboratorUrl: string;
+  resourcesDriveUrl: string;
 }
 
 export const eventConfig: EventConfig = {
@@ -51,6 +52,8 @@ export const eventConfig: EventConfig = {
   footer: "Powered by KBT EventOS — Attendify™ · An Innovation by KOBIS Berhad",
   footerSecondary: "Smart Digital Solutions. Sustainable Impact.",
   collaboratorUrl: "https://www.kobisberhad.com",
+  resourcesDriveUrl:
+    "https://drive.google.com/drive/folders/1qQHuowoSiAQVAFxDThQQZR_eVEWF5AYq?usp=sharing",
 };
 
 // Route base for this event (keeps deep links / QR targets consistent)

@@ -263,10 +263,15 @@ export default function Landing() {
               {t("programmeResourcesTitle")}
             </h2>
           </div>
-          <Link to="/resources" className="btn-outline text-sm">
+          <a
+            href={eventConfig.resourcesDriveUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-outline text-sm"
+          >
             {t("allResources")}
             <Icon name="arrowRight" className="h-4 w-4" />
-          </Link>
+          </a>
         </div>
         <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
           {RESOURCES.slice(0, 8).map((r) => (

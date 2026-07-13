@@ -2,6 +2,7 @@ import { AppShell } from "../components/AppShell";
 import { BrandFooter } from "../components/Brand";
 import { Icon } from "../components/Icon";
 import { RESOURCES } from "../content/programme";
+import { eventConfig } from "../config/eventConfig";
 import { useI18n } from "../context/I18nContext";
 
 export default function Resources() {
@@ -14,6 +15,15 @@ export default function Resources() {
           {t("everythingYouNeed")}
         </h1>
         <p className="mt-2 text-sm text-navy-100">{t("resourcesIntro")}</p>
+        <a
+          href={eventConfig.resourcesDriveUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="btn-gold mt-4 w-full text-sm"
+        >
+          <Icon name="download" className="h-4 w-4" />
+          {t("openResourcesFolder")}
+        </a>
       </section>
 
       <section className="space-y-3 px-5 py-6">
