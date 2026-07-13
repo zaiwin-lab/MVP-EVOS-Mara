@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ADMIN_PASSWORD,
   ADMIN_USERNAME,
@@ -91,12 +91,19 @@ function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
           <Icon name="lock" className="h-4 w-4" />
           Sign In
         </button>
+        <Link
+          to="/"
+          className="mt-4 block text-center text-sm font-semibold text-navy-500 hover:text-navy-800"
+        >
+          ← Back to home
+        </Link>
       </form>
     </div>
   );
 }
 
 function Dashboard() {
+  const navigate = useNavigate();
   const [records, setRecords] = useState<ParticipantRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
@@ -140,17 +147,23 @@ function Dashboard() {
       {/* Header */}
       <header className="sticky top-0 z-20 border-b border-navy-100 bg-navy-950 text-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-          <div className="flex items-center gap-2.5">
+          <Link to="/" className="flex items-center gap-2.5" title="Back to home">
             <LogoMark className="h-8 w-8" />
             <div className="leading-tight">
               <div className="text-sm font-bold">Attendify™ · Admin</div>
               <div className="text-[11px] text-navy-300">{eventConfig.eventName}</div>
             </div>
-          </div>
+          </Link>
           <div className="flex items-center gap-2">
             <span className="hidden rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-navy-100 sm:inline">
               {storageMode === "supabase" ? "Shared backend" : "On-device data"}
             </span>
+            <Link
+              to="/"
+              className="hidden rounded-lg border border-white/20 px-3 py-2 text-sm font-semibold text-white/80 hover:bg-white/10 sm:inline-flex sm:items-center"
+            >
+              Home
+            </Link>
             <button
               onClick={() => downloadCsv(`attendify-${eventConfig.slug}.csv`, recordsToCsv(records))}
               className="btn-gold px-3 py-2 text-sm"
@@ -161,9 +174,9 @@ function Dashboard() {
             <button
               onClick={() => {
                 sessionStorage.removeItem(AUTH_KEY);
-                location.reload();
+                navigate("/");
               }}
-              className="rounded-lg border border-white/20 px-3 py-2 text-sm font-semibold text-white/80"
+              className="rounded-lg border border-white/20 px-3 py-2 text-sm font-semibold text-white/80 hover:bg-white/10"
             >
               Exit
             </button>

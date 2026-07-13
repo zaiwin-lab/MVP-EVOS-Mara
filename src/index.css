@@ -36,14 +36,6 @@
 }
 
 @layer components {
-  /* App shell for task/flow pages (check-in, profile, assessment, results…).
-     Full-bleed on phones; a clean, wider centered card on tablet/desktop —
-     a normal web layout, not a phone frame. The marketing Landing page uses
-     its own full-width responsive layout instead of this shell. */
-  .app-shell {
-    @apply relative mx-auto flex w-full max-w-app min-h-dvh flex-col bg-white;
-  }
-
   .field-label {
     @apply block text-sm font-semibold text-navy-700 mb-1.5;
   }
@@ -105,32 +97,3 @@
   }
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Tablet / desktop treatment for the flow pages.
-   The task screens (check-in, profile, assessment, results, journey…)
-   read best as a single focused column, so on wider screens we present
-   them as a comfortable centered card on a light page — a normal web
-   layout, never a phone. Phones (< 40rem) are completely unaffected.
-   ───────────────────────────────────────────────────────────── */
-@media (min-width: 40rem) {
-  body {
-    @apply bg-sand-100;
-  }
-
-  .app-shell {
-    max-width: 40rem;
-    min-height: auto;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    border-radius: 1.25rem;
-    box-shadow: 0 24px 60px -32px rgba(10, 20, 40, 0.35);
-    border: 1px solid rgba(21, 36, 71, 0.08);
-    overflow: hidden;
-  }
-
-  /* Sticky bars must anchor to the viewport, not the rounded card,
-     so they keep working when the card has overflow/rounded corners. */
-  .app-shell .sticky {
-    position: static;
-  }
-}
