@@ -119,16 +119,21 @@ export default function Landing() {
                   <div className="mt-1 font-semibold">{eventConfig.venue}</div>
                 </div>
               </div>
-              <div className="mt-6 border-t border-white/10 pt-4 text-xs text-navy-300">
-                {t("organisedBy")} {eventConfig.organiser} · {t("inCollaborationWith")}{" "}
-                <a
-                  href={eventConfig.collaboratorUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-semibold text-gold-300 underline decoration-gold-300/40 underline-offset-2 hover:text-gold-200"
-                >
-                  {eventConfig.collaborator}
-                </a>
+              <div className="mt-6 space-y-1 border-t border-white/10 pt-4 text-xs text-navy-300">
+                <div>
+                  {t("organisedBy")} {eventConfig.organiser}
+                </div>
+                <div>
+                  {t("inCollaborationWith")}{" "}
+                  <a
+                    href={eventConfig.collaboratorUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-semibold text-gold-300 underline decoration-gold-300/40 underline-offset-2 hover:text-gold-200"
+                  >
+                    {eventConfig.collaborator}
+                  </a>
+                </div>
               </div>
             </div>
           </div>
