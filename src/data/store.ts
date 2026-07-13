@@ -60,7 +60,10 @@ function makeId(): string {
 }
 
 // ── LocalStorage adapter ─────────────────────────────────────
-const NS = `attendify:${eventConfig.slug}`;
+// The `:v2` suffix is a storage version. Bumping it starts the app from a
+// clean, empty state and abandons any records written under an older key
+// (e.g. earlier demo/seed data) — so the dashboard shows real entries only.
+const NS = `attendify:${eventConfig.slug}:v2`;
 const K = {
   participants: `${NS}:participants`,
   profiles: `${NS}:profiles`,

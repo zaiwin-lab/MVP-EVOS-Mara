@@ -203,6 +203,18 @@ const DICT: Record<string, Localized> = {
     zh: "三天学习旅程",
     iban: "Pejalai Belajar Tiga Hari",
   },
+  tentativeNote: {
+    en: "Tentative schedule — session times may be adjusted during the programme.",
+    bm: "Jadual tentatif — masa sesi mungkin diubah sepanjang program.",
+    zh: "暂定日程 — 各环节时间可能在课程期间调整。",
+    iban: "Jadual tentatif — jam sesi engka diubah lebuh program.",
+  },
+  todaysLearningJourney: {
+    en: "Today’s Learning Journey",
+    bm: "Perjalanan Pembelajaran Hari Ini",
+    zh: "今日学习旅程",
+    iban: "Pejalai Belajar Sari Tu",
+  },
   meetTrainersTitle: { en: "Meet the Trainers", bm: "Kenali Jurulatih", zh: "认识讲师", iban: "Temu Pengajar" },
   programmeFaculty: { en: "Programme Faculty", bm: "Fakulti Program", zh: "课程讲师团", iban: "Fakulti Program" },
   focusAreas: { en: "Focus Areas", bm: "Bidang Fokus", zh: "专注领域", iban: "Bidang Fokus" },

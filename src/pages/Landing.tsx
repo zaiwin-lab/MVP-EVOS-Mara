@@ -90,15 +90,7 @@ export default function Landing() {
               </div>
 
               <div className="mt-6 text-[11px] text-navy-300 sm:text-xs">
-                {t("organisedBy")} {eventConfig.organiser} · {t("inCollaborationWith")}{" "}
-                <a
-                  href={eventConfig.collaboratorUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-semibold text-gold-300 underline decoration-gold-300/40 underline-offset-2 hover:text-gold-200"
-                >
-                  {eventConfig.collaborator}
-                </a>
+                {t("configuredNote")}
               </div>
             </div>
 
@@ -128,7 +120,15 @@ export default function Landing() {
                 </div>
               </div>
               <div className="mt-6 border-t border-white/10 pt-4 text-xs text-navy-300">
-                {t("configuredNote")}
+                {t("organisedBy")} {eventConfig.organiser} · {t("inCollaborationWith")}{" "}
+                <a
+                  href={eventConfig.collaboratorUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-semibold text-gold-300 underline decoration-gold-300/40 underline-offset-2 hover:text-gold-200"
+                >
+                  {eventConfig.collaborator}
+                </a>
               </div>
             </div>
           </div>

@@ -82,17 +82,14 @@ export default function Programme() {
               ))}
             </ol>
 
-            {d.schedule.length === 0 && (
-              <p className="mt-3 rounded-lg bg-sand-100 px-3 py-2 text-[11px] text-navy-400">
-                Detailed session times will be confirmed from the official
-                Tentatif Program.
-              </p>
-            )}
+            <p className="mt-3 rounded-lg bg-sand-100 px-3 py-2 text-[11px] text-navy-400">
+              {t("tentativeNote")}
+            </p>
 
             {/* Today's Learning Journey */}
             <div className="mt-4 rounded-2xl bg-navy-900 p-4 text-center text-white">
               <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-300">
-                Today’s Learning Journey
+                {t("todaysLearningJourney")}
               </div>
               <div className="mt-1 font-display text-2xl font-extrabold tracking-wide">
                 {d.journeyWord}
