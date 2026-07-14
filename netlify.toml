@@ -7,6 +7,17 @@
 [build.environment]
   NODE_VERSION = "22"
 
+# Serverless functions (24/7 Digital Officer AI endpoint).
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Keep the functions path out of the SPA catch-all below.
+[[redirects]]
+  from = "/.netlify/functions/*"
+  status = 200
+  force = false
+
 # SPA fallback — all routes render index.html so deep links
 # (e.g. /event/vdp-frontier-miri/check-in from the QR code) work.
 [[redirects]]

@@ -12,6 +12,7 @@
     "qr": "node scripts/generate-qr.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.111.0",
     "@supabase/supabase-js": "^2.45.4",
     "qrcode": "^1.5.4",
     "react": "^18.3.1",
