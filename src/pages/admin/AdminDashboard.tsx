@@ -155,8 +155,16 @@ function Dashboard() {
             </div>
           </Link>
           <div className="flex items-center gap-2">
-            <span className="hidden rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-navy-100 sm:inline">
-              {storageMode === "supabase" ? "Shared backend" : "On-device data"}
+            <span
+              className={`hidden rounded-full px-2.5 py-1 text-[11px] font-semibold sm:inline ${
+                storageMode === "supabase"
+                  ? "bg-green-500/20 text-green-300"
+                  : "bg-amber-400/20 text-amber-200"
+              }`}
+            >
+              {storageMode === "supabase"
+                ? "🟢 Shared Database Connected"
+                : "🟡 On-device data"}
             </span>
             <Link
               to="/"
@@ -189,6 +197,21 @@ function Dashboard() {
           <div className="py-20 text-center text-sm text-navy-400">Loading…</div>
         ) : (
           <>
+            {/* Backend status banner */}
+            <div
+              className={`mb-4 flex items-center gap-2 rounded-xl border px-4 py-3 text-sm font-semibold ${
+                storageMode === "supabase"
+                  ? "border-green-200 bg-green-50 text-green-800"
+                  : "border-amber-200 bg-amber-50 text-amber-800"
+              }`}
+            >
+              {storageMode === "supabase" ? (
+                <>🟢 Shared Database Connected — all devices share one live database.</>
+              ) : (
+                <>🟡 On-device data — records stay on this device. Connect Supabase for a shared live database.</>
+              )}
+            </div>
+
             {/* Summary cards */}
             <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
               <StatCard label="Participants" value={stats.total} icon="users" accent />
@@ -218,6 +241,23 @@ function Dashboard() {
                       </span>
                     </div>
                     <div className="text-[11px] text-navy-400">{s.date}</div>
+                  </div>
+                ))}
+                {stats.customSessionIds.map((id) => (
+                  <div key={id} className="card p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-navy-700">
+                        {deslugifyLabel(id)}
+                      </span>
+                      <Icon name="qr" className="h-4 w-4 text-navy-300" />
+                    </div>
+                    <div className="mt-1 text-2xl font-extrabold text-navy-900">
+                      {stats.attendanceBySession[id] ?? 0}
+                      <span className="text-sm font-semibold text-navy-400">
+                        {" "}/ {stats.total}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-navy-400">Custom session</div>
                   </div>
                 ))}
               </div>
@@ -472,9 +512,14 @@ function computeStats(records: ParticipantRecord[]) {
   for (const r of records) {
     for (const a of r.attendance) {
       attendanceTotal += 1;
-      if (a.session in attendanceBySession) attendanceBySession[a.session] += 1;
+      attendanceBySession[a.session] = (attendanceBySession[a.session] ?? 0) + 1;
     }
   }
+  // Custom sessions created via the admin QR generator (not preset days).
+  const presetIds = new Set(eventConfig.attendanceSessions.map((s) => s.id));
+  const customSessionIds = Object.keys(attendanceBySession).filter(
+    (id) => !presetIds.has(id)
+  );
 
   const avgScore =
     withResult.length > 0
@@ -520,6 +565,7 @@ function computeStats(records: ParticipantRecord[]) {
     avgScore,
     attendanceTotal,
     attendanceBySession,
+    customSessionIds,
     indicatorAverages,
     noWebsite,
     profileNeedsWork,
@@ -530,18 +576,96 @@ function computeStats(records: ParticipantRecord[]) {
   };
 }
 
-// ── Attendance / registration QR generator ───────────────────
+// "Day 1 Morning" → "day-1-morning"
+function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+// "day-1-morning" → "Day 1 Morning"
+function deslugifyLabel(id: string): string {
+  return id
+    .split("-")
+    .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
+    .join(" ");
+}
+
+// ── Attendance QR generator ──────────────────────────────────
+// Admin types any session name → Generate → download the attendance QR.
+// Scanning it records presence for that session (duplicates prevented).
 function QRGenerator() {
   const origin = publicOrigin();
   const registrationUrl = `${origin}${eventBase}/register`;
+
+  const [name, setName] = useState("");
+  const [session, setSession] = useState<{ id: string; label: string } | null>(
+    null
+  );
+
+  const generate = () => {
+    const label = name.trim();
+    const id = slugify(label);
+    if (!id) return;
+    setSession({ id, label });
+  };
+
+  const attendUrl = session
+    ? `${origin}/attend/${session.id}?n=${encodeURIComponent(session.label)}`
+    : "";
+
   return (
     <section className="mt-6">
-      <h2 className="section-eyebrow">QR Generator</h2>
+      <h2 className="section-eyebrow">Attendance QR Generator</h2>
       <p className="mt-1 text-xs text-navy-400">
-        Print or display these. The Registration QR creates accounts; each
-        Attendance QR records presence for that day (duplicates are prevented).
+        Type any session name (e.g. “Day 1 Morning”, “Site Visit”, “Closing
+        Ceremony”), generate the QR, and download it. Scanning records presence
+        for that session; duplicate scans are ignored.
       </p>
-      <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+      <div className="mt-3 grid grid-cols-1 gap-4 lg:grid-cols-3">
+        {/* Generator */}
+        <div className="card p-5 lg:col-span-2">
+          <label className="field-label">Session name</label>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <input
+              className="field-input flex-1"
+              placeholder="e.g. Day 1 Morning"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && generate()}
+            />
+            <button
+              type="button"
+              onClick={generate}
+              disabled={!name.trim()}
+              className="btn-primary shrink-0"
+            >
+              <Icon name="qr" className="h-5 w-5" />
+              Generate
+            </button>
+          </div>
+
+          {session ? (
+            <div className="mt-4 flex justify-center">
+              <QRCodeCard
+                value={attendUrl}
+                label={`Attendance · ${session.label}`}
+                caption="Scan to record attendance"
+                downloadName={`attendify-attendance-${session.id}-qr.png`}
+                size={200}
+              />
+            </div>
+          ) : (
+            <p className="mt-4 text-center text-xs text-navy-400">
+              Your generated QR will appear here.
+            </p>
+          )}
+        </div>
+
+        {/* Registration QR — always available */}
         <QRCodeCard
           value={registrationUrl}
           label="Registration"
@@ -549,6 +673,11 @@ function QRGenerator() {
           downloadName="attendify-registration-qr.png"
           size={190}
         />
+      </div>
+
+      {/* Quick presets for the three programme days */}
+      <p className="mt-5 text-xs font-semibold text-navy-500">Quick day presets</p>
+      <div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-3">
         {eventConfig.attendanceSessions.map((s) => (
           <QRCodeCard
             key={s.id}
@@ -556,7 +685,7 @@ function QRGenerator() {
             label={`Attendance · ${s.label}`}
             caption={`${s.weekday}, ${s.date}`}
             downloadName={`attendify-attendance-${s.id}-qr.png`}
-            size={190}
+            size={170}
           />
         ))}
       </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { AppShell } from "../components/AppShell";
 import { Icon } from "../components/Icon";
 import { eventConfig } from "../config/eventConfig";
@@ -13,12 +13,24 @@ type State = "loading" | "done" | "already" | "invalid";
 
 export default function Attend() {
   const { session = "" } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { participantId, record, loading, refresh } = useParticipant();
   const { t } = useI18n();
   const [state, setState] = useState<State>("loading");
 
-  const sessionMeta = eventConfig.attendanceSessions.find((s) => s.id === session);
+  // Preset day sessions carry weekday/date; custom sessions (from the admin
+  // QR generator) carry their label in the `n` query param or the slug id.
+  const preset = eventConfig.attendanceSessions.find((s) => s.id === session);
+  const sessionMeta = preset
+    ? { label: preset.label, weekday: preset.weekday, date: preset.date }
+    : session
+      ? {
+          label: searchParams.get("n") || deslugify(session),
+          weekday: "",
+          date: "",
+        }
+      : null;
 
   useEffect(() => {
     if (loading) return;
@@ -87,8 +99,15 @@ export default function Attend() {
             </h1>
             {sessionMeta && (
               <div className="mt-4 w-full max-w-xs rounded-2xl border border-navy-100 bg-white p-4 text-left shadow-card">
-                <Row label={t("myAttendance")} value={`${sessionMeta.label} · ${sessionMeta.weekday}`} />
-                <Row label={t("datesLabel")} value={sessionMeta.date} />
+                <Row
+                  label={t("myAttendance")}
+                  value={
+                    sessionMeta.weekday
+                      ? `${sessionMeta.label} · ${sessionMeta.weekday}`
+                      : sessionMeta.label
+                  }
+                />
+                {sessionMeta.date && <Row label={t("datesLabel")} value={sessionMeta.date} />}
                 <Row label={t("venueLabel")} value={eventConfig.venue} />
                 <Row label={t("fullName")} value={record?.participant.fullName ?? ""} />
                 <Row
@@ -105,6 +124,14 @@ export default function Attend() {
       </div>
     </AppShell>
   );
+}
+
+// "day-1-morning" → "Day 1 Morning" (fallback label for custom sessions).
+function deslugify(id: string): string {
+  return id
+    .split("-")
+    .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
+    .join(" ");
 }
 
 function Row({ label, value }: { label: string; value: string }) {

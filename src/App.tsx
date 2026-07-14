@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { eventConfig } from "./config/eventConfig";
+import { FloatingActions } from "./components/FloatingActions";
 import Landing from "./pages/Landing";
 import Programme from "./pages/Programme";
 import Trainers from "./pages/Trainers";
@@ -21,6 +22,7 @@ const slug = eventConfig.slug;
 
 export default function App() {
   return (
+    <>
     <Routes>
       {/* Public landing + event-scoped QR entry points */}
       <Route path="/" element={<Landing />} />
@@ -57,5 +59,7 @@ export default function App() {
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    <FloatingActions />
+    </>
   );
 }
