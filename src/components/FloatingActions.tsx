@@ -14,12 +14,6 @@ const HIDE_ON = [
   "/journey",
 ];
 
-const WA_NUMBER = "601128465813";
-const WA_TEXT = encodeURIComponent(
-  "Hello KOBIS Team.\n\nI need assistance regarding Attendify."
-);
-const WA_LINK = `https://wa.me/${WA_NUMBER}?text=${WA_TEXT}`;
-
 const GREETING =
   "Hi! I'm your 24/7 Digital Officer for VDP Frontier MARA Miri. Ask me anything — how to register, mark attendance, the programme, venue, and more. 😊";
 
@@ -35,7 +29,7 @@ interface Msg {
   content: string;
 }
 
-// Floating support: WhatsApp + an AI-powered 24/7 Digital Officer chat.
+// Floating support: an AI-powered 24/7 Digital Officer chat.
 export function FloatingActions() {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
@@ -77,7 +71,7 @@ export function FloatingActions() {
           {
             role: "assistant",
             content:
-              "I'm not fully set up yet — please contact the KOBIS team on WhatsApp and they'll help you right away.",
+              "I'm not fully set up yet — please contact the KOBIS team and they'll help you right away.",
           },
         ]);
       }
@@ -87,7 +81,7 @@ export function FloatingActions() {
         {
           role: "assistant",
           content:
-            "I couldn't reach the assistant just now. Please WhatsApp the KOBIS team for help.",
+            "I couldn't reach the assistant just now. Please contact the KOBIS team for help.",
         },
       ]);
     } finally {
@@ -98,16 +92,6 @@ export function FloatingActions() {
   return (
     <>
       <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-3">
-        <a
-          href={WA_LINK}
-          target="_blank"
-          rel="noreferrer"
-          className="flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-3 font-semibold text-white shadow-lg transition hover:brightness-105 active:scale-95"
-          title="WhatsApp KOBIS Support"
-        >
-          <span className="text-lg leading-none">💬</span>
-          <span className="hidden text-sm sm:inline">WhatsApp</span>
-        </a>
         <button
           type="button"
           onClick={() => setOpen(true)}
@@ -214,14 +198,6 @@ export function FloatingActions() {
                   Send
                 </button>
               </form>
-              <a
-                href={WA_LINK}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-2 block text-center text-xs font-semibold text-green-700 hover:underline"
-              >
-                💬 Or chat with a human on WhatsApp
-              </a>
             </div>
           </div>
         </div>
