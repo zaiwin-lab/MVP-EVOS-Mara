@@ -14,6 +14,21 @@ export default function AdminParticipant() {
   const navigate = useNavigate();
   const [record, setRecord] = useState<ParticipantRecord | null>(null);
   const [loading, setLoading] = useState(true);
+  const [pdfBusy, setPdfBusy] = useState(false);
+
+  const handleDownloadPdf = async () => {
+    if (pdfBusy || !record) return;
+    setPdfBusy(true);
+    try {
+      const { generateSingleParticipantPdf } = await import("../../lib/pdf");
+      await generateSingleParticipantPdf(record);
+    } catch (err) {
+      console.error("PDF export failed", err);
+      alert("Sorry, the PDF export failed. Please try again.");
+    } finally {
+      setPdfBusy(false);
+    }
+  };
 
   useEffect(() => {
     if (sessionStorage.getItem(AUTH_KEY) !== "1") {
@@ -55,9 +70,20 @@ export default function AdminParticipant() {
             <div className="truncate text-sm font-bold">{p.fullName}</div>
             <div className="truncate text-[11px] text-navy-300">{p.companyName}</div>
           </div>
-          <span className="ml-auto rounded-full bg-white/10 px-2.5 py-1 text-xs font-semibold">
-            {p.ref}
-          </span>
+          <div className="ml-auto flex items-center gap-2">
+            <button
+              onClick={handleDownloadPdf}
+              disabled={pdfBusy}
+              className="btn-gold px-3 py-1.5 text-xs disabled:opacity-50"
+              title="Download this participant's full data as PDF"
+            >
+              <Icon name="download" className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">{pdfBusy ? "Preparing…" : "Download PDF"}</span>
+            </button>
+            <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-semibold">
+              {p.ref}
+            </span>
+          </div>
         </div>
       </header>
 

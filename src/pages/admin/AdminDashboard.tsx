@@ -123,6 +123,21 @@ function Dashboard() {
   }, []);
 
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [pdfBusy, setPdfBusy] = useState(false);
+
+  const handleDownloadPdf = async () => {
+    if (pdfBusy || records.length === 0) return;
+    setPdfBusy(true);
+    try {
+      const { generateParticipantsPdf } = await import("../../lib/pdf");
+      await generateParticipantsPdf(records);
+    } catch (err) {
+      console.error("PDF export failed", err);
+      alert("Sorry, the PDF export failed. Please try again.");
+    } finally {
+      setPdfBusy(false);
+    }
+  };
 
   const handleDelete = async (r: ParticipantRecord) => {
     const name = r.participant.fullName || "this participant";
@@ -195,11 +210,21 @@ function Dashboard() {
               Home
             </Link>
             <button
-              onClick={() => downloadCsv(`attendify-${eventConfig.slug}.csv`, recordsToCsv(records))}
-              className="btn-gold px-3 py-2 text-sm"
+              onClick={handleDownloadPdf}
+              disabled={pdfBusy || records.length === 0}
+              className="btn-gold px-3 py-2 text-sm disabled:opacity-50"
+              title="Download all participant data as PDF"
             >
               <Icon name="download" className="h-4 w-4" />
-              <span className="hidden sm:inline">Export CSV</span>
+              <span className="hidden sm:inline">{pdfBusy ? "Preparing…" : "Download PDF"}</span>
+            </button>
+            <button
+              onClick={() => downloadCsv(`attendify-${eventConfig.slug}.csv`, recordsToCsv(records))}
+              className="rounded-lg border border-white/20 px-3 py-2 text-sm font-semibold text-white/80 hover:bg-white/10"
+              title="Export as CSV spreadsheet"
+            >
+              <Icon name="download" className="h-4 w-4" />
+              <span className="hidden sm:inline">CSV</span>
             </button>
             <button
               onClick={() => {
