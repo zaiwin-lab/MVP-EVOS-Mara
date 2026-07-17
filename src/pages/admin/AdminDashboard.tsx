@@ -122,6 +122,28 @@ function Dashboard() {
     };
   }, []);
 
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDelete = async (r: ParticipantRecord) => {
+    const name = r.participant.fullName || "this participant";
+    if (
+      !window.confirm(
+        `Delete ${name} and ALL of their records (profile, attendance, assessment, plan)?\n\nThis cannot be undone.`
+      )
+    )
+      return;
+    setDeletingId(r.participant.id);
+    try {
+      await store.deleteParticipant(r.participant.id);
+      setRecords((prev) => prev.filter((x) => x.participant.id !== r.participant.id));
+    } catch (err) {
+      console.error("delete failed", err);
+      alert("Sorry, the delete failed. Please try again.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   const stats = useMemo(() => computeStats(records), [records]);
 
   const filtered = useMemo(() => {
@@ -371,12 +393,23 @@ function Dashboard() {
                           <StatusDot ok={Boolean(r.actionPlan)} />
                         </td>
                         <td className="px-4 py-3">
-                          <Link
-                            to={`/admin/participant/${r.participant.id}`}
-                            className="font-semibold text-navy-700 hover:text-gold-600"
-                          >
-                            View
-                          </Link>
+                          <div className="flex items-center gap-3">
+                            <Link
+                              to={`/admin/participant/${r.participant.id}`}
+                              className="font-semibold text-navy-700 hover:text-gold-600"
+                            >
+                              View
+                            </Link>
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(r)}
+                              disabled={deletingId === r.participant.id}
+                              className="font-semibold text-red-600 hover:text-red-700 disabled:opacity-40"
+                              title="Delete participant"
+                            >
+                              {deletingId === r.participant.id ? "…" : "Delete"}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -397,11 +430,25 @@ function Dashboard() {
                         <div className="truncate font-bold text-navy-900">{r.participant.fullName}</div>
                         <div className="truncate text-xs text-navy-500">{r.participant.companyName}</div>
                       </div>
-                      {r.result && (
-                        <span className="chip shrink-0 bg-navy-800 text-white">
-                          {r.result.totalScore}/100
-                        </span>
-                      )}
+                      <div className="flex shrink-0 items-center gap-2">
+                        {r.result && (
+                          <span className="chip bg-navy-800 text-white">
+                            {r.result.totalScore}/100
+                          </span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleDelete(r);
+                          }}
+                          disabled={deletingId === r.participant.id}
+                          className="rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600 disabled:opacity-40"
+                        >
+                          {deletingId === r.participant.id ? "…" : "Delete"}
+                        </button>
+                      </div>
                     </div>
                     <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
                       <span className="chip bg-navy-50 text-navy-600">{r.participant.mobile}</span>

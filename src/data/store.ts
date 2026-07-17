@@ -40,6 +40,8 @@ export interface Store {
   saveReflection(reflection: Reflection): Promise<void>;
   /** Mark attendance for a session; no-op (returns false) if already marked. */
   markAttendance(participantId: string, session: string): Promise<boolean>;
+  /** Permanently remove a participant and all of their related records. */
+  deleteParticipant(id: string): Promise<void>;
 }
 
 const now = () => new Date().toISOString();
@@ -223,6 +225,33 @@ class LocalAdapter implements Store {
     );
     write(K.reflections, [...list, reflection]);
   }
+
+  async deleteParticipant(id: string): Promise<void> {
+    write(
+      K.participants,
+      read<Participant[]>(K.participants, []).filter((p) => p.id !== id)
+    );
+    write(
+      K.profiles,
+      read<CompanyProfile[]>(K.profiles, []).filter((p) => p.participantId !== id)
+    );
+    write(
+      K.results,
+      read<AssessmentResult[]>(K.results, []).filter((r) => r.participantId !== id)
+    );
+    write(
+      K.actionPlans,
+      read<ActionPlan[]>(K.actionPlans, []).filter((a) => a.participantId !== id)
+    );
+    write(
+      K.reflections,
+      read<Reflection[]>(K.reflections, []).filter((r) => r.participantId !== id)
+    );
+    write(
+      K.attendance,
+      read<AttendanceRecord[]>(K.attendance, []).filter((a) => a.participantId !== id)
+    );
+  }
 }
 
 // ── Supabase adapter ─────────────────────────────────────────
@@ -356,6 +385,19 @@ class SupabaseAdapter implements Store {
       },
       { onConflict: "id" }
     );
+  }
+
+  async deleteParticipant(id: string): Promise<void> {
+    // Child tables cascade on participant delete, but remove them explicitly
+    // first so the delete is clean even if a FK constraint is missing.
+    await Promise.all([
+      this.db.from("attendance").delete().eq("participant_id", id),
+      this.db.from("reflections").delete().eq("participant_id", id),
+      this.db.from("action_plans").delete().eq("participant_id", id),
+      this.db.from("assessment_results").delete().eq("participant_id", id),
+      this.db.from("company_profiles").delete().eq("participant_id", id),
+    ]);
+    await this.db.from("participants").delete().eq("id", id);
   }
 }
 
