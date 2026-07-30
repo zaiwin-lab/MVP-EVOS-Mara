@@ -2,13 +2,12 @@
 
 **One Scan. One Journey.**
 
-A fast, mobile-first digital participant experience. This deployment is
-configured to support the **VDP Frontier MARA Miri** — *Program Pembangunan
-Usahawan Kontraktor Bumiputera* (14–16 July 2026, MARA Miri).
+A fast, mobile-first and reusable digital participant experience for training,
+entrepreneurship and community programmes.
 
-> Attendify™ is an internal, reusable event platform by **KOBIS Berhad**. MARA
-> and VDP Frontier appear only as the event being supported by Attendify — this
-> is **not** a MARA-owned system.
+> Attendify™ is an independent event-platform prototype by **KOBIS Berhad**.
+> Event configurations are illustrative and do not imply platform ownership,
+> commissioning or endorsement by any external organisation.
 
 ---
 
@@ -66,7 +65,7 @@ Copy `.env.example` → `.env`:
 | Variable | Purpose | Default |
 |---|---|---|
 | `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` | Shared backend (see below) | unset → localStorage |
-| `VITE_ADMIN_PASSWORD` | Password for `/admin` | `attendify2026` |
+| `VITE_ADMIN_PASSWORD` | Required password for `/admin`; set securely in the deployment environment | no public default |
 | `VITE_PUBLIC_URL` | Live origin used for QR links | current browser origin |
 
 ### Enabling the shared backend (recommended for the live event)
@@ -115,8 +114,8 @@ Two entry points:
 
 ## Admin
 
-- Go to `/admin`, enter the admin password (default `attendify2026` — change via
-  `VITE_ADMIN_PASSWORD`).
+- Set a strong `VITE_ADMIN_PASSWORD` in the protected deployment environment before launch.
+- Go to `/admin` and use the privately managed administrator credential.
 - Summary stats, group readiness averages, insight cards, participant table with
   search/filter, per-participant detail (`/admin/participant/:id`), and **Export
   CSV**.
