@@ -1,9 +1,20 @@
-# KBT EventOS — Attendify™
+# Attendify EventOS™
 
-**One Scan. One Journey.**
+> **Portfolio maturity:** Pilot Ready · Digital Participant Journey & Programme Operations Platform
 
-A fast, mobile-first and reusable digital participant experience for training,
-entrepreneurship and community programmes.
+[Open live demonstration](https://kbtmaravdp.uk)
+
+**One Scan. One Journey. From Attendance to Action.**
+
+A mobile-first platform that unifies attendance, participant profiling, readiness assessment, learning resources, action planning and programme reporting for training, entrepreneurship and community initiatives.
+
+## Business Value
+
+- replaces fragmented forms, links and spreadsheets with one participant journey;
+- gives programme teams clearer evidence of attendance, readiness and completion;
+- supports personalised results and 90-day participant action plans;
+- provides supervisors with searchable records, summary insights and CSV export;
+- can be configured for different programmes without rebuilding the entire platform.
 
 > Attendify™ is an independent event-platform prototype by **KOBIS Berhad**.
 > Event configurations are illustrative and do not imply platform ownership,
@@ -156,5 +167,11 @@ create another event from the same platform.”
 
 ---
 
-Powered by **KBT EventOS — Attendify™** · An Innovation by KOBIS Berhad
+## Status & Delivery Role
+
+**Status:** Pilot Ready — suitable for controlled demonstrations and stakeholder testing. A live multi-device programme requires the shared Supabase backend, securely managed administrator access, verified programme content, privacy notices, consent, retention rules and operational support.
+
+Product strategy, participant journey, programme workflow and solution direction are led by **Ts. Zaiwin Kassim**, together with the **KOBIS AI Prodigy Team**, using supervised AI-assisted development.
+
+Powered by **Attendify EventOS™** · An innovation by KOBIS Berhad
 *Smart Digital Solutions. Sustainable Impact.*
