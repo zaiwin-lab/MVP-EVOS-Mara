@@ -1,112 +1,72 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AppShell } from "../components/AppShell";
-import { LogoMark } from "../components/Brand";
-import { Icon } from "../components/Icon";
-import { eventConfig } from "../config/eventConfig";
 import { store } from "../data/store";
 import { useParticipant } from "../context/ParticipantContext";
-import { useI18n } from "../context/I18nContext";
-import { PENDING_ATTEND_KEY } from "./Attend";
-
-/** After auth, resume a pending attendance scan if there was one. */
-function nextRoute(): string {
-  const pending = localStorage.getItem(PENDING_ATTEND_KEY);
-  if (pending) {
-    localStorage.removeItem(PENDING_ATTEND_KEY);
-    return `/attend/${pending}`;
-  }
-  return "/my";
-}
+import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
+import { Icon } from "../components/Icon";
 
 export default function Login() {
   const navigate = useNavigate();
   const { setParticipantId, refresh } = useParticipant();
-  const { t } = useI18n();
 
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const canSubmit = mobile.trim().length >= 7 && email.trim().length >= 3;
-
   async function submit() {
-    if (!canSubmit || submitting) return;
+    if (submitting) return;
     setSubmitting(true);
     setError(null);
     try {
       const p = await store.login(mobile, email);
       if (!p) {
-        setError(t("wrongLogin"));
+        setError("Nombor telefon atau emel tidak betul.");
         setSubmitting(false);
         return;
       }
       setParticipantId(p.id);
       await refresh();
-      navigate(nextRoute());
+      navigate("/my");
     } catch (e) {
       console.error(e);
-      setError("Something went wrong. Please try again.");
+      setError("Maaf, berlaku ralat. Sila cuba lagi.");
       setSubmitting(false);
     }
   }
 
   return (
-    <AppShell
-      header
-      title={t("myAttendify")}
-      onBack={() => navigate("/")}
-      footer={
-        <button onClick={submit} disabled={!canSubmit || submitting} className="btn-gold w-full">
-          {submitting ? "…" : t("logIn")}
-          {!submitting && <Icon name="arrowRight" className="h-5 w-5" />}
-        </button>
-      }
-    >
-      <section className="bg-navy-950 px-5 pb-6 pt-6 text-center text-white">
-        <LogoMark className="mx-auto h-12 w-12" />
-        <h1 className="mt-4 font-display text-2xl font-extrabold">{t("welcomeBack")}</h1>
-        <p className="mx-auto mt-2 max-w-xs text-sm text-navy-100">{t("loginIntro")}</p>
-        <div className="mt-3 text-xs text-navy-300">{eventConfig.eventName}</div>
+    <SiteLayout>
+      <section className={`${SITE_WRAP} py-12`}>
+        <div className="mx-auto max-w-md">
+          <div className="card p-6 sm:p-7">
+            <div className="text-center">
+              <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-navy-900 text-gold-300"><Icon name="lock" className="h-6 w-6" /></span>
+              <h1 className="mt-4 font-display text-2xl font-extrabold text-navy-900">Selamat Kembali</h1>
+              <p className="mt-2 text-sm text-navy-500">Masukkan nombor telefon dan emel anda untuk meneruskan.</p>
+            </div>
+
+            <div className="mt-6 space-y-4">
+              <div>
+                <label className="field-label">No. Telefon</label>
+                <input className="field-input" value={mobile} inputMode="tel" autoComplete="tel" placeholder="cth. 012-345 6789" onChange={(e) => setMobile(e.target.value)} />
+              </div>
+              <div>
+                <label className="field-label">Emel</label>
+                <input className="field-input" value={email} type="email" inputMode="email" autoComplete="email" placeholder="anda@koperasi.com" onChange={(e) => setEmail(e.target.value)} />
+              </div>
+              {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+              <button onClick={submit} disabled={submitting} className="btn-gold w-full">
+                {submitting ? "Log masuk…" : "Log Masuk"} {!submitting && <Icon name="arrowRight" className="h-5 w-5" />}
+              </button>
+            </div>
+
+            <p className="mt-5 text-center text-sm text-navy-500">
+              Belum berdaftar? <Link to="/check-in" className="font-bold text-navy-800 underline">Daftar di sini</Link>
+            </p>
+          </div>
+        </div>
       </section>
-
-      <div className="space-y-4 px-5 py-6">
-        <div>
-          <label className="field-label">{t("mobileNumber")}</label>
-          <input
-            className="field-input"
-            value={mobile}
-            inputMode="tel"
-            autoComplete="tel"
-            placeholder="e.g. 0138765432"
-            onChange={(e) => setMobile(e.target.value)}
-          />
-        </div>
-        <div>
-          <label className="field-label">{t("emailLabel")}</label>
-          <input
-            className="field-input"
-            value={email}
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            placeholder="you@company.com"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        {error && (
-          <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
-        )}
-
-        <p className="pt-2 text-center text-sm text-navy-500">
-          {t("notRegistered")}{" "}
-          <Link to="/register" className="font-bold text-navy-800 underline">
-            {t("registerHere")}
-          </Link>
-        </p>
-      </div>
-    </AppShell>
+    </SiteLayout>
   );
 }

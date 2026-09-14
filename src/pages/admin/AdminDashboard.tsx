@@ -1,773 +1,368 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  ADMIN_PASSWORD,
-  ADMIN_USERNAME,
-  eventBase,
-  eventConfig,
-  publicOrigin,
-} from "../../config/eventConfig";
-import { INDICATORS } from "../../content/assessment";
+import { eventConfig, ADMIN_PASSWORD, publicOrigin } from "../../config/eventConfig";
 import { store, storageMode } from "../../data/store";
 import type { ParticipantRecord } from "../../data/types";
-import { recordsToCsv, downloadCsv } from "../../lib/csv";
+import { WORK_AREAS, getWorkArea, PROMPT_COUNT } from "../../content/promptLibrary";
+import { READINESS_BANDS } from "../../content/readiness";
 import { Icon } from "../../components/Icon";
-import { LogoMark } from "../../components/Brand";
 import { QRCodeCard } from "../../components/QRCode";
+import { areaAccent } from "../../lib/accents";
 
 const AUTH_KEY = "attendify:adminAuthed";
 
 export default function AdminDashboard() {
-  const [authed, setAuthed] = useState(
-    () => sessionStorage.getItem(AUTH_KEY) === "1"
-  );
-
-  if (!authed) return <AdminLogin onSuccess={() => setAuthed(true)} />;
+  const [authed, setAuthed] = useState(() => sessionStorage.getItem(AUTH_KEY) === "1");
+  if (!authed) return <Gate onOk={() => setAuthed(true)} />;
   return <Dashboard />;
 }
 
-function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
-
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (username.trim() === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+function Gate({ onOk }: { onOk: () => void }) {
+  const [pw, setPw] = useState("");
+  const [err, setErr] = useState(false);
+  const navigate = useNavigate();
+  function submit() {
+    if (pw === ADMIN_PASSWORD) {
       sessionStorage.setItem(AUTH_KEY, "1");
-      onSuccess();
-    } else {
-      setError(true);
-    }
+      onOk();
+    } else setErr(true);
   }
-
   return (
     <div className="flex min-h-dvh items-center justify-center bg-navy-950 px-5">
-      <form onSubmit={submit} className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-lift">
-        <div className="flex flex-col items-center text-center">
-          <LogoMark className="h-12 w-12" />
-          <h1 className="mt-4 font-display text-xl font-extrabold text-navy-900">
-            Administrator Access
-          </h1>
-          <p className="mt-1 text-sm text-navy-500">
-            {eventConfig.eventName} · Event Dashboard
-          </p>
+      <div className="w-full max-w-sm rounded-3xl bg-white p-7 shadow-lift">
+        <div className="text-center">
+          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-navy-900 text-gold-300"><Icon name="lock" className="h-6 w-6" /></span>
+          <h1 className="mt-4 font-display text-xl font-extrabold text-navy-900">Admin ProgramOS Lite</h1>
+          <p className="mt-1 text-sm text-navy-500">Masukkan kata laluan untuk teruskan.</p>
         </div>
-        <div className="mt-6 space-y-4">
-          <div>
-            <label className="field-label">Username</label>
-            <input
-              className="field-input"
-              value={username}
-              onChange={(e) => {
-                setUsername(e.target.value);
-                setError(false);
-              }}
-              placeholder="admin"
-              autoFocus
-              autoCapitalize="none"
-            />
-          </div>
-          <div>
-            <label className="field-label">Password</label>
-            <input
-              type="password"
-              className="field-input"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setError(false);
-              }}
-              placeholder="Enter admin password"
-            />
-          </div>
-          {error && (
-            <p className="text-sm font-semibold text-red-600">
-              Incorrect username or password. Please try again.
-            </p>
-          )}
-        </div>
-        <button type="submit" className="btn-primary mt-5 w-full">
-          <Icon name="lock" className="h-4 w-4" />
-          Sign In
-        </button>
-        <Link
-          to="/"
-          className="mt-4 block text-center text-sm font-semibold text-navy-500 hover:text-navy-800"
-        >
-          ← Back to home
-        </Link>
-      </form>
+        <input
+          type="password"
+          value={pw}
+          onChange={(e) => { setPw(e.target.value); setErr(false); }}
+          onKeyDown={(e) => e.key === "Enter" && submit()}
+          placeholder="Kata laluan"
+          className="field-input mt-5"
+          autoFocus
+        />
+        {err && <p className="mt-2 text-sm text-red-600">Kata laluan tidak betul.</p>}
+        <button onClick={submit} className="btn-gold mt-4 w-full">Log Masuk</button>
+        <button onClick={() => navigate("/")} className="mt-3 w-full text-center text-xs text-navy-400 underline">Kembali ke laman utama</button>
+      </div>
     </div>
   );
 }
 
 function Dashboard() {
-  const navigate = useNavigate();
   const [records, setRecords] = useState<ParticipantRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<"all" | "checkedin" | "assessed" | "noProfile">("all");
-
-  useEffect(() => {
-    let alive = true;
-    store.listRecords().then((r) => {
-      if (alive) {
-        setRecords(r);
-        setLoading(false);
-      }
-    });
-    return () => {
-      alive = false;
-    };
-  }, []);
-
+  const [q, setQ] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [pdfBusy, setPdfBusy] = useState(false);
 
-  const handleDownloadPdf = async () => {
-    if (pdfBusy || records.length === 0) return;
-    setPdfBusy(true);
-    try {
-      const { generateParticipantsPdf } = await import("../../lib/pdf");
-      await generateParticipantsPdf(records);
-    } catch (err) {
-      console.error("PDF export failed", err);
-      alert("Sorry, the PDF export failed. Please try again.");
-    } finally {
-      setPdfBusy(false);
-    }
+  const load = () => {
+    setLoading(true);
+    store.listRecords().then((r) => { setRecords(r); setLoading(false); });
   };
-
-  const handleDelete = async (r: ParticipantRecord) => {
-    const name = r.participant.fullName || "this participant";
-    if (
-      !window.confirm(
-        `Delete ${name} and ALL of their records (profile, attendance, assessment, plan)?\n\nThis cannot be undone.`
-      )
-    )
-      return;
-    setDeletingId(r.participant.id);
-    try {
-      await store.deleteParticipant(r.participant.id);
-      setRecords((prev) => prev.filter((x) => x.participant.id !== r.participant.id));
-    } catch (err) {
-      console.error("delete failed", err);
-      alert("Sorry, the delete failed. Please try again.");
-    } finally {
-      setDeletingId(null);
-    }
-  };
+  useEffect(load, []);
 
   const stats = useMemo(() => computeStats(records), [records]);
 
   const filtered = useMemo(() => {
-    let list = records;
-    if (filter === "checkedin") list = list.filter((r) => !r.profile);
-    if (filter === "assessed") list = list.filter((r) => r.result);
-    if (filter === "noProfile") list = list.filter((r) => !r.profile);
-    const q = query.trim().toLowerCase();
-    if (q) {
-      list = list.filter(
-        (r) =>
-          r.participant.fullName.toLowerCase().includes(q) ||
-          r.participant.companyName.toLowerCase().includes(q) ||
-          r.participant.mobile.includes(q) ||
-          (r.profile?.cidbGrade ?? "").toLowerCase().includes(q)
-      );
-    }
-    return list;
-  }, [records, query, filter]);
+    const t = q.trim().toLowerCase();
+    if (!t) return records;
+    return records.filter((r) => {
+      const p = r.participant;
+      return [p.fullName, p.coopName, p.companyName, p.mobile, p.email, p.role, p.ref]
+        .filter(Boolean).some((v) => String(v).toLowerCase().includes(t));
+    });
+  }, [records, q]);
+
+  async function handleDelete(r: ParticipantRecord) {
+    if (!window.confirm(`Padam ${r.participant.fullName} dan semua rekod berkaitan? Tindakan ini tidak boleh diundur.`)) return;
+    setDeletingId(r.participant.id);
+    setRecords((prev) => prev.filter((x) => x.participant.id !== r.participant.id));
+    try { await store.deleteParticipant(r.participant.id); }
+    catch (e) { console.error(e); load(); }
+    finally { setDeletingId(null); }
+  }
+
+  const checkInUrl = `${publicOrigin()}/check-in`;
+  const online = storageMode === "supabase";
 
   return (
     <div className="min-h-dvh bg-sand-50">
       {/* Header */}
-      <header className="sticky top-0 z-20 border-b border-navy-100 bg-navy-950 text-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-          <Link to="/" className="flex items-center gap-2.5" title="Back to home">
-            <LogoMark className="h-8 w-8" />
-            <div className="leading-tight">
-              <div className="text-sm font-bold">Attendify™ · Admin</div>
-              <div className="text-[11px] text-navy-300">{eventConfig.eventName}</div>
-            </div>
-          </Link>
-          <div className="flex items-center gap-2">
-            <span
-              className={`hidden rounded-full px-2.5 py-1 text-[11px] font-semibold sm:inline ${
-                storageMode === "supabase"
-                  ? "bg-green-500/20 text-green-300"
-                  : "bg-amber-400/20 text-amber-200"
-              }`}
-            >
-              {storageMode === "supabase"
-                ? "🟢 Shared Database Connected"
-                : "🟡 On-device data"}
-            </span>
-            <Link
-              to="/"
-              className="hidden rounded-lg border border-white/20 px-3 py-2 text-sm font-semibold text-white/80 hover:bg-white/10 sm:inline-flex sm:items-center"
-            >
-              Home
-            </Link>
-            <button
-              onClick={handleDownloadPdf}
-              disabled={pdfBusy || records.length === 0}
-              className="btn-gold px-3 py-2 text-sm disabled:opacity-50"
-              title="Download all participant data as PDF"
-            >
-              <Icon name="download" className="h-4 w-4" />
-              <span className="hidden sm:inline">{pdfBusy ? "Preparing…" : "Download PDF"}</span>
-            </button>
-            <button
-              onClick={() => downloadCsv(`attendify-${eventConfig.slug}.csv`, recordsToCsv(records))}
-              className="rounded-lg border border-white/20 px-3 py-2 text-sm font-semibold text-white/80 hover:bg-white/10"
-              title="Export as CSV spreadsheet"
-            >
-              <Icon name="download" className="h-4 w-4" />
-              <span className="hidden sm:inline">CSV</span>
-            </button>
-            <button
-              onClick={() => {
-                sessionStorage.removeItem(AUTH_KEY);
-                navigate("/");
-              }}
-              className="rounded-lg border border-white/20 px-3 py-2 text-sm font-semibold text-white/80 hover:bg-white/10"
-            >
-              Exit
-            </button>
+      <header className="sticky top-0 z-30 bg-navy-950 text-white">
+        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+          <Link to="/" className="flex h-9 w-9 items-center justify-center rounded-full text-white/70 hover:bg-white/10"><Icon name="arrowLeft" /></Link>
+          <div>
+            <div className="text-sm font-bold">ANGKASA Admin · ProgramOS Lite</div>
+            <div className="text-[11px] text-navy-300">Gambaran keseluruhan pelaksanaan program</div>
           </div>
+          <span className={`ml-auto chip ${online ? "bg-emerald-400/20 text-emerald-200" : "bg-amber-400/20 text-amber-100"}`}>
+            <span className={`h-2 w-2 rounded-full ${online ? "bg-emerald-400" : "bg-amber-400"}`} />
+            {online ? "Shared Database Connected" : "Local Mode"}
+          </span>
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-6">
-        {loading ? (
-          <div className="py-20 text-center text-sm text-navy-400">Loading…</div>
-        ) : (
-          <>
-            {/* Backend status banner */}
-            <div
-              className={`mb-4 flex items-center gap-2 rounded-xl border px-4 py-3 text-sm font-semibold ${
-                storageMode === "supabase"
-                  ? "border-green-200 bg-green-50 text-green-800"
-                  : "border-amber-200 bg-amber-50 text-amber-800"
-              }`}
-            >
-              {storageMode === "supabase" ? (
-                <>🟢 Shared Database Connected — all devices share one live database.</>
-              ) : (
-                <>🟡 On-device data — records stay on this device. Connect Supabase for a shared live database.</>
-              )}
+      <main className="mx-auto max-w-6xl space-y-6 px-4 py-6">
+        {/* Backend banner */}
+        <div className={`rounded-2xl border px-4 py-3 text-sm ${online ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-amber-200 bg-amber-50 text-amber-800"}`}>
+          {online
+            ? "🟢 Shared Database Connected — data kehadiran diselaraskan merentas semua peranti peserta."
+            : "🟡 Local Mode — Supabase belum dikonfigurasikan; data disimpan pada peranti ini sahaja."}
+        </div>
+
+        {/* Summary cards */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <StatCard icon="users" label="Peserta" sub="Total Participants" value={stats.total} tone="navy" />
+          <StatCard icon="building" label="Koperasi" sub="Co-operatives" value={stats.coops} tone="violet" />
+          <StatCard icon="chart" label="Penilaian Selesai" sub="Readiness Completed" value={stats.readinessDone} tone="emerald" />
+          <StatCard icon="target" label="Bidang Popular" sub={stats.topAreaLabel} value={stats.topAreaCount} tone="rose" isText textValue={stats.topAreaShort} />
+          <StatCard icon="spark" label="Prompt Dicuba" sub="Prompt Missions Tried" value={stats.promptsTried} tone="amber" />
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          {/* Charts */}
+          <div className="space-y-6 lg:col-span-2">
+            <Panel title="Bidang Paling Popular" subtitle="Work Area Popularity">
+              <BarList
+                items={WORK_AREAS.map((a) => ({ label: a.title, value: stats.areaCounts[a.id] ?? 0, accent: a.accent }))}
+                max={Math.max(1, ...Object.values(stats.areaCounts))}
+              />
+            </Panel>
+
+            <Panel title="Status Kesiapsiagaan AI" subtitle="Readiness Distribution">
+              <BarList
+                items={READINESS_BANDS.map((b) => ({ label: b.label, value: stats.bandCounts[b.label] ?? 0, accent: "blue" }))}
+                max={Math.max(1, ...Object.values(stats.bandCounts))}
+              />
+            </Panel>
+          </div>
+
+          {/* QR generator */}
+          <Panel title="QR Generator Kehadiran" subtitle="Jana · Cetak · Muat Turun">
+            <QRCodeCard
+              value={checkInUrl}
+              caption="Imbas untuk daftar kehadiran ProgramOS Lite"
+              downloadName="programos-lite-checkin-qr.png"
+              size={190}
+            />
+            <div className="mt-3 rounded-xl bg-sand-100 px-3 py-2 text-[11px] text-navy-500">
+              QR menghala ke: <span className="break-all font-semibold">{checkInUrl}</span>
             </div>
+            <button onClick={() => window.print()} className="btn-outline mt-3 w-full text-sm">
+              <Icon name="document" className="h-4 w-4" /> Cetak QR
+            </button>
+          </Panel>
+        </div>
 
-            {/* Summary cards */}
-            <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-              <StatCard label="Participants" value={stats.total} icon="users" accent />
-              <StatCard label="Attendance" value={stats.attendanceTotal} icon="checkCircle" accent />
-              <StatCard label="Completed Profiles" value={stats.profiles} icon="clipboard" />
-              <StatCard label="Assessments" value={stats.assessments} icon="chart" />
-              <StatCard label="Action Plans" value={stats.actionPlans} icon="target" />
-              <StatCard label="Avg Score" value={stats.avgScore} suffix="/100" icon="spark" accent />
-            </section>
-
-            {/* Attendance by session */}
-            <section className="mt-6">
-              <h2 className="section-eyebrow">Attendance by Session</h2>
-              <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                {eventConfig.attendanceSessions.map((s) => (
-                  <div key={s.id} className="card p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-navy-700">
-                        {s.label} · {s.weekday}
-                      </span>
-                      <Icon name="calendar" className="h-4 w-4 text-navy-300" />
-                    </div>
-                    <div className="mt-1 text-2xl font-extrabold text-navy-900">
-                      {stats.attendanceBySession[s.id] ?? 0}
-                      <span className="text-sm font-semibold text-navy-400">
-                        {" "}/ {stats.total}
-                      </span>
-                    </div>
-                    <div className="text-[11px] text-navy-400">{s.date}</div>
-                  </div>
-                ))}
-                {stats.customSessionIds.map((id) => (
-                  <div key={id} className="card p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-navy-700">
-                        {deslugifyLabel(id)}
-                      </span>
-                      <Icon name="qr" className="h-4 w-4 text-navy-300" />
-                    </div>
-                    <div className="mt-1 text-2xl font-extrabold text-navy-900">
-                      {stats.attendanceBySession[id] ?? 0}
-                      <span className="text-sm font-semibold text-navy-400">
-                        {" "}/ {stats.total}
-                      </span>
-                    </div>
-                    <div className="text-[11px] text-navy-400">Custom session</div>
-                  </div>
-                ))}
+        {/* Participants */}
+        <Panel
+          title={`Peserta (${filtered.length})`}
+          subtitle="Senarai penyertaan"
+          action={
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Icon name="search" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-300" />
+                <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari…" className="w-40 rounded-full border border-navy-100 bg-white py-2 pl-9 pr-3 text-sm focus:outline-none sm:w-52" />
               </div>
-            </section>
-
-            {/* Attendance QR generator */}
-            <QRGenerator />
-
-            {/* Group readiness averages */}
-            <section className="mt-6">
-              <h2 className="section-eyebrow">Group Readiness Averages</h2>
-              <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
-                {INDICATORS.map((ind) => {
-                  const avg = stats.indicatorAverages[ind.id] ?? 0;
-                  const pct = (avg / 20) * 100;
-                  return (
-                    <div key={ind.id} className="card p-4">
-                      <div className="flex items-center gap-2">
-                        <Icon name={ind.icon} className="h-4 w-4 text-navy-500" />
-                        <span className="text-xs font-bold text-navy-700">{ind.titleShort}</span>
-                      </div>
-                      <div className="mt-2 text-2xl font-extrabold text-navy-900">
-                        {avg.toFixed(1)}
-                        <span className="text-sm font-semibold text-navy-400">/20</span>
-                      </div>
-                      <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-navy-100">
-                        <div className="h-full rounded-full bg-gold-400" style={{ width: `${pct}%` }} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* Insight cards */}
-            <section className="mt-6">
-              <h2 className="section-eyebrow">Programme Insights</h2>
-              <div className="mt-3 grid grid-cols-2 gap-3 lg:grid-cols-3">
-                <InsightCard label="Without a website" value={stats.noWebsite} tone="orange" />
-                <InsightCard label="Profile needs improvement" value={stats.profileNeedsWork} tone="orange" />
-                <InsightCard label="Need tender-readiness support" value={stats.lowTender} tone="amber" />
-                <InsightCard label="Need digital-readiness support" value={stats.lowDigital} tone="amber" />
-                <InsightCard label="Most common CIDB grade" value={stats.commonGrade} tone="navy" isText />
-                <InsightCard label="Most common category" value={stats.commonCategory} tone="navy" isText />
-              </div>
-            </section>
-
-            {/* Participant table */}
-            <section className="mt-6">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <h2 className="section-eyebrow">Participants ({filtered.length})</h2>
-                <div className="flex flex-wrap items-center gap-2">
-                  <div className="relative">
-                    <Icon name="search" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-300" />
-                    <input
-                      className="field-input py-2 pl-9 pr-3 text-sm"
-                      placeholder="Search name, company, mobile…"
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                    />
-                  </div>
-                  <select
-                    className="field-input w-auto py-2 text-sm"
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value as typeof filter)}
-                  >
-                    <option value="all">All</option>
-                    <option value="assessed">Assessed</option>
-                    <option value="noProfile">No profile</option>
-                  </select>
-                </div>
-              </div>
-
+              <button onClick={() => exportCsv(records)} disabled={!records.length} className="btn-gold text-sm disabled:opacity-50">
+                <Icon name="download" className="h-4 w-4" /> <span className="hidden sm:inline">CSV</span>
+              </button>
+            </div>
+          }
+        >
+          {loading ? (
+            <div className="py-12 text-center text-sm text-navy-400">Memuatkan…</div>
+          ) : filtered.length === 0 ? (
+            <div className="py-12 text-center text-sm text-navy-400">Tiada peserta lagi.</div>
+          ) : (
+            <>
               {/* Desktop table */}
-              <div className="mt-3 hidden overflow-x-auto rounded-2xl border border-navy-100 bg-white lg:block">
-                <table className="w-full text-sm">
+              <div className="-mx-2 hidden overflow-x-auto sm:block">
+                <table className="w-full min-w-[720px] text-sm">
                   <thead>
-                    <tr className="border-b border-navy-100 bg-navy-50 text-left text-xs uppercase tracking-wide text-navy-500">
-                      <th className="px-4 py-3">Name</th>
-                      <th className="px-4 py-3">Company</th>
-                      <th className="px-4 py-3">Mobile</th>
-                      <th className="px-4 py-3">Att.</th>
-                      <th className="px-4 py-3">CIDB</th>
-                      <th className="px-4 py-3">Profile</th>
-                      <th className="px-4 py-3">Score</th>
-                      <th className="px-4 py-3">Category</th>
-                      <th className="px-4 py-3">Plan</th>
-                      <th className="px-4 py-3"></th>
+                    <tr className="text-left text-[11px] font-bold uppercase tracking-wide text-navy-400">
+                      <th className="px-2 py-2">Peserta</th>
+                      <th className="px-2 py-2">Koperasi</th>
+                      <th className="px-2 py-2">Peranan</th>
+                      <th className="px-2 py-2">Hadir</th>
+                      <th className="px-2 py-2">Skor</th>
+                      <th className="px-2 py-2">Bidang</th>
+                      <th className="px-2 py-2 text-right">Tindakan</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {filtered.map((r) => (
-                      <tr key={r.participant.id} className="border-b border-navy-50 hover:bg-sand-50">
-                        <td className="px-4 py-3 font-semibold text-navy-900">{r.participant.fullName}</td>
-                        <td className="px-4 py-3 text-navy-600">{r.participant.companyName}</td>
-                        <td className="px-4 py-3 text-navy-600">{r.participant.mobile}</td>
-                        <td className="px-4 py-3 font-semibold text-navy-700">
-                          {r.attendance.length}/{eventConfig.attendanceSessions.length}
-                        </td>
-                        <td className="px-4 py-3">{r.profile?.cidbGrade ?? "—"}</td>
-                        <td className="px-4 py-3">
-                          <StatusDot ok={Boolean(r.profile)} />
-                        </td>
-                        <td className="px-4 py-3 font-bold text-navy-900">
-                          {r.result ? r.result.totalScore : "—"}
-                        </td>
-                        <td className="px-4 py-3 text-xs text-navy-500">
-                          {r.result?.readinessCategory ?? "—"}
-                        </td>
-                        <td className="px-4 py-3">
-                          <StatusDot ok={Boolean(r.actionPlan)} />
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center gap-3">
-                            <Link
-                              to={`/admin/participant/${r.participant.id}`}
-                              className="font-semibold text-navy-700 hover:text-gold-600"
-                            >
-                              View
-                            </Link>
-                            <button
-                              type="button"
-                              onClick={() => handleDelete(r)}
-                              disabled={deletingId === r.participant.id}
-                              className="font-semibold text-red-600 hover:text-red-700 disabled:opacity-40"
-                              title="Delete participant"
-                            >
-                              {deletingId === r.participant.id ? "…" : "Delete"}
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                  <tbody className="divide-y divide-navy-50">
+                    {filtered.map((r) => {
+                      const p = r.participant;
+                      const area = p.selectedWorkArea ? getWorkArea(p.selectedWorkArea) : undefined;
+                      return (
+                        <tr key={p.id} className="hover:bg-sand-50">
+                          <td className="px-2 py-2.5">
+                            <div className="font-semibold text-navy-900">{p.fullName}</div>
+                            <div className="text-[11px] text-navy-400">{p.ref} · {p.mobile}</div>
+                          </td>
+                          <td className="px-2 py-2.5 text-navy-700">{p.coopName || p.companyName || "—"}</td>
+                          <td className="px-2 py-2.5 text-navy-600">{p.role || "—"}</td>
+                          <td className="px-2 py-2.5">{r.attendance.length ? <span className="chip bg-emerald-100 text-emerald-700">Hadir</span> : <span className="chip bg-navy-50 text-navy-400">—</span>}</td>
+                          <td className="px-2 py-2.5 font-bold text-navy-900">{p.readinessScore != null ? `${p.readinessScore}` : "—"}</td>
+                          <td className="px-2 py-2.5 text-navy-600">{area ? area.title : "—"}</td>
+                          <td className="px-2 py-2.5">
+                            <div className="flex items-center justify-end gap-1">
+                              <Link to={`/admin/participant/${p.id}`} className="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-navy-700 hover:bg-navy-50">Lihat</Link>
+                              <button onClick={() => handleDelete(r)} disabled={deletingId === p.id} className="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 disabled:opacity-40">Padam</button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
 
               {/* Mobile cards */}
-              <div className="mt-3 space-y-3 lg:hidden">
-                {filtered.map((r) => (
-                  <Link
-                    key={r.participant.id}
-                    to={`/admin/participant/${r.participant.id}`}
-                    className="card block p-4"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <div className="truncate font-bold text-navy-900">{r.participant.fullName}</div>
-                        <div className="truncate text-xs text-navy-500">{r.participant.companyName}</div>
+              <div className="space-y-2 sm:hidden">
+                {filtered.map((r) => {
+                  const p = r.participant;
+                  const area = p.selectedWorkArea ? getWorkArea(p.selectedWorkArea) : undefined;
+                  return (
+                    <div key={p.id} className="rounded-2xl border border-navy-100 p-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="truncate font-semibold text-navy-900">{p.fullName}</div>
+                          <div className="text-[11px] text-navy-400">{p.coopName || p.companyName} · {p.role || "—"}</div>
+                        </div>
+                        {r.attendance.length ? <span className="chip bg-emerald-100 text-emerald-700">Hadir</span> : <span className="chip bg-navy-50 text-navy-400">—</span>}
                       </div>
-                      <div className="flex shrink-0 items-center gap-2">
-                        {r.result && (
-                          <span className="chip bg-navy-800 text-white">
-                            {r.result.totalScore}/100
-                          </span>
-                        )}
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleDelete(r);
-                          }}
-                          disabled={deletingId === r.participant.id}
-                          className="rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600 disabled:opacity-40"
-                        >
-                          {deletingId === r.participant.id ? "…" : "Delete"}
-                        </button>
+                      <div className="mt-2 flex flex-wrap gap-1.5 text-[11px] text-navy-500">
+                        <span className="chip bg-navy-50 text-navy-600">{p.ref}</span>
+                        {p.readinessScore != null && <span className="chip bg-navy-50 text-navy-600">Skor {p.readinessScore}</span>}
+                        {area && <span className="chip bg-navy-50 text-navy-600">{area.title}</span>}
+                      </div>
+                      <div className="mt-2 flex justify-end gap-1">
+                        <Link to={`/admin/participant/${p.id}`} className="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-navy-700 hover:bg-navy-50">Lihat</Link>
+                        <button onClick={() => handleDelete(r)} disabled={deletingId === p.id} className="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 disabled:opacity-40">Padam</button>
                       </div>
                     </div>
-                    <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
-                      <span className="chip bg-navy-50 text-navy-600">{r.participant.mobile}</span>
-                      <span className="chip bg-navy-50 text-navy-600">
-                        Att {r.attendance.length}/{eventConfig.attendanceSessions.length}
-                      </span>
-                      {r.profile?.cidbGrade && (
-                        <span className="chip bg-navy-50 text-navy-600">{r.profile.cidbGrade}</span>
-                      )}
-                      <span className={`chip ${r.profile ? "bg-green-50 text-green-700" : "bg-orange-50 text-orange-700"}`}>
-                        {r.profile ? "Profile ✓" : "No profile"}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
+                  );
+                })}
               </div>
+            </>
+          )}
+        </Panel>
 
-              {filtered.length === 0 && (
-                <div className="rounded-2xl border border-dashed border-navy-200 py-12 text-center text-sm text-navy-400">
-                  No participants match your search.
-                </div>
-              )}
-            </section>
-          </>
-        )}
+        <p className="pb-6 text-center text-[11px] text-navy-400">
+          {PROMPT_COUNT} prompt · {WORK_AREAS.length} bidang · {eventConfig.eventName}
+        </p>
       </main>
     </div>
   );
 }
 
-function StatCard({
-  label,
-  value,
-  suffix,
-  icon,
-  accent,
-}: {
-  label: string;
-  value: number | string;
-  suffix?: string;
-  icon: string;
-  accent?: boolean;
-}) {
-  return (
-    <div className={`card p-4 ${accent ? "ring-1 ring-gold-200" : ""}`}>
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-navy-400">{label}</span>
-        <Icon name={icon} className={`h-4 w-4 ${accent ? "text-gold-500" : "text-navy-300"}`} />
-      </div>
-      <div className="mt-1 text-2xl font-extrabold text-navy-900">
-        {value}
-        {suffix && <span className="text-sm font-semibold text-navy-400">{suffix}</span>}
-      </div>
-    </div>
-  );
+// ── Stats ────────────────────────────────────────────────────
+interface Stats {
+  total: number; coops: number; readinessDone: number; promptsTried: number;
+  areaCounts: Record<string, number>; bandCounts: Record<string, number>;
+  topAreaShort: string; topAreaLabel: string; topAreaCount: number;
+}
+function computeStats(records: ParticipantRecord[]): Stats {
+  const coopSet = new Set<string>();
+  const areaCounts: Record<string, number> = {};
+  const bandCounts: Record<string, number> = {};
+  let readinessDone = 0;
+  let promptsTried = 0;
+  for (const r of records) {
+    const p = r.participant;
+    const coop = (p.coopName || p.companyName || "").trim().toLowerCase();
+    if (coop) coopSet.add(coop);
+    if (p.selectedWorkArea) areaCounts[p.selectedWorkArea] = (areaCounts[p.selectedWorkArea] ?? 0) + 1;
+    if (p.readinessScore != null || r.result) {
+      readinessDone++;
+      const band = p.readinessCategory || r.result?.readinessCategory;
+      if (band) bandCounts[band] = (bandCounts[band] ?? 0) + 1;
+    }
+    promptsTried += p.triedPromptIds?.length ?? 0;
+  }
+  let topId = ""; let topCount = 0;
+  for (const [id, c] of Object.entries(areaCounts)) if (c > topCount) { topId = id; topCount = c; }
+  const topArea = topId ? getWorkArea(topId) : undefined;
+  return {
+    total: records.length, coops: coopSet.size, readinessDone, promptsTried,
+    areaCounts, bandCounts,
+    topAreaShort: topArea ? topArea.title.split(" ")[0] : "—",
+    topAreaLabel: topArea ? "Most Selected" : "Belum ada",
+    topAreaCount: topCount,
+  };
 }
 
-function InsightCard({
-  label,
-  value,
-  tone,
-  isText,
-}: {
-  label: string;
-  value: number | string;
-  tone: "orange" | "amber" | "navy";
-  isText?: boolean;
+// ── UI bits ──────────────────────────────────────────────────
+function StatCard({ icon, label, sub, value, tone, isText, textValue }: {
+  icon: string; label: string; sub: string; value: number; tone: string; isText?: boolean; textValue?: string;
 }) {
-  const tones = {
-    orange: "text-orange-600",
-    amber: "text-amber-600",
-    navy: "text-navy-900",
-  };
+  const ac = areaAccent(tone === "navy" ? "blue" : tone);
   return (
     <div className="card p-4">
-      <div className={`font-extrabold ${isText ? "text-lg" : "text-2xl"} ${tones[tone]}`}>
-        {value}
-      </div>
-      <div className="mt-0.5 text-xs font-medium text-navy-500">{label}</div>
+      <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${ac.badge}`}><Icon name={icon} className="h-4 w-4" /></span>
+      <div className="mt-3 font-display text-2xl font-extrabold text-navy-900">{isText ? (textValue || "—") : value}</div>
+      <div className="text-sm font-bold text-navy-700">{label}</div>
+      <div className="text-[11px] text-navy-400">{sub}</div>
     </div>
   );
 }
 
-function StatusDot({ ok }: { ok: boolean }) {
+function Panel({ title, subtitle, action, children }: { title: string; subtitle?: string; action?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
-        ok ? "text-green-600" : "text-navy-300"
-      }`}
-    >
-      <span className={`h-2 w-2 rounded-full ${ok ? "bg-green-500" : "bg-navy-200"}`} />
-      {ok ? "Yes" : "No"}
-    </span>
-  );
-}
-
-// ── stats computation ─────────────────────────────────────────
-function computeStats(records: ParticipantRecord[]) {
-  const total = records.length;
-  const withResult = records.filter((r) => r.result);
-  const profiles = records.filter((r) => r.profile).length;
-  const assessments = withResult.length;
-  const actionPlans = records.filter((r) => r.actionPlan).length;
-
-  const attendanceBySession: Record<string, number> = {};
-  for (const s of eventConfig.attendanceSessions) attendanceBySession[s.id] = 0;
-  let attendanceTotal = 0;
-  for (const r of records) {
-    for (const a of r.attendance) {
-      attendanceTotal += 1;
-      attendanceBySession[a.session] = (attendanceBySession[a.session] ?? 0) + 1;
-    }
-  }
-  // Custom sessions created via the admin QR generator (not preset days).
-  const presetIds = new Set(eventConfig.attendanceSessions.map((s) => s.id));
-  const customSessionIds = Object.keys(attendanceBySession).filter(
-    (id) => !presetIds.has(id)
-  );
-
-  const avgScore =
-    withResult.length > 0
-      ? Math.round(withResult.reduce((s, r) => s + (r.result?.totalScore ?? 0), 0) / withResult.length)
-      : 0;
-
-  const indicatorAverages: Record<string, number> = {};
-  for (const ind of INDICATORS) {
-    if (withResult.length === 0) {
-      indicatorAverages[ind.id] = 0;
-      continue;
-    }
-    indicatorAverages[ind.id] =
-      withResult.reduce((s, r) => s + (r.result?.indicatorScores[ind.id] ?? 0), 0) /
-      withResult.length;
-  }
-
-  const noWebsite = records.filter(
-    (r) => r.profile && !r.profile.digitalLinks.website
-  ).length;
-  const profileNeedsWork = records.filter(
-    (r) => r.profile?.documents.companyProfile === "needs_improvement"
-  ).length;
-  const lowTender = withResult.filter(
-    (r) => (r.result?.indicatorScores.tender ?? 20) < 12
-  ).length;
-  const lowDigital = withResult.filter(
-    (r) => (r.result?.indicatorScores.digital ?? 20) < 12
-  ).length;
-
-  const commonGrade = mostCommon(
-    records.map((r) => r.profile?.cidbGrade).filter(Boolean) as string[]
-  );
-  const commonCategory = mostCommon(
-    records.map((r) => r.profile?.category).filter(Boolean) as string[]
-  );
-
-  return {
-    total,
-    profiles,
-    assessments,
-    actionPlans,
-    avgScore,
-    attendanceTotal,
-    attendanceBySession,
-    customSessionIds,
-    indicatorAverages,
-    noWebsite,
-    profileNeedsWork,
-    lowTender,
-    lowDigital,
-    commonGrade: commonGrade ?? "—",
-    commonCategory: commonCategory ?? "—",
-  };
-}
-
-// "Day 1 Morning" → "day-1-morning"
-function slugify(name: string): string {
-  return name
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
-// "day-1-morning" → "Day 1 Morning"
-function deslugifyLabel(id: string): string {
-  return id
-    .split("-")
-    .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
-    .join(" ");
-}
-
-// ── Attendance QR generator ──────────────────────────────────
-// Admin types any session name → Generate → download the attendance QR.
-// Scanning it records presence for that session (duplicates prevented).
-function QRGenerator() {
-  const origin = publicOrigin();
-  const registrationUrl = `${origin}${eventBase}/register`;
-
-  const [name, setName] = useState("");
-  const [session, setSession] = useState<{ id: string; label: string } | null>(
-    null
-  );
-
-  const generate = () => {
-    const label = name.trim();
-    const id = slugify(label);
-    if (!id) return;
-    setSession({ id, label });
-  };
-
-  const attendUrl = session
-    ? `${origin}/attend/${session.id}?n=${encodeURIComponent(session.label)}`
-    : "";
-
-  return (
-    <section className="mt-6">
-      <h2 className="section-eyebrow">Attendance QR Generator</h2>
-      <p className="mt-1 text-xs text-navy-400">
-        Type any session name (e.g. “Day 1 Morning”, “Site Visit”, “Closing
-        Ceremony”), generate the QR, and download it. Scanning records presence
-        for that session; duplicate scans are ignored.
-      </p>
-
-      <div className="mt-3 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        {/* Generator */}
-        <div className="card p-5 lg:col-span-2">
-          <label className="field-label">Session name</label>
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <input
-              className="field-input flex-1"
-              placeholder="e.g. Day 1 Morning"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && generate()}
-            />
-            <button
-              type="button"
-              onClick={generate}
-              disabled={!name.trim()}
-              className="btn-primary shrink-0"
-            >
-              <Icon name="qr" className="h-5 w-5" />
-              Generate
-            </button>
-          </div>
-
-          {session ? (
-            <div className="mt-4 flex justify-center">
-              <QRCodeCard
-                value={attendUrl}
-                label={`Attendance · ${session.label}`}
-                caption="Scan to record attendance"
-                downloadName={`attendify-attendance-${session.id}-qr.png`}
-                size={200}
-              />
-            </div>
-          ) : (
-            <p className="mt-4 text-center text-xs text-navy-400">
-              Your generated QR will appear here.
-            </p>
-          )}
+    <section className="card p-5">
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <h2 className="font-display text-base font-extrabold text-navy-900">{title}</h2>
+          {subtitle && <p className="text-[11px] font-semibold uppercase tracking-wide text-navy-300">{subtitle}</p>}
         </div>
-
-        {/* Registration QR — always available */}
-        <QRCodeCard
-          value={registrationUrl}
-          label="Registration"
-          caption="Register & Enter Attendify"
-          downloadName="attendify-registration-qr.png"
-          size={190}
-        />
+        {action}
       </div>
-
-      {/* Quick presets for the three programme days */}
-      <p className="mt-5 text-xs font-semibold text-navy-500">Quick day presets</p>
-      <div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {eventConfig.attendanceSessions.map((s) => (
-          <QRCodeCard
-            key={s.id}
-            value={`${origin}/attend/${s.id}`}
-            label={`Attendance · ${s.label}`}
-            caption={`${s.weekday}, ${s.date}`}
-            downloadName={`attendify-attendance-${s.id}-qr.png`}
-            size={170}
-          />
-        ))}
-      </div>
+      {children}
     </section>
   );
 }
 
-function mostCommon(items: string[]): string | null {
-  if (items.length === 0) return null;
-  const counts = new Map<string, number>();
-  for (const i of items) counts.set(i, (counts.get(i) ?? 0) + 1);
-  return [...counts.entries()].sort((a, b) => b[1] - a[1])[0][0];
+function BarList({ items, max }: { items: { label: string; value: number; accent: string }[]; max: number }) {
+  return (
+    <div className="space-y-2.5">
+      {items.map((it) => (
+        <div key={it.label} className="flex items-center gap-3">
+          <span className="w-40 shrink-0 truncate text-xs font-semibold text-navy-600">{it.label}</span>
+          <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-navy-50">
+            <div className={`h-full rounded-full ${areaAccent(it.accent).bar}`} style={{ width: `${(it.value / max) * 100}%` }} />
+          </div>
+          <span className="w-6 shrink-0 text-right text-xs font-bold text-navy-900">{it.value}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── CSV export ───────────────────────────────────────────────
+function exportCsv(records: ParticipantRecord[]) {
+  const headers = ["Rujukan", "Nama", "Koperasi", "Peranan", "Telefon", "Emel", "Hadir", "Skor Kesiapsiagaan", "Kategori", "Bidang Dipilih", "Prompt Dicuba", "Prompt Disimpan", "Daftar Pada"];
+  const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const rows = records.map((r) => {
+    const p = r.participant;
+    const area = p.selectedWorkArea ? getWorkArea(p.selectedWorkArea)?.title : "";
+    return [
+      p.ref, p.fullName, p.coopName || p.companyName, p.role || "", p.mobile, p.email,
+      r.attendance.length ? "Ya" : "Tidak",
+      p.readinessScore ?? "", p.readinessCategory ?? "", area ?? "",
+      p.triedPromptIds?.length ?? 0, p.savedPrompts?.length ?? 0,
+      new Date(p.checkedInAt).toLocaleString("en-MY"),
+    ].map(esc).join(",");
+  });
+  const csv = [headers.map(esc).join(","), ...rows].join("\n");
+  const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `programos-lite-peserta-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }

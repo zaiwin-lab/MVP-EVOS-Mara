@@ -23,6 +23,8 @@ export interface RegistrationInput {
   mobile: string;
   email: string;
   companyName?: string;
+  coopName?: string; // ANGKASA: Nama Koperasi
+  role?: string; // ANGKASA: Peranan
 }
 
 export interface Store {
@@ -51,7 +53,26 @@ function normalizeMobile(m: string): string {
 }
 
 function makeRef(): string {
-  return `VDP-${Math.floor(1000 + Math.random() * 9000)}`;
+  return `${eventConfig.refPrefix}-${Math.floor(1000 + Math.random() * 9000)}`;
+}
+
+/** Build a fresh Participant from a registration input (shared by adapters). */
+function buildParticipant(input: RegistrationInput): Participant {
+  const coop = input.coopName?.trim() || input.companyName?.trim() || "";
+  return {
+    id: makeId(),
+    ref: makeRef(),
+    eventSlug: eventConfig.slug,
+    fullName: input.fullName.trim(),
+    mobile: input.mobile.trim(),
+    email: input.email.trim(),
+    companyName: coop,
+    coopName: coop || undefined,
+    role: input.role?.trim() || undefined,
+    checkedInAt: now(),
+    createdAt: now(),
+    updatedAt: now(),
+  };
 }
 
 function makeId(): string {
@@ -148,18 +169,7 @@ class LocalAdapter implements Store {
 
   async createParticipant(input: RegistrationInput): Promise<Participant> {
     const list = read<Participant[]>(K.participants, []);
-    const participant: Participant = {
-      id: makeId(),
-      ref: makeRef(),
-      eventSlug: eventConfig.slug,
-      fullName: input.fullName.trim(),
-      mobile: input.mobile.trim(),
-      email: input.email.trim(),
-      companyName: input.companyName?.trim() || "",
-      checkedInAt: now(),
-      createdAt: now(),
-      updatedAt: now(),
-    };
+    const participant = buildParticipant(input);
     write(K.participants, [participant, ...list]);
     return participant;
   }
@@ -302,18 +312,7 @@ class SupabaseAdapter implements Store {
   }
 
   async createParticipant(input: RegistrationInput): Promise<Participant> {
-    const participant: Participant = {
-      id: makeId(),
-      ref: makeRef(),
-      eventSlug: eventConfig.slug,
-      fullName: input.fullName.trim(),
-      mobile: input.mobile.trim(),
-      email: input.email.trim(),
-      companyName: input.companyName?.trim() || "",
-      checkedInAt: now(),
-      createdAt: now(),
-      updatedAt: now(),
-    };
+    const participant = buildParticipant(input);
     await this.db.from("participants").insert({
       id: participant.id,
       event_slug: participant.eventSlug,

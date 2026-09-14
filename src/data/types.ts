@@ -13,6 +13,15 @@ export type DocumentStatus =
   | "needs_improvement"
   | "not_available";
 
+/** A prompt the participant built and saved to "Senarai Saya". */
+export interface SavedPrompt {
+  id: string; // prompt mission id
+  areaId: string;
+  title: string;
+  text: string;
+  savedAt: string;
+}
+
 export interface Participant {
   id: string;
   ref: string; // human-friendly confirmation reference, e.g. VDP-4821
@@ -31,6 +40,16 @@ export interface Participant {
   profileCompleted?: boolean;
   assessmentCompleted?: boolean;
   actionPlanCompleted?: boolean;
+
+  // ── ANGKASA ProgramOS Lite (optional; stored only on this event's rows) ──
+  coopName?: string; // Nama Koperasi
+  role?: string; // Peranan
+  selectedWorkArea?: string; // one of the 6 work-area ids
+  readinessCategory?: string; // cached snapshot band label
+  readinessScore?: number; // cached /100
+  triedPromptIds?: string[]; // prompt missions the participant has opened/built
+  savedPrompts?: SavedPrompt[]; // saved to "Senarai Saya"
+  journeyReflection?: Record<string, string>; // 90-day light reflection
 }
 
 // One attendance mark per participant per session (Day 1/2/3, …).

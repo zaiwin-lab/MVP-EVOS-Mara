@@ -1,20 +1,18 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { eventConfig } from "./config/eventConfig";
-import { FloatingActions } from "./components/FloatingActions";
 import Landing from "./pages/Landing";
 import Programme from "./pages/Programme";
-import Trainers from "./pages/Trainers";
-import Resources from "./pages/Resources";
-import Register from "./pages/Register";
+import PromptHub from "./pages/PromptHub";
+import WorkArea from "./pages/WorkArea";
+import PromptBuilder from "./pages/PromptBuilder";
+import Readiness from "./pages/Readiness";
+import Journey90 from "./pages/Journey90";
+import Sumber from "./pages/Sumber";
+import Gallery from "./pages/Gallery";
+import Faq from "./pages/Faq";
+import CheckIn from "./pages/CheckIn";
+import MySpace from "./pages/MySpace";
 import Login from "./pages/Login";
-import Attend from "./pages/Attend";
-import Journey from "./pages/Journey";
-import Profile from "./pages/Profile";
-import Assessment from "./pages/Assessment";
-import Results from "./pages/Results";
-import ActionPlan from "./pages/ActionPlan";
-import Reflection from "./pages/Reflection";
-import QRPage from "./pages/QRPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminParticipant from "./pages/admin/AdminParticipant";
 
@@ -22,35 +20,32 @@ const slug = eventConfig.slug;
 
 export default function App() {
   return (
-    <>
     <Routes>
-      {/* Public landing + event-scoped QR entry points */}
+      {/* Public — home + programme */}
       <Route path="/" element={<Landing />} />
       <Route path={`/event/${slug}`} element={<Landing />} />
-      {/* Registration QR (new + legacy check-in path both register) */}
-      <Route path={`/event/${slug}/register`} element={<Register />} />
-      <Route path={`/event/${slug}/check-in`} element={<Register />} />
+      <Route path="/program" element={<Programme />} />
+      <Route path="/faq" element={<Faq />} />
 
-      {/* Participant portal */}
-      <Route path="/register" element={<Register />} />
+      {/* Prompt Hub — 6 work areas → 10 missions → builder */}
+      <Route path="/prompt-hub" element={<PromptHub />} />
+      <Route path="/prompt-hub/:areaId" element={<WorkArea />} />
+      <Route path="/prompt-hub/:areaId/:missionId" element={<PromptBuilder />} />
+
+      {/* Readiness + journey */}
+      <Route path="/readiness" element={<Readiness />} />
+      <Route path="/journey" element={<Journey90 />} />
+
+      {/* Resources + gallery */}
+      <Route path="/sumber" element={<Sumber />} />
+      <Route path="/galeri" element={<Gallery />} />
+
+      {/* Check-in / registration (QR target) + participant portal */}
+      <Route path="/check-in" element={<CheckIn />} />
+      <Route path={`/event/${slug}/check-in`} element={<CheckIn />} />
+      <Route path="/daftar" element={<CheckIn />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/check-in" element={<Navigate to="/register" replace />} />
-      <Route path="/my" element={<Journey />} />
-      <Route path="/journey" element={<Journey />} />
-      <Route path="/attend/:session" element={<Attend />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/assessment" element={<Assessment />} />
-      <Route path="/result" element={<Results />} />
-      <Route path="/action-plan" element={<ActionPlan />} />
-      <Route path="/reflection" element={<Reflection />} />
-
-      {/* Programme information */}
-      <Route path="/programme" element={<Programme />} />
-      <Route path="/trainers" element={<Trainers />} />
-      <Route path="/resources" element={<Resources />} />
-
-      {/* Utilities */}
-      <Route path="/qr" element={<QRPage />} />
+      <Route path="/my" element={<MySpace />} />
 
       {/* Admin */}
       <Route path="/admin" element={<AdminDashboard />} />
@@ -59,7 +54,5 @@ export default function App() {
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-    <FloatingActions />
-    </>
   );
 }
