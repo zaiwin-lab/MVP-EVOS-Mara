@@ -40,10 +40,14 @@ export default function App() {
       <Route path="/sumber" element={<Sumber />} />
       <Route path="/galeri" element={<Gallery />} />
 
-      {/* Check-in / registration (QR target) + participant portal */}
-      <Route path="/check-in" element={<CheckIn />} />
-      <Route path={`/event/${slug}/check-in`} element={<CheckIn />} />
-      <Route path="/daftar" element={<CheckIn />} />
+      {/* On-site check-in (QR target — marks attendance) */}
+      <Route path="/check-in" element={<CheckIn mode="checkin" />} />
+      <Route path={`/event/${slug}/check-in`} element={<CheckIn mode="checkin" />} />
+
+      {/* Public promo registration (sign-up, no attendance mark) */}
+      <Route path="/register" element={<CheckIn mode="register" />} />
+      <Route path="/daftar" element={<CheckIn mode="register" />} />
+      <Route path={`/event/${slug}/register`} element={<CheckIn mode="register" />} />
       <Route path="/login" element={<Login />} />
       <Route path="/my" element={<MySpace />} />
 
