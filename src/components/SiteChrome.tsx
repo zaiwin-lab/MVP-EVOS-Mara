@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { eventConfig } from "../config/eventConfig";
 import { NAV, PILLARS } from "../content/site";
+import { useParticipant } from "../context/ParticipantContext";
 import { LogoMark } from "./Brand";
 import { Icon } from "./Icon";
 
@@ -37,6 +38,118 @@ export function PartnerStrip({ className = "" }: { className?: string }) {
   );
 }
 
+function initials(name = ""): string {
+  const parts = name.trim().split(/\s+/).slice(0, 2);
+  return parts.map((w) => w[0] ?? "").join("").toUpperCase() || "?";
+}
+
+/**
+ * Signed-in state in the global header: who you are, a way to your profile,
+ * and a way out — on every page. Without this the header looked identical
+ * whether or not you were logged in, which read as "it logged me out".
+ */
+export function AccountMenu() {
+  const { record, signOut } = useParticipant();
+  const [open, setOpen] = useState(false);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  // Close on outside click and on Escape, like a native menu.
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (boxRef.current && !boxRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  // Navigating away should close the menu.
+  useEffect(() => setOpen(false), [pathname]);
+
+  const p = record?.participant;
+
+  // Signed out — the existing check-in call to action stands in.
+  if (!p) {
+    return (
+      <Link
+        to="/check-in"
+        className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-gold-400 px-4 py-2 text-sm font-bold text-navy-900 shadow-gold hover:bg-gold-300 lg:ml-2"
+      >
+        <Icon name="qr" className="h-4 w-4" />
+        <span className="hidden sm:inline">Log Masuk / Check-In</span>
+        <span className="sm:hidden">Check-In</span>
+      </Link>
+    );
+  }
+
+  return (
+    <div ref={boxRef} className="relative ml-auto lg:ml-2">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        className="flex items-center gap-2 rounded-full border border-navy-100 bg-navy-50 py-1 pl-1 pr-3 hover:bg-navy-100"
+      >
+        <span
+          className="grid h-7 w-7 place-items-center rounded-full bg-gold-400 text-[11px] font-extrabold text-navy-900"
+          aria-hidden="true"
+        >
+          {initials(p.fullName)}
+        </span>
+        <span className="max-w-[92px] truncate text-sm font-bold text-navy-800">
+          {p.fullName.split(" ")[0]}
+        </span>
+        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-navy-400" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+
+      {open && (
+        <div
+          role="menu"
+          className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-xl"
+        >
+          <div className="border-b border-navy-100 bg-navy-50 px-4 py-3">
+            <p className="truncate text-sm font-bold text-navy-900">{p.fullName}</p>
+            <p className="truncate text-xs text-navy-500">{p.coopName || p.companyName || p.email}</p>
+            {p.ref && (
+              <span className="mt-1.5 inline-block rounded bg-white px-1.5 py-0.5 font-mono text-[10px] font-bold text-navy-600">
+                {p.ref}
+              </span>
+            )}
+          </div>
+          <Link to="/my" role="menuitem" className="block px-4 py-2.5 text-sm font-semibold text-navy-800 hover:bg-navy-50">
+            Profil Saya
+          </Link>
+          <Link to="/my#prompts" role="menuitem" className="block px-4 py-2.5 text-sm font-semibold text-navy-800 hover:bg-navy-50">
+            Senarai Prompt Saya
+          </Link>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => {
+              setOpen(false);
+              signOut();
+              navigate("/");
+            }}
+            className="block w-full border-t border-navy-100 px-4 py-2.5 text-left text-sm font-semibold text-navy-500 hover:bg-navy-50"
+          >
+            Log Keluar
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
@@ -68,14 +181,7 @@ export function SiteHeader() {
             </NavLink>
           ))}
         </nav>
-        <Link
-          to="/check-in"
-          className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-gold-400 px-4 py-2 text-sm font-bold text-navy-900 shadow-gold hover:bg-gold-300 lg:ml-2"
-        >
-          <Icon name="qr" className="h-4 w-4" />
-          <span className="hidden sm:inline">Log Masuk / Check-In</span>
-          <span className="sm:hidden">Check-In</span>
-        </Link>
+        <AccountMenu />
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
@@ -106,9 +212,40 @@ export function SiteHeader() {
               </Link>
             ))}
           </div>
+          <MobileAccountLinks onNavigate={() => setOpen(false)} />
         </nav>
       )}
     </header>
+  );
+}
+
+/** Profile + log out inside the mobile menu, where the account chip is cramped. */
+function MobileAccountLinks({ onNavigate }: { onNavigate: () => void }) {
+  const { record, signOut } = useParticipant();
+  const navigate = useNavigate();
+  if (!record?.participant) return null;
+
+  return (
+    <div className={`${WRAP} grid grid-cols-2 gap-1 border-t border-navy-100 pb-3`}>
+      <Link
+        to="/my"
+        onClick={onNavigate}
+        className="mt-3 rounded-xl bg-gold-400 px-3 py-2.5 text-center text-sm font-bold text-navy-900"
+      >
+        Profil Saya
+      </Link>
+      <button
+        type="button"
+        onClick={() => {
+          onNavigate();
+          signOut();
+          navigate("/");
+        }}
+        className="mt-3 rounded-xl bg-navy-50 px-3 py-2.5 text-sm font-semibold text-navy-600"
+      >
+        Log Keluar
+      </button>
+    </div>
   );
 }
 
