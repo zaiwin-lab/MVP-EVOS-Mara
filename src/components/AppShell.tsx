@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { AccountChip } from "./AccountChip";
 import { Wordmark } from "./Brand";
 import { Icon } from "./Icon";
 import { LangToggle } from "./LangToggle";
@@ -55,6 +56,7 @@ export function AppShell({
             )}
 
             <div className="flex shrink-0 items-center gap-2">
+              <AccountChip tone="light" />
               <LangToggle tone="light" />
               <Link
                 to="/"

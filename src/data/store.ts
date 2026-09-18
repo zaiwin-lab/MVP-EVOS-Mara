@@ -271,6 +271,23 @@ class SupabaseAdapter implements Store {
         this.db.from("reflections").select("data"),
         this.db.from("attendance").select("data"),
       ]);
+
+    // supabase-js resolves with { data: null, error } rather than throwing.
+    // Reading `.data ?? []` past an error turned any transient failure into
+    // "this event has no records" — and ParticipantContext read that as
+    // "your record was deleted" and cleared the saved session. Surface the
+    // failure instead so callers can tell a broken request from an empty one.
+    for (const res of [
+      participants,
+      profiles,
+      results,
+      actionPlans,
+      reflections,
+      attendance,
+    ]) {
+      if (res.error) throw res.error;
+    }
+
     return assemble(
       (participants.data ?? []).map((r) => r.data as Participant),
       (profiles.data ?? []).map((r) => r.data as CompanyProfile),
