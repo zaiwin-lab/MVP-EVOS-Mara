@@ -384,16 +384,19 @@ function BarList({ items, max }: { items: { label: string; value: number; accent
 }
 
 // ── CSV export ───────────────────────────────────────────────
+type Cell = string | number | null | undefined;
+
 function exportCsv(records: ParticipantRecord[]) {
   const headers = ["Rujukan", "Nama", "Koperasi", "Peranan", "Telefon", "Emel", "Hadir", "Skor Kesiapsiagaan", "Kategori", "Bidang Dipilih", "Prompt Dicuba", "Prompt Disimpan", "Daftar Pada"];
-  const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const esc = (v: Cell) => `"${String(v ?? "").replace(/"/g, '""')}"`;
   const rows = records.map((r) => {
     const p = r.participant;
-    const area = p.selectedWorkArea ? getWorkArea(p.selectedWorkArea)?.title : "";
+    const selected = p.selectedWorkArea ? getWorkArea(p.selectedWorkArea) : undefined;
+    const area = selected ? bm(selected.title) : "";
     return [
       p.ref, p.fullName, p.coopName || p.companyName, p.role || "", p.mobile, p.email,
       r.attendance.length ? "Ya" : "Tidak",
-      p.readinessScore ?? "", p.readinessCategory ?? "", area ?? "",
+      p.readinessScore ?? "", p.readinessCategory ?? "", area,
       p.triedPromptIds?.length ?? 0, p.savedPrompts?.length ?? 0,
       new Date(p.checkedInAt).toLocaleString("en-MY"),
     ].map(esc).join(",");
@@ -517,8 +520,8 @@ function PromptActivityPanel({
 }
 
 function exportPromptCsv(prompts: PromptAttempt[], records: ParticipantRecord[]) {
-  const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-  const rows = [
+  const esc = (v: Cell) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const rows: Cell[][] = [
     ["Nama", "Koperasi", "E-mel", "Prompt", "Bidang", "Kali Guna", "Kali Terakhir", "Jawapan", "Teks Prompt"],
     ...prompts.map((a) => {
       const p = records.find((r) => r.participant.id === a.participantId)?.participant;
@@ -527,7 +530,7 @@ function exportPromptCsv(prompts: PromptAttempt[], records: ParticipantRecord[])
         p?.coopName || p?.companyName || "",
         p?.email ?? "",
         a.promptTitle,
-        getWorkArea(a.areaId)?.title ?? a.areaId,
+        (() => { const wa = getWorkArea(a.areaId); return wa ? bm(wa.title) : a.areaId; })(),
         a.attemptCount,
         new Date(a.lastUsedAt).toLocaleString("ms-MY"),
         JSON.stringify(a.inputs ?? {}),
