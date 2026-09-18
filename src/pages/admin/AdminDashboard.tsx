@@ -8,6 +8,13 @@ import { READINESS_BANDS } from "../../content/readiness";
 import { Icon } from "../../components/Icon";
 import { QRCodeCard } from "../../components/QRCode";
 import { areaAccent } from "../../lib/accents";
+import { pick as pickLang, type Localized } from "../../context/I18nContext";
+
+
+// The admin console is Bahasa Melayu only, and the figures it shows are
+// keyed by the BM wording stored in the database — so localized content is
+// always resolved to BM here rather than to the visitor's chosen language.
+const bm = (v: Localized) => pickLang(v, "bm");
 
 const AUTH_KEY = "attendify:adminAuthed";
 
@@ -159,14 +166,14 @@ function Dashboard({ onSignOut }: { onSignOut: () => void }) {
           <div className="space-y-6 lg:col-span-2">
             <Panel title="Bidang Paling Popular" subtitle="Work Area Popularity">
               <BarList
-                items={WORK_AREAS.map((a) => ({ label: a.title, value: stats.areaCounts[a.id] ?? 0, accent: a.accent }))}
+                items={WORK_AREAS.map((a) => ({ label: bm(a.title), value: stats.areaCounts[a.id] ?? 0, accent: a.accent }))}
                 max={Math.max(1, ...Object.values(stats.areaCounts))}
               />
             </Panel>
 
             <Panel title="Status Kesiapsiagaan AI" subtitle="Readiness Distribution">
               <BarList
-                items={READINESS_BANDS.map((b) => ({ label: b.label, value: stats.bandCounts[b.label] ?? 0, accent: "blue" }))}
+                items={READINESS_BANDS.map((b) => ({ label: bm(b.label), value: stats.bandCounts[bm(b.label)] ?? 0, accent: "blue" }))}
                 max={Math.max(1, ...Object.values(stats.bandCounts))}
               />
             </Panel>
@@ -239,7 +246,7 @@ function Dashboard({ onSignOut }: { onSignOut: () => void }) {
                           <td className="px-2 py-2.5 text-navy-600">{p.role || "—"}</td>
                           <td className="px-2 py-2.5">{r.attendance.length ? <span className="chip bg-emerald-100 text-emerald-700">Hadir</span> : <span className="chip bg-navy-50 text-navy-400">—</span>}</td>
                           <td className="px-2 py-2.5 font-bold text-navy-900">{p.readinessScore != null ? `${p.readinessScore}` : "—"}</td>
-                          <td className="px-2 py-2.5 text-navy-600">{area ? area.title : "—"}</td>
+                          <td className="px-2 py-2.5 text-navy-600">{area ? bm(area.title) : "—"}</td>
                           <td className="px-2 py-2.5">
                             <div className="flex items-center justify-end gap-1">
                               <Link to={`/admin/participant/${p.id}`} className="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-navy-700 hover:bg-navy-50">Lihat</Link>
@@ -270,7 +277,7 @@ function Dashboard({ onSignOut }: { onSignOut: () => void }) {
                       <div className="mt-2 flex flex-wrap gap-1.5 text-[11px] text-navy-500">
                         <span className="chip bg-navy-50 text-navy-600">{p.ref}</span>
                         {p.readinessScore != null && <span className="chip bg-navy-50 text-navy-600">Skor {p.readinessScore}</span>}
-                        {area && <span className="chip bg-navy-50 text-navy-600">{area.title}</span>}
+                        {area && <span className="chip bg-navy-50 text-navy-600">{bm(area.title)}</span>}
                       </div>
                       <div className="mt-2 flex justify-end gap-1">
                         <Link to={`/admin/participant/${p.id}`} className="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-navy-700 hover:bg-navy-50">Lihat</Link>
@@ -324,7 +331,7 @@ function computeStats(records: ParticipantRecord[]): Stats {
   return {
     total: records.length, coops: coopSet.size, readinessDone, promptsTried,
     areaCounts, bandCounts,
-    topAreaShort: topArea ? topArea.title.split(" ")[0] : "—",
+    topAreaShort: topArea ? bm(topArea.title).split(" ")[0] : "—",
     topAreaLabel: topArea ? "Most Selected" : "Belum ada",
     topAreaCount: topCount,
   };
@@ -457,7 +464,7 @@ function PromptActivityPanel({
                     <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[11px] text-navy-500">
                       <span className="font-semibold text-navy-700">{a.promptTitle}</span>
                       <span aria-hidden="true">·</span>
-                      <span>{getWorkArea(a.areaId)?.title ?? a.areaId}</span>
+                      <span>{(() => { const wa = getWorkArea(a.areaId); return wa ? bm(wa.title) : a.areaId; })()}</span>
                       <span aria-hidden="true">·</span>
                       <span>{a.attemptCount}× guna</span>
                       <span aria-hidden="true">·</span>

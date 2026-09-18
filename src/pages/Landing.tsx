@@ -6,15 +6,18 @@ import { READINESS_AREAS } from "../content/readiness";
 import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { areaAccent } from "../lib/accents";
+import { useI18n } from "../context/I18nContext";
 
+/** Hero meta strip. Labels with a key are resolved at render time. */
 const META = [
   { icon: "calendar", label: eventConfig.dates, sub: eventConfig.weekday },
   { icon: "location", label: eventConfig.venue, sub: eventConfig.venueCity },
-  { icon: "users", label: `${eventConfig.expectedParticipants} Peserta`, sub: "Tempat Terhad" },
-  { icon: "team", label: `${eventConfig.maxPerCoop} Wakil`, sub: "Setiap Koperasi" },
-];
+  { icon: "users", labelKey: "metaParticipants", labelN: eventConfig.expectedParticipants, subKey: "metaLimitedPlaces" },
+  { icon: "team", labelKey: "metaReps", labelN: eventConfig.maxPerCoop, subKey: "metaPerCoop" },
+] as const;
 
 export default function Landing() {
+  const { t, pick } = useI18n();
   return (
     <SiteLayout>
       {/* ── Hero ─────────────────────────────────────────────── */}
@@ -31,46 +34,50 @@ export default function Landing() {
         <div className="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-sky-500/10 blur-3xl" />
 
         <div className={`relative ${SITE_WRAP} py-12 lg:py-16`}>
-          <span className="section-eyebrow text-gold-300">{eventConfig.heroKicker}</span>
+          <span className="section-eyebrow text-gold-300">{pick(eventConfig.heroKicker)}</span>
           <h1 className="mt-3 font-display text-4xl font-extrabold leading-[1.02] tracking-tight sm:text-5xl lg:text-6xl">
-            <span className="block">TRANSFORMASI</span>
+            <span className="block">{pick(eventConfig.heroLines[0])}</span>
             <span className="block bg-gradient-to-r from-sky-300 via-cyan-200 to-gold-300 bg-clip-text text-transparent">
-              DIGITAL &amp; AI
+              {pick(eventConfig.heroLines[1])}
             </span>
-            <span className="block">UNTUK KOPERASI</span>
+            <span className="block">{pick(eventConfig.heroLines[2])}</span>
           </h1>
           <p className="mt-4 text-sm font-semibold text-gold-200 sm:text-base">
-            {eventConfig.heroSubline}
+            {pick(eventConfig.heroSubline)}
           </p>
 
           {/* Event meta */}
           <div className="mt-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
-            {META.map((m) => (
-              <div key={m.label} className="rounded-2xl border border-white/10 bg-white/5 p-3.5 backdrop-blur">
-                <div className="flex items-center gap-2 text-gold-300">
-                  <Icon name={m.icon} className="h-4 w-4" />
+            {META.map((m) => {
+              const label = "labelKey" in m ? t(m.labelKey).replace("{n}", String(m.labelN)) : m.label;
+              const sub = "subKey" in m ? t(m.subKey) : m.sub;
+              return (
+                <div key={m.icon} className="rounded-2xl border border-white/10 bg-white/5 p-3.5 backdrop-blur">
+                  <div className="flex items-center gap-2 text-gold-300">
+                    <Icon name={m.icon} className="h-4 w-4" />
+                  </div>
+                  <div className="mt-2 text-sm font-bold leading-tight">{label}</div>
+                  <div className="text-[11px] text-navy-200">{sub}</div>
                 </div>
-                <div className="mt-2 text-sm font-bold leading-tight">{m.label}</div>
-                <div className="text-[11px] text-navy-200">{m.sub}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* CTAs */}
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Link to="/check-in" className="btn-gold text-base sm:px-8">
-              Mulakan Perjalanan AI Anda
+              {t("ldStartJourney")}
               <Icon name="arrowRight" className="h-5 w-5" />
             </Link>
             <Link to="/sumber" className="btn-ghost bg-white/10 text-sm text-white hover:bg-white/20">
-              <Icon name="book" className="h-4 w-4" /> Akses Modul
+              <Icon name="book" className="h-4 w-4" /> {t("ldAccessModules")}
             </Link>
             <Link to="/galeri" className="btn-ghost bg-white/10 text-sm text-white hover:bg-white/20">
-              <Icon name="slides" className="h-4 w-4" /> Galeri Foto
+              <Icon name="slides" className="h-4 w-4" /> {t("ldPhotoGallery")}
             </Link>
           </div>
 
-          <p className="mt-6 text-xs font-medium tracking-wide text-navy-300">{eventConfig.motto}</p>
+          <p className="mt-6 text-xs font-medium tracking-wide text-navy-300">{pick(eventConfig.motto)}</p>
         </div>
       </section>
 
@@ -78,14 +85,14 @@ export default function Landing() {
       <section className={`${SITE_WRAP} py-12 lg:py-16`}>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((f) => (
-            <Link key={f.title} to={f.to} className="card group flex flex-col gap-3 p-5 transition hover:shadow-lift">
+            <Link key={f.to + pick(f.title)} to={f.to} className="card group flex flex-col gap-3 p-5 transition hover:shadow-lift">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy-900 text-gold-300">
                 <Icon name={f.icon} className="h-5 w-5" />
               </span>
-              <div className="font-display text-lg font-bold text-navy-900">{f.title}</div>
-              <p className="text-sm text-navy-500">{f.desc}</p>
+              <div className="font-display text-lg font-bold text-navy-900">{pick(f.title)}</div>
+              <p className="text-sm text-navy-500">{pick(f.desc)}</p>
               <span className="mt-auto inline-flex items-center gap-1 pt-1 text-sm font-semibold text-navy-700 group-hover:text-gold-600">
-                Terokai <Icon name="arrowRight" className="h-4 w-4" />
+                {t("ldExplore")} <Icon name="arrowRight" className="h-4 w-4" />
               </span>
             </Link>
           ))}
@@ -97,19 +104,19 @@ export default function Landing() {
         <div className={SITE_WRAP}>
           <div className="flex items-end justify-between gap-4">
             <div>
-              <span className="section-eyebrow">Pintu Pantas Anda</span>
-              <h2 className="mt-2 font-display text-2xl font-extrabold text-navy-900 sm:text-3xl">Akses Utama Program</h2>
-              <p className="mt-1 text-sm text-navy-500">Semua yang anda perlukan, di satu tempat.</p>
+              <span className="section-eyebrow">{t("ldQuickEyebrow")}</span>
+              <h2 className="mt-2 font-display text-2xl font-extrabold text-navy-900 sm:text-3xl">{t("ldQuickTitle")}</h2>
+              <p className="mt-1 text-sm text-navy-500">{t("ldQuickDesc")}</p>
             </div>
           </div>
           <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
             {QUICK_LINKS.map((q) => (
-              <Link key={q.title} to={q.to} className="group flex flex-col gap-2 rounded-2xl bg-white p-4 shadow-card transition hover:shadow-lift">
+              <Link key={q.to + pick(q.title)} to={q.to} className="group flex flex-col gap-2 rounded-2xl bg-white p-4 shadow-card transition hover:shadow-lift">
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-navy-50 text-navy-700 group-hover:bg-navy-900 group-hover:text-gold-300">
                   <Icon name={q.icon} className="h-5 w-5" />
                 </span>
-                <div className="text-sm font-bold leading-tight text-navy-900">{q.title}</div>
-                <div className="text-[11px] text-navy-400">{q.desc}</div>
+                <div className="text-sm font-bold leading-tight text-navy-900">{pick(q.title)}</div>
+                <div className="text-[11px] text-navy-400">{pick(q.desc)}</div>
               </Link>
             ))}
           </div>
@@ -119,13 +126,11 @@ export default function Landing() {
       {/* ── 6 Work areas teaser ──────────────────────────────── */}
       <section className={`${SITE_WRAP} py-12 lg:py-16`}>
         <div className="max-w-2xl">
-          <span className="section-eyebrow">6 Bidang Utama Koperasi</span>
+          <span className="section-eyebrow">{t("ldAreasEyebrow")}</span>
           <h2 className="mt-2 font-display text-2xl font-extrabold text-navy-900 sm:text-3xl">
-            {PROMPT_COUNT} prompt praktikal, disusun untuk koperasi
+            {t("ldAreasTitle").replace("{n}", String(PROMPT_COUNT))}
           </h2>
-          <p className="mt-3 text-sm text-navy-500 sm:text-base">
-            Setiap bidang mengandungi 10 prompt mission yang direka khas untuk kegunaan koperasi secara praktikal.
-          </p>
+          <p className="mt-3 text-sm text-navy-500 sm:text-base">{t("ldAreasDesc")}</p>
         </div>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {WORK_AREAS.map((a) => {
@@ -135,10 +140,10 @@ export default function Landing() {
                 <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${ac.badge}`}>
                   <Icon name={a.icon} className="h-5 w-5" />
                 </span>
-                <div className="font-display text-base font-bold text-navy-900">{a.title}</div>
-                <p className="text-xs text-navy-500">{a.blurb}</p>
+                <div className="font-display text-base font-bold text-navy-900">{pick(a.title)}</div>
+                <p className="text-xs text-navy-500">{pick(a.blurb)}</p>
                 <span className="mt-auto inline-flex items-center gap-1 pt-1 text-sm font-semibold text-navy-700 group-hover:text-gold-600">
-                  10 Prompt Missions <Icon name="arrowRight" className="h-4 w-4" />
+                  {t("ldMissionsChip")} <Icon name="arrowRight" className="h-4 w-4" />
                 </span>
               </Link>
             );
@@ -147,13 +152,13 @@ export default function Landing() {
         <div className="mt-8 rounded-3xl bg-navy-950 p-6 text-white sm:p-8">
           <div className="grid items-center gap-6 sm:grid-cols-[1fr_auto]">
             <div>
-              <h3 className="font-display text-xl font-extrabold sm:text-2xl">Tidak pasti bidang mana untuk bermula?</h3>
+              <h3 className="font-display text-xl font-extrabold sm:text-2xl">{t("ldUnsureTitle")}</h3>
               <p className="mt-2 text-sm text-navy-200">
-                Lengkapkan AI Readiness Snapshot — {READINESS_AREAS.length} soalan, 2 minit — dan kami cadangkan satu bidang untuk anda mulakan.
+                {t("ldUnsureDesc").replace("{n}", String(READINESS_AREAS.length))}
               </p>
             </div>
             <Link to="/readiness" className="btn-gold shrink-0">
-              Mula Penilaian <Icon name="arrowRight" className="h-5 w-5" />
+              {t("phStartAssessment")} <Icon name="arrowRight" className="h-5 w-5" />
             </Link>
           </div>
         </div>

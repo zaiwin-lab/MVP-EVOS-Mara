@@ -337,6 +337,426 @@ const DICT: Record<string, Localized> = {
     iban: "Nuan udah ditanda datai ke sesi tu.",
   },
   exit: { en: "Exit", bm: "Keluar", zh: "退出", iban: "Pansut" },
+
+  // ── Readiness Snapshot (ProgramOS Lite) ──
+  rdEyebrow: {
+    en: "AI Readiness Assessment",
+    bm: "Penilaian Kesiapsiagaan AI",
+    zh: "AI 就绪度评估",
+    iban: "Penilaian Kesedia AI",
+  },
+  rdTitle: {
+    en: "AI Readiness Snapshot",
+    bm: "Gambaran Kesiapsiagaan AI",
+    zh: "AI 就绪度快照",
+    iban: "Gambar Kesedia AI",
+  },
+  rdIntro: {
+    en: "Only {n} questions · About 2 minutes · A guide, not a formal audit.",
+    bm: "Hanya {n} soalan · Lebih kurang 2 minit · Panduan, bukan audit formal.",
+    zh: "只需 {n} 道题 · 约 2 分钟 · 仅供参考，非正式审核。",
+    iban: "Semina {n} tanya · Kira-kira 2 minit · Panduan, ukai audit formal.",
+  },
+  rdQuestionOf: { en: "Question {i} / {n}", bm: "Soalan {i} / {n}", zh: "第 {i} 题 / 共 {n} 题", iban: "Tanya {i} / {n}" },
+  rdPrevious: { en: "Previous", bm: "Sebelumnya", zh: "上一题", iban: "Ti Dulu" },
+  rdLevelLabel: {
+    en: "Readiness level: {band}",
+    bm: "Tahap Kesiapsiagaan: {band}",
+    zh: "就绪度等级：{band}",
+    iban: "Tikas Kesedia: {band}",
+  },
+  rdRadarTitle: {
+    en: "Your overall picture",
+    bm: "Gambaran Kedudukan Anda",
+    zh: "您的整体概况",
+    iban: "Gambar Penatai Nuan",
+  },
+  rdRecommendTitle: {
+    en: "Recommended area to start with",
+    bm: "Bidang cadangan untuk anda mulakan",
+    zh: "建议您从这个领域开始",
+    iban: "Bidang ti dipadah kena berengkah",
+  },
+  rdStartThisArea: {
+    en: "Start with this area",
+    bm: "Mula dengan bidang ini",
+    zh: "从这个领域开始",
+    iban: "Berengkah enggau bidang tu",
+  },
+  rdSeeAllAreas: {
+    en: "See all 6 work areas",
+    bm: "Lihat Semua 6 Bidang",
+    zh: "查看全部 6 个领域",
+    iban: "Peda Semua 6 Bidang",
+  },
+  rdToMySpace: { en: "Go to My Space", bm: "Ke Ruang Saya", zh: "前往我的空间", iban: "Ke Ruang Aku" },
+  rdRegisterToSave: {
+    en: "Register to save your result",
+    bm: "Daftar untuk simpan keputusan",
+    zh: "注册以保存结果",
+    iban: "Daftar kena nyimpan keputusan",
+  },
+  rdSaveNote: {
+    en: "Check in so this result is saved to My Space.",
+    bm: "Daftar kehadiran untuk menyimpan keputusan ini ke Ruang Saya.",
+    zh: "请先签到，结果便会保存到「我的空间」。",
+    iban: "Daftar kehadiran kena nyimpan keputusan tu ba Ruang Aku.",
+  },
+
+  // ── Shared page actions ──
+  ctaReadyRegister: {
+    en: "Ready to begin? Register now",
+    bm: "Sedia untuk bermula? Daftar sekarang",
+    zh: "准备好了吗？立即报名",
+    iban: "Udah sedia berengkah? Daftar diatu",
+  },
+  ctaRegisterCheckIn: { en: "Register / Check-In", bm: "Daftar / Check-In", zh: "报名／签到", iban: "Daftar / Check-In" },
+  ctaExplorePromptHub: { en: "Explore the Prompt Hub", bm: "Terokai Prompt Hub", zh: "探索提示中心", iban: "Uji Peda Prompt Hub" },
+  pgScheduleNote: {
+    en: "Tentative schedule — session times may shift during the programme. A light guide, not a compulsory KPI.",
+    bm: "Jadual tentatif — masa sesi mungkin diubah sepanjang program. Panduan ringkas, bukan KPI wajib.",
+    zh: "暂定日程——各环节时间可能在课程期间调整。这是轻松的指引，不是硬性 KPI。",
+    iban: "Jadual tentatif — jam sesi engka diubah sepemanjai program. Panduan ti pandak, ukai KPI ti mesti.",
+  },
+  metaParticipants: { en: "{n} Participants", bm: "{n} Peserta", zh: "{n} 位参与者", iban: "{n} Peserta" },
+  metaLimitedPlaces: { en: "Limited places", bm: "Tempat Terhad", zh: "名额有限", iban: "Endur Mimit" },
+  metaReps: { en: "{n} Representatives", bm: "{n} Wakil", zh: "{n} 位代表", iban: "{n} Wakil" },
+  metaPerCoop: { en: "Per co-operative", bm: "Setiap Koperasi", zh: "每家合作社", iban: "Tiap Koperasi" },
+  homeAria: { en: "ProgramOS Lite — Home", bm: "ProgramOS Lite — Utama", zh: "ProgramOS Lite — 首页", iban: "ProgramOS Lite — Utama" },
+
+  // ── Site chrome ──
+  headerCta: { en: "Sign In / Check-In", bm: "Log Masuk / Check-In", zh: "登录／签到", iban: "Login / Check-In" },
+  headerCtaShort: { en: "Check-In", bm: "Check-In", zh: "签到", iban: "Check-In" },
+  wordmarkSub: { en: "AI for Co-operatives", bm: "AI untuk Koperasi", zh: "合作社的 AI", iban: "AI ke Koperasi" },
+  footerTagline: {
+    en: "AI Does Not Replace People — It Empowers Co-operatives.",
+    bm: "AI Bukan Menggantikan Manusia, Tetapi Memperkasa Koperasi.",
+    zh: "AI 不是取代人，而是赋能合作社。",
+    iban: "AI Ukai Nganti Mensia, Tang Meri Kuasa Ngagai Koperasi.",
+  },
+
+  // ── Landing page ──
+  ldStartJourney: {
+    en: "Start Your AI Journey",
+    bm: "Mulakan Perjalanan AI Anda",
+    zh: "开启您的 AI 旅程",
+    iban: "Berengkahka Pejalai AI Nuan",
+  },
+  ldAccessModules: { en: "Open the modules", bm: "Akses Modul", zh: "取用模块", iban: "Buka Modul" },
+  ldPhotoGallery: { en: "Photo gallery", bm: "Galeri Foto", zh: "照片库", iban: "Galeri Gambar" },
+  ldExplore: { en: "Explore", bm: "Terokai", zh: "了解更多", iban: "Uji Peda" },
+  ldQuickEyebrow: { en: "Your quick doors", bm: "Pintu Pantas Anda", zh: "快速入口", iban: "Pintu Chelap Nuan" },
+  ldQuickTitle: { en: "Main programme access", bm: "Akses Utama Program", zh: "课程主要入口", iban: "Akses Utama Program" },
+  ldQuickDesc: {
+    en: "Everything you need, in one place.",
+    bm: "Semua yang anda perlukan, di satu tempat.",
+    zh: "您需要的一切，都在这里。",
+    iban: "Semua utai ti dikinginka nuan, ba siti endur.",
+  },
+  ldAreasEyebrow: { en: "6 co-op work areas", bm: "6 Bidang Utama Koperasi", zh: "合作社 6 大核心领域", iban: "6 Bidang Utama Koperasi" },
+  ldAreasTitle: {
+    en: "{n} practical prompts, built for co-operatives",
+    bm: "{n} prompt praktikal, disusun untuk koperasi",
+    zh: "{n} 个实用提示，专为合作社而设",
+    iban: "{n} prompt praktikal, digaga ke koperasi",
+  },
+  ldAreasDesc: {
+    en: "Each area holds 10 prompt missions designed for practical co-op use.",
+    bm: "Setiap bidang mengandungi 10 prompt mission yang direka khas untuk kegunaan koperasi secara praktikal.",
+    zh: "每个领域包含 10 个提示任务，专为合作社的实际运用而设计。",
+    iban: "Tiap bidang bisi 10 prompt mission ti digaga ke pengguna koperasi ti praktikal.",
+  },
+  ldMissionsChip: { en: "10 Prompt Missions", bm: "10 Prompt Missions", zh: "10 个提示任务", iban: "10 Prompt Missions" },
+  ldUnsureTitle: {
+    en: "Not sure which area to start with?",
+    bm: "Tidak pasti bidang mana untuk bermula?",
+    zh: "不确定该从哪个领域开始？",
+    iban: "Enda tentu bidang ni ke berengkah?",
+  },
+  ldUnsureDesc: {
+    en: "Take the AI Readiness Snapshot — {n} questions, 2 minutes — and we will suggest one area to start with.",
+    bm: "Lengkapkan AI Readiness Snapshot — {n} soalan, 2 minit — dan kami cadangkan satu bidang untuk anda mulakan.",
+    zh: "完成 AI 就绪度快照——{n} 道题，2 分钟——我们会建议一个起步领域。",
+    iban: "Ngaga AI Readiness Snapshot — {n} tanya, 2 minit — lalu kami deka madah siti bidang kena berengkah.",
+  },
+
+  // ── Programme & FAQ page headers ──
+  pgEyebrow: { en: "Programme", bm: "Program", zh: "课程", iban: "Program" },
+  pgTitle: { en: "The One-Day Programme Flow", bm: "Aliran Program Sehari", zh: "一日课程流程", iban: "Aliran Program Sehari" },
+  pgIntro: {
+    en: "A light, practical programme that walks co-operatives into AI step by step — at your own pace.",
+    bm: "Program praktikal dan ringan yang membimbing koperasi menerap AI langkah demi langkah — mengikut rentak anda.",
+    zh: "一个轻量而实用的课程，带领合作社一步步导入 AI——按自己的节奏前进。",
+    iban: "Program praktikal sereta ringan ti mimpin koperasi ngena AI selangkah-selangkah — nitihka rentak nuan empu.",
+  },
+  faqTitle: { en: "Frequently Asked Questions", bm: "Soalan Lazim", zh: "常见问题", iban: "Tanya Ti Selalu" },
+  faqIntro: {
+    en: "The things people most often ask about ProgramOS Lite.",
+    bm: "Perkara yang sering ditanya tentang ProgramOS Lite.",
+    zh: "关于 ProgramOS Lite 最常被问到的问题。",
+    iban: "Pekara ti selalu ditanya pasal ProgramOS Lite.",
+  },
+
+  // ── Prompt Hub ──
+  phEyebrow: { en: "AI Prompt Hub · 6 Work Areas", bm: "AI Prompt Hub · 6 Bidang Utama", zh: "AI 提示中心 · 6 大领域", iban: "AI Prompt Hub · 6 Bidang Utama" },
+  phTitle: { en: "Choose Your Work Area", bm: "Pilih Bidang Utama Anda", zh: "选择您的核心领域", iban: "Pilih Bidang Utama Nuan" },
+  phIntro: {
+    en: "Each area holds a set of AI prompts put together to help co-operatives work more easily, faster and more effectively — {n} prompts in all.",
+    bm: "Setiap bidang mengandungi koleksi prompt AI yang disusun khas untuk membantu koperasi bekerja dengan lebih mudah, cepat dan berkesan — {n} prompt kesemuanya.",
+    zh: "每个领域都收录了一组 AI 提示，帮助合作社更轻松、更快速、更有效地工作——共 {n} 个提示。",
+    iban: "Tiap bidang bisi kumpul prompt AI ti digaga kena nulung koperasi bekereja enggau mudah, chelap sereta beguna agi — {n} prompt semua.",
+  },
+  phStep1: { en: "Choose an area", bm: "Pilih Bidang", zh: "选择领域", iban: "Pilih Bidang" },
+  phStep1Desc: {
+    en: "Pick the one area most relevant to what your co-op needs.",
+    bm: "Pilih satu bidang yang paling relevan dengan keperluan koperasi anda.",
+    zh: "选出与贵合作社需求最相关的一个领域。",
+    iban: "Pilih siti bidang ti pemadu ngena enggau pengingin koperasi nuan.",
+  },
+  phStep2: { en: "Browse the prompts", bm: "Lihat Prompt", zh: "浏览提示", iban: "Peda Prompt" },
+  phStep2Desc: {
+    en: "Explore the prompt list for that area.",
+    bm: "Terokai senarai prompt mengikut bidang.",
+    zh: "浏览该领域的提示清单。",
+    iban: "Uji peda senarai prompt ba bidang nya.",
+  },
+  phStep3: { en: "Get started", bm: "Mulakan", zh: "开始使用", iban: "Berengkah" },
+  phStep3Desc: {
+    en: "Fill in your details, generate the prompt, and use it in the AI of your choice.",
+    bm: "Isi butiran, jana prompt, dan gunakan dalam AI pilihan anda.",
+    zh: "填写资料、生成提示，然后在您选择的 AI 中使用。",
+    iban: "Isi penerang, ngaga prompt, lalu kena ba AI ti dipilih nuan.",
+  },
+  phSelected: { en: "Selected", bm: "Dipilih", zh: "已选择", iban: "Udah dipilih" },
+  phSeeTen: { en: "See 10 prompts", bm: "Lihat 10 Prompt", zh: "查看 10 个提示", iban: "Peda 10 Prompt" },
+  phUnsure: { en: "Not sure which area?", bm: "Tidak pasti bidang mana?", zh: "不确定选哪个领域？", iban: "Enda tentu bidang ni?" },
+  phUnsureDesc: {
+    en: "Take the AI Readiness Snapshot and we will suggest one area to start with.",
+    bm: "Ambil AI Readiness Snapshot dan kami cadangkan satu bidang untuk anda mulakan.",
+    zh: "先做 AI 就绪度快照，我们会建议一个起步领域。",
+    iban: "Ambi AI Readiness Snapshot lalu kami deka madah siti bidang kena berengkah.",
+  },
+  phStartAssessment: { en: "Start the assessment", bm: "Mula Penilaian", zh: "开始评估", iban: "Berengkah Penilaian" },
+
+  // ── Work area page ──
+  waAllAreas: { en: "All areas", bm: "Semua Bidang", zh: "全部领域", iban: "Semua Bidang" },
+  waMissions: { en: "{n} Prompt Missions", bm: "{n} Prompt Missions", zh: "{n} 个提示任务", iban: "{n} Prompt Missions" },
+  waTried: { en: "{a}/{b} tried", bm: "{a}/{b} telah dicuba", zh: "已尝试 {a}/{b}", iban: "{a}/{b} udah diuji" },
+  waViewPrompt: { en: "View prompt", bm: "Lihat Prompt", zh: "查看提示", iban: "Peda Prompt" },
+  waTip: {
+    en: "Tip: treat what the prompt gives you as a starting point and adjust it to your co-op. Small prompt, big impact!",
+    bm: "Petua: Gunakan hasil prompt ini sebagai titik permulaan dan sesuaikan mengikut keperluan koperasi anda. Kecilkan Prompt, Besarkan Impak!",
+    zh: "小贴士：把提示生成的内容当作起点，再按贵合作社的需要调整。小提示，大影响！",
+    iban: "Petua: Kena utai ti ulih ari prompt tu nyadi pun, lalu ubah nitihka pengingin koperasi nuan. Prompt mit, impak besai!",
+  },
+
+  // ── Prompt builder ──
+  pbPromptOfTen: { en: "Prompt {n} / 10", bm: "Prompt {n} / 10", zh: "第 {n} 个提示 / 共 10 个", iban: "Prompt {n} / 10" },
+  pbFillDetails: { en: "Fill in your details", bm: "Isi Butiran Anda", zh: "填写您的资料", iban: "Isi Penerang Nuan" },
+  pbFillNote: {
+    en: "Just a few short details. Blank fields are skipped.",
+    bm: "Hanya beberapa maklumat ringkas. Medan kosong akan dilangkau.",
+    zh: "只需几项简短资料。留空的栏位会被跳过。",
+    iban: "Semina sekeda penerang pandak. Ruang ti kosong deka dilintasi.",
+  },
+  pbGenerate: { en: "Generate My Prompt", bm: "Jana Prompt Saya", zh: "生成我的提示", iban: "Ngaga Prompt Aku" },
+  pbLoginTitle: {
+    en: "Sign in first to use this prompt",
+    bm: "Log masuk dahulu untuk guna prompt ini",
+    zh: "请先登录再使用此提示",
+    iban: "Login dulu kena ngena prompt tu",
+  },
+  pbLoginBodyA: {
+    en: "The prompt you generate is saved to",
+    bm: "Prompt yang anda jana akan disimpan dalam",
+    zh: "您生成的提示会保存到",
+    iban: "Prompt ti digaga nuan deka disimpan ba",
+  },
+  pbLoginBodyB: {
+    en: "so you can read it back after the programme. Browsing the prompt library stays free.",
+    bm: "supaya anda boleh rujuk semula selepas program. Melihat pustaka prompt kekal percuma.",
+    zh: "方便您在课程结束后回顾。浏览提示库仍然免费。",
+    iban: "ngambika nuan ulih macha iya baru udah program. Meda pustaka prompt agi percuma.",
+  },
+  pbLoginCta: { en: "Sign In / Register", bm: "Log Masuk / Daftar", zh: "登录／注册", iban: "Login / Daftar" },
+  pbBackToList: { en: "Back to the list", bm: "Kembali ke senarai", zh: "返回清单", iban: "Pulai ngagai senarai" },
+  pbResultTitle: { en: "Your prompt", bm: "Hasil Prompt Anda", zh: "您的提示", iban: "Prompt Nuan" },
+  pbReady: { en: "Ready", bm: "Sedia", zh: "就绪", iban: "Sedia" },
+  pbCopied: { en: "Copied!", bm: "Disalin!", zh: "已复制！", iban: "Udah disalin!" },
+  pbCopy: { en: "Copy prompt", bm: "Salin Prompt", zh: "复制提示", iban: "Salin Prompt" },
+  pbDownload: { en: "Download .txt", bm: "Muat Turun .txt", zh: "下载 .txt", iban: "Ambi .txt" },
+  pbSavedState: { en: "Saved", bm: "Disimpan", zh: "已保存", iban: "Udah disimpan" },
+  pbSaveToList: { en: "Save to my list", bm: "Simpan ke Senarai", zh: "保存到清单", iban: "Simpan ba Senarai" },
+  pbRegisterToSave: { en: "Register to save", bm: "Daftar untuk simpan", zh: "注册以保存", iban: "Daftar kena nyimpan" },
+  pbPasteHint: {
+    en: "Copy this prompt and paste it into ChatGPT, Claude or Gemini for the best result.",
+    bm: "Salin prompt ini dan tampalkan ke dalam ChatGPT, Claude atau Gemini untuk mendapatkan hasil terbaik.",
+    zh: "复制此提示，贴到 ChatGPT、Claude 或 Gemini 中，效果最佳。",
+    iban: "Salin prompt tu lalu tampal ba ChatGPT, Claude tauka Gemini kena ulih hasil ti pemadu manah.",
+  },
+  pbEmpty: {
+    en: "Fill in the details on the left and press “Generate My Prompt”. Your professional prompt appears here, ready to copy.",
+    bm: "Isi butiran di sebelah dan tekan “Jana Prompt Saya”. Prompt profesional anda akan dipaparkan di sini, sedia untuk disalin.",
+    zh: "在左侧填写资料，然后按「生成我的提示」。您的专业提示会显示在这里，可直接复制。",
+    iban: "Isi penerang ba sepiak lalu tekan “Ngaga Prompt Aku”. Prompt profesional nuan deka pegari ditu, sedia disalin.",
+  },
+
+  // ── My Space ──
+  msLoading: { en: "Loading…", bm: "Memuatkan…", zh: "载入中…", iban: "Benung ngambi…" },
+  msEyebrow: { en: "My Space · My Results", bm: "Ruang Saya · Hasil Saya", zh: "我的空间 · 我的成果", iban: "Ruang Aku · Hasil Aku" },
+  msGreeting: { en: "Hello, {name} 👋", bm: "Salam, {name} 👋", zh: "您好，{name} 👋", iban: "Selamat, {name} 👋" },
+  msParticipantRole: { en: "Participant", bm: "Peserta", zh: "参与者", iban: "Peserta" },
+  msAttendanceYes: { en: "Attendance recorded", bm: "Kehadiran direkodkan", zh: "出席已记录", iban: "Kehadiran udah direkod" },
+  msAttendanceNo: { en: "Not checked in yet", bm: "Belum daftar kehadiran", zh: "尚未签到", iban: "Apin daftar kehadiran" },
+  msTriedCount: { en: "{n} prompts tried", bm: "{n} prompt dicuba", zh: "已尝试 {n} 个提示", iban: "{n} prompt udah diuji" },
+  msSavedCount: { en: "{n} prompts saved", bm: "{n} prompt disimpan", zh: "已保存 {n} 个提示", iban: "{n} prompt udah disimpan" },
+  msReadiness: { en: "AI readiness", bm: "Kesiapsiagaan AI", zh: "AI 就绪度", iban: "Kesedia AI" },
+  msRetake: { en: "Take it again", bm: "Ambil semula", zh: "重新评估", iban: "Ambi baru" },
+  msNoAssessment: { en: "You have not taken the assessment yet.", bm: "Anda belum mengambil penilaian.", zh: "您尚未进行评估。", iban: "Nuan apin ngambi penilaian." },
+  msStartAssessment: { en: "Start the AI assessment", bm: "Mula Penilaian AI", zh: "开始 AI 评估", iban: "Berengkah Penilaian AI" },
+  msFocusArea: { en: "Your focus area", bm: "Bidang Fokus Anda", zh: "您的重点领域", iban: "Bidang Fokus Nuan" },
+  msOpen: { en: "Open", bm: "Buka", zh: "打开", iban: "Buka" },
+  msNoArea: {
+    en: "You have not chosen an area yet. Explore the 6 work areas.",
+    bm: "Anda belum memilih bidang. Terokai 6 bidang utama.",
+    zh: "您尚未选择领域。来看看 6 大核心领域。",
+    iban: "Nuan apin milih bidang. Uji peda 6 bidang utama.",
+  },
+  msChooseArea: { en: "Choose an area", bm: "Pilih Bidang", zh: "选择领域", iban: "Pilih Bidang" },
+  msAddMore: { en: "Add more", bm: "Tambah lagi", zh: "添加更多", iban: "Tambah agi" },
+  msNoPrompts: {
+    en: "No prompts used yet. Open the Prompt Hub, fill in your co-op details and press “Generate My Prompt” — it will appear here.",
+    bm: "Belum ada prompt digunakan. Buka Prompt Hub, isi butiran koperasi anda dan tekan “Jana Prompt Saya” — ia akan muncul di sini.",
+    zh: "您还没有使用过任何提示。打开提示中心，填写合作社资料并按「生成我的提示」——它就会出现在这里。",
+    iban: "Apin bisi prompt dikena. Buka Prompt Hub, isi penerang koperasi nuan lalu tekan “Ngaga Prompt Aku” — iya deka pegari ditu.",
+  },
+  msSixAreas: { en: "6 work areas", bm: "6 Bidang Utama", zh: "6 大核心领域", iban: "6 Bidang Utama" },
+  msJourney: { en: "90-day journey", bm: "Perjalanan 90 Hari", zh: "90 天旅程", iban: "Pejalai 90 Hari" },
+  msResources: { en: "Modules & resources", bm: "Modul & Sumber", zh: "模块与资源", iban: "Modul & Bahan" },
+  msTimesUsed: { en: "used {n}×", bm: "{n} kali guna", zh: "使用 {n} 次", iban: "dikena {n} kali" },
+  msSavedTag: { en: "Saved", bm: "Disimpan", zh: "已保存", iban: "Udah disimpan" },
+  msViewPrompt: { en: "View prompt", bm: "Lihat prompt", zh: "查看提示", iban: "Peda prompt" },
+  msClosePrompt: { en: "Close", bm: "Tutup", zh: "收起", iban: "Tutup" },
+  msCopyPrompt: { en: "Copy prompt", bm: "Salin prompt", zh: "复制提示", iban: "Salin prompt" },
+  msRegenerate: { en: "Generate again", bm: "Jana semula", zh: "重新生成", iban: "Ngaga baru" },
+  msNoStoredText: {
+    en: "This prompt was recorded before the text was stored. Generate it again to keep a copy.",
+    bm: "Prompt ini direkodkan sebelum teks disimpan. Jana semula untuk menyimpan salinannya.",
+    zh: "此提示是在开始保存文本之前记录的。重新生成即可保留副本。",
+    iban: "Prompt tu direkod sebedau teks disimpan. Ngaga baru kena nyimpan salin iya.",
+  },
+
+  // ── Check-in / registration form ──
+  ciCoopName: { en: "Co-op Name", bm: "Nama Koperasi", zh: "合作社名称", iban: "Nama Koperasi" },
+  ciRole: { en: "Role", bm: "Peranan", zh: "职务", iban: "Pengawa" },
+  ciPickRole: { en: "Choose your role…", bm: "Pilih peranan anda…", zh: "选择您的职务…", iban: "Pilih pengawa nuan…" },
+  ciYourRef: { en: "Your reference", bm: "Rujukan Anda", zh: "您的参考编号", iban: "Rujukan Nuan" },
+
+  // ── Login ──
+  lgIntro: {
+    en: "Enter your phone number and email to continue.",
+    bm: "Masukkan nombor telefon dan emel anda untuk meneruskan.",
+    zh: "输入您的手机号码与电子邮箱以继续。",
+    iban: "Tama no. telefon enggau e-mel nuan kena neruska.",
+  },
+  lgWrong: {
+    en: "That phone number or email is not correct.",
+    bm: "Nombor telefon atau emel tidak betul.",
+    zh: "手机号码或电子邮箱不正确。",
+    iban: "No. telefon tauka e-mel nadai betul.",
+  },
+  lgSubmitting: { en: "Signing in…", bm: "Log masuk…", zh: "登录中…", iban: "Benung login…" },
+  lgSubmit: { en: "Sign In", bm: "Log Masuk", zh: "登录", iban: "Login" },
+  commonError: {
+    en: "Sorry, something went wrong. Please try again.",
+    bm: "Maaf, berlaku ralat. Sila cuba lagi.",
+    zh: "抱歉，出了点问题。请再试一次。",
+    iban: "Ampun, bisi penyalah. Uji baru.",
+  },
+
+  // ── Resources (Modul & Sumber) ──
+  sbEyebrow: { en: "Modules & Resources", bm: "Modul & Sumber", zh: "模块与资源", iban: "Modul & Bahan" },
+  sbTitle: { en: "Modules, Templates & References", bm: "Modul, Template & Rujukan", zh: "模块、模板与参考资料", iban: "Modul, Template & Rujukan" },
+  sbIntro: {
+    en: "Get the learning materials, templates, toolkits and key resources for ProgramOS Lite — all in one place through a Google Folder.",
+    bm: "Akses bahan pembelajaran, template, toolkit dan sumber penting ProgramOS Lite — semua di satu tempat melalui Google Folder.",
+    zh: "取用 ProgramOS Lite 的学习材料、模板、工具包与重要资源——全都集中在一个 Google 文件夹中。",
+    iban: "Ambi bahan belajar, template, toolkit enggau bahan beguna ProgramOS Lite — semua ba siti endur ngena Google Folder.",
+  },
+  sbOpenAll: { en: "Open everything in Google Folder", bm: "Buka Semua di Google Folder", zh: "在 Google 文件夹中打开全部", iban: "Buka Semua ba Google Folder" },
+  sbOpenFolder: { en: "Open in Google Folder", bm: "Buka di Google Folder", zh: "在 Google 文件夹中打开", iban: "Buka ba Google Folder" },
+  sbComingSoon: { en: "Coming soon", bm: "Akan Dikemaskini", zh: "即将更新", iban: "Deka Dikemas Kini" },
+  sbNote: {
+    en: "Resources are shared through the official ProgramOS Lite Google Folder. Links marked “Coming soon” switch on as soon as the folder URL is ready.",
+    bm: "Sumber disediakan melalui Google Folder rasmi ProgramOS Lite. Pautan bertanda “Akan Dikemaskini” akan diaktifkan sebaik URL folder disediakan.",
+    zh: "资源通过 ProgramOS Lite 的官方 Google 文件夹分享。标记为「即将更新」的链接会在文件夹网址就绪后启用。",
+    iban: "Bahan dikunsi ngena Google Folder resmi ProgramOS Lite. Pautan ti betanda “Deka Dikemas Kini” deka diidupka lebuh URL folder udah sedia.",
+  },
+  sbGalleryTitle: { en: "Programme photo gallery", bm: "Galeri Foto Program", zh: "课程照片库", iban: "Galeri Gambar Program" },
+  sbGalleryDesc: {
+    en: "See the moments that mattered during the programme.",
+    bm: "Lihat momen bermakna sepanjang program.",
+    zh: "回顾课程期间的精彩时刻。",
+    iban: "Peda maya ti berguna sepemanjai program.",
+  },
+  sbViewGallery: { en: "View the gallery", bm: "Lihat Galeri", zh: "查看照片库", iban: "Peda Galeri" },
+
+  // ── Gallery ──
+  glEyebrow: { en: "Photo Gallery", bm: "Galeri Foto", zh: "照片库", iban: "Galeri Gambar" },
+  glTitle: { en: "Programme Moments & Activities", bm: "Momen Program & Aktiviti", zh: "课程时刻与活动", iban: "Maya Program & Pengawa" },
+  glIntro: {
+    en: "The moments that mattered throughout ProgramOS Lite.",
+    bm: "Detik-detik bermakna sepanjang ProgramOS Lite.",
+    zh: "ProgramOS Lite 期间值得纪念的时刻。",
+    iban: "Maya ti berguna sepemanjai ProgramOS Lite.",
+  },
+  glFullTitle: { en: "See the full gallery", bm: "Lihat galeri penuh", zh: "查看完整照片库", iban: "Peda galeri penuh" },
+  glFullDesc: {
+    en: "All programme photos are shared through the official album.",
+    bm: "Semua foto program dikongsi melalui album rasmi.",
+    zh: "所有课程照片都通过官方相册分享。",
+    iban: "Semua gambar program dikunsi ngena album resmi.",
+  },
+  glOpen: { en: "Open the photo gallery", bm: "Buka Galeri Foto", zh: "打开照片库", iban: "Buka Galeri Gambar" },
+  glSoonDesc: {
+    en: "The photo gallery appears here as soon as the programme album is ready.",
+    bm: "Galeri foto akan dipaparkan di sini sebaik sahaja album program disediakan.",
+    zh: "课程相册准备好后，照片库就会显示在这里。",
+    iban: "Galeri gambar deka pegari ditu lebuh album program udah sedia.",
+  },
+
+  // ── 90-day journey ──
+  j9Eyebrow: { en: "90-Day Prompt Exploration Journey", bm: "90-Day Prompt Exploration Journey", zh: "90 天提示探索旅程", iban: "Pejalai Nguji Prompt 90 Hari" },
+  j9Title: { en: "The 90-Day Journey", bm: "Perjalanan 90 Hari", zh: "90 天旅程", iban: "Pejalai 90 Hari" },
+  j9Intro: {
+    en: "Step by step, at your own pace. Start small, learn together, and find where AI can help your co-op.",
+    bm: "Langkah demi langkah, mengikut rentak anda. Mulakan kecil, belajar bersama, dan temui peluang AI untuk koperasi anda.",
+    zh: "一步一步，按自己的节奏。从小处着手，一起学习，找到 AI 能帮上忙的地方。",
+    iban: "Selangkah-selangkah, nitihka rentak nuan empu. Berengkah ari utai mit, belajar sama, lalu ngiga peluang AI ke koperasi nuan.",
+  },
+  j9Note: {
+    en: "A light guide, not a compulsory KPI.",
+    bm: "Panduan ringkas, bukan KPI wajib.",
+    zh: "这是轻松的指引，不是硬性 KPI。",
+    iban: "Panduan ti pandak, ukai KPI ti mesti.",
+  },
+  j9ReflectTitle: { en: "Your reflection space", bm: "Ruang Refleksi Anda", zh: "您的反思空间", iban: "Ruang Refleksi Nuan" },
+  j9ReflectSub: {
+    en: "Take a little time to think it over.",
+    bm: "Luangkan sedikit masa untuk fikirkan.",
+    zh: "花点时间想一想。",
+    iban: "Beri sekeda maya kena berunding.",
+  },
+  j9Placeholder: { en: "Write your reflection here…", bm: "Tulis refleksi anda di sini…", zh: "在这里写下您的反思…", iban: "Tulis refleksi nuan ditu…" },
+  j9Saved: { en: "Reflection saved", bm: "Refleksi Disimpan", zh: "反思已保存", iban: "Refleksi Udah Disimpan" },
+  j9Save: { en: "Save my reflection", bm: "Simpan Refleksi", zh: "保存我的反思", iban: "Simpan Refleksi" },
+  j9RegisterCta: { en: "Register to save your reflection", bm: "Daftar untuk simpan refleksi", zh: "注册以保存反思", iban: "Daftar kena nyimpan refleksi" },
+  j9Optional: {
+    en: "Reflection is optional — no pressure.",
+    bm: "Refleksi adalah pilihan — tiada tekanan.",
+    zh: "反思是自愿的——没有压力。",
+    iban: "Refleksi nya pilih — nadai tekan.",
+  },
 };
 
 // Short domain terms used as tags (programme topics, trainer focus areas).
@@ -379,11 +799,14 @@ const I18nContext = createContext<I18nValue | null>(null);
 const STORAGE_KEY = "attendify:lang";
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
+  // Bahasa Melayu is the default: this programme runs in BM for ANGKASA
+  // Sarawak co-operatives, and it is the language every string is written
+  // in first. Visitors switch from the header and the choice is remembered.
   const [lang, setLangState] = useState<Lang>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return (["en", "bm", "zh", "iban"] as Lang[]).includes(saved as Lang)
       ? (saved as Lang)
-      : "en";
+      : "bm";
   });
 
   useEffect(() => {

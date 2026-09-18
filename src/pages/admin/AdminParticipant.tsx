@@ -7,6 +7,13 @@ import { getWorkArea } from "../../content/promptLibrary";
 import { Icon } from "../../components/Icon";
 import { RadarChart } from "../../components/RadarChart";
 import { ScoreRing } from "../../components/ScoreRing";
+import { pick as pickLang, type Localized } from "../../context/I18nContext";
+
+
+// The admin console is Bahasa Melayu only, and the figures it shows are
+// keyed by the BM wording stored in the database — so localized content is
+// always resolved to BM here rather than to the visitor's chosen language.
+const bm = (v: Localized) => pickLang(v, "bm");
 
 const AUTH_KEY = "attendify:adminAuthed";
 
@@ -80,13 +87,13 @@ export default function AdminParticipant() {
                 <span className="mt-2 chip bg-navy-800 text-white">{result.readinessCategory}</span>
               </div>
               <div className="w-full flex-1">
-                <RadarChart axes={READINESS_AREAS.map((a) => ({ label: a.radarLabel, value: result.indicatorScores[a.id] ?? 0, max: 20 }))} size={220} />
+                <RadarChart axes={READINESS_AREAS.map((a) => ({ label: bm(a.radarLabel), value: result.indicatorScores[a.id] ?? 0, max: 20 }))} size={220} />
               </div>
             </div>
             <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
               {READINESS_AREAS.map((a) => (
                 <div key={a.id} className="flex items-center justify-between rounded-lg bg-sand-50 px-3 py-2 text-sm">
-                  <span className="text-navy-600">{a.title}</span>
+                  <span className="text-navy-600">{bm(a.title)}</span>
                   <span className="font-bold text-navy-900">{result.indicatorScores[a.id] ?? 0}/20</span>
                 </div>
               ))}
@@ -99,7 +106,7 @@ export default function AdminParticipant() {
 
         <Panel title="Aktiviti Prompt" icon="spark">
           <DL rows={[
-            ["Bidang Dipilih", area ? area.title : "—"],
+            ["Bidang Dipilih", area ? bm(area.title) : "—"],
             ["Prompt Dicuba", String(p.triedPromptIds?.length ?? 0)],
             ["Prompt Disimpan", String(saved.length)],
           ]} />
@@ -108,7 +115,7 @@ export default function AdminParticipant() {
               {saved.map((s) => (
                 <li key={s.id} className="flex items-center gap-2 rounded-lg bg-sand-50 px-3 py-2 text-sm text-navy-700">
                   <Icon name="check" className="h-4 w-4 text-emerald-600" /> {s.title}
-                  <span className="ml-auto text-[11px] text-navy-400">{getWorkArea(s.areaId)?.title}</span>
+                  <span className="ml-auto text-[11px] text-navy-400">{(() => { const wa = getWorkArea(s.areaId); return wa ? bm(wa.title) : ""; })()}</span>
                 </li>
               ))}
             </ul>

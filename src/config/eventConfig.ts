@@ -9,6 +9,8 @@
 // (slug `vdp-frontier-miri`). See src/data/store.ts.
 // ─────────────────────────────────────────────────────────────
 
+import type { Localized } from "../context/I18nContext";
+
 export interface AttendanceSession {
   id: string;
   label: string;
@@ -26,14 +28,21 @@ export interface Partner {
   logo?: string;
 }
 
-/** A resource / Google Folder button. Empty url → "Akan Dikemaskini". */
+/** A resource / Google Folder button. Empty url → "coming soon". */
 export interface ResourceLink {
   id: string;
-  title: string;
-  titleEn: string;
-  desc: string;
+  title: Localized;
+  desc: Localized;
   icon: string;
   url: string; // "" means coming soon
+}
+
+/** A role a participant can pick at check-in. `value` is what gets STORED
+ *  (always Bahasa Melayu, so the admin export stays consistent); `label` is
+ *  only what the visitor sees. */
+export interface RoleOption {
+  value: string;
+  label: Localized;
 }
 
 export interface EventConfig {
@@ -54,18 +63,18 @@ export interface EventConfig {
   collaboratorUrl: string;
   expectedParticipants: number;
   maxPerCoop: number;
-  heroKicker: string;
-  heroLines: string[];
-  heroSubline: string;
-  motto: string;
-  brandStrip: string;
+  heroKicker: Localized;
+  heroLines: Localized[];
+  heroSubline: Localized;
+  motto: Localized;
+  brandStrip: Localized;
   footer: string;
   footerSecondary: string;
   copyright: string;
   hashtags: string[];
   partners: Partner[];
   /** Role options for the check-in form (Peranan). */
-  roleOptions: string[];
+  roleOptions: RoleOption[];
   /** Google Folder / resource buttons (spec §12). */
   resources: ResourceLink[];
   /** Single "open everything" module folder (nav: Modul Google Folder). */
@@ -99,11 +108,33 @@ export const eventConfig: EventConfig = {
   collaboratorUrl: "https://www.kobisberhad.com",
   expectedParticipants: 30,
   maxPerCoop: 2,
-  heroKicker: "Program Pembangunan",
-  heroLines: ["TRANSFORMASI", "DIGITAL & AI", "UNTUK KOPERASI"],
-  heroSubline: "Operasi Lebih Cekap · Pemasaran Lebih Hebat · Hasil Lebih Baik",
-  motto: "Ilmu Digital. Koperasi Berdaya. Masa Depan Bersama.",
-  brandStrip: "AI untuk Koperasi · Mudah · Praktikal · Impak Sebenar",
+  heroKicker: {
+    bm: "Program Pembangunan", en: "Development Programme",
+    zh: "发展课程", iban: "Program Pemansang",
+  },
+  heroLines: [
+    { bm: "TRANSFORMASI", en: "DIGITAL & AI", zh: "数字与 AI", iban: "TRANSFORMASI" },
+    { bm: "DIGITAL & AI", en: "TRANSFORMATION", zh: "转型", iban: "DIGITAL & AI" },
+    { bm: "UNTUK KOPERASI", en: "FOR CO-OPERATIVES", zh: "赋能合作社", iban: "KE KOPERASI" },
+  ],
+  heroSubline: {
+    bm: "Operasi Lebih Cekap · Pemasaran Lebih Hebat · Hasil Lebih Baik",
+    en: "Leaner Operations · Stronger Marketing · Better Results",
+    zh: "营运更高效 · 营销更有力 · 成果更出色",
+    iban: "Pengawa Lancar Agi · Pemasaran Kuat Agi · Hasil Manah Agi",
+  },
+  motto: {
+    bm: "Ilmu Digital. Koperasi Berdaya. Masa Depan Bersama.",
+    en: "Digital Know-How. Empowered Co-operatives. A Shared Future.",
+    zh: "数字素养。赋能合作社。共享未来。",
+    iban: "Penemu Digital. Koperasi Bekuasa. Jemah Ila Sama.",
+  },
+  brandStrip: {
+    bm: "AI untuk Koperasi · Mudah · Praktikal · Impak Sebenar",
+    en: "AI for Co-operatives · Simple · Practical · Real Impact",
+    zh: "合作社的 AI · 简单 · 实用 · 真实影响",
+    iban: "AI ke Koperasi · Mudah · Praktikal · Impak Amat",
+  },
   footer: "ProgramOS Lite — Inisiatif bersama ANGKASA, KOBIS Berhad & SDEC",
   footerSecondary: "Smart Digital Solutions. Sustainable Impact.",
   copyright: "© 2026 ProgramOS Lite. Inisiatif bersama ANGKASA × KOBIS Berhad × SDEC.",
@@ -114,21 +145,45 @@ export const eventConfig: EventConfig = {
     { name: "SDEC", role: "Sokongan Digital Sarawak", url: "https://sdec.com.my" },
   ],
   roleOptions: [
-    "Anggota Koperasi",
-    "Anggota Lembaga (ALK)",
-    "Pengurus / Kakitangan",
-    "Setiausaha",
-    "Bendahari",
-    "Pengerusi",
-    "Lain-lain",
+    { value: "Anggota Koperasi", label: { bm: "Anggota Koperasi", en: "Co-op member", zh: "合作社会员", iban: "Anggota Koperasi" } },
+    { value: "Anggota Lembaga (ALK)", label: { bm: "Anggota Lembaga (ALK)", en: "Board member (ALK)", zh: "董事会成员（ALK）", iban: "Anggota Lembaga (ALK)" } },
+    { value: "Pengurus / Kakitangan", label: { bm: "Pengurus / Kakitangan", en: "Manager / staff", zh: "经理／职员", iban: "Pengurus / Pengawa" } },
+    { value: "Setiausaha", label: { bm: "Setiausaha", en: "Secretary", zh: "秘书", iban: "Setiausaha" } },
+    { value: "Bendahari", label: { bm: "Bendahari", en: "Treasurer", zh: "财政", iban: "Bendahari" } },
+    { value: "Pengerusi", label: { bm: "Pengerusi", en: "Chairperson", zh: "主席", iban: "Pengerusi" } },
+    { value: "Lain-lain", label: { bm: "Lain-lain", en: "Other", zh: "其他", iban: "Bukai" } },
   ],
   resources: [
-    { id: "slides", title: "Slide Pembentangan", titleEn: "Presentation Slides", desc: "Bahan pembentangan rasmi sesi program.", icon: "slides", url: "" },
-    { id: "toolkit", title: "Toolkit & Panduan", titleEn: "Toolkit & Guides", desc: "Toolkit praktikal, panduan langkah demi langkah.", icon: "template", url: "" },
-    { id: "templates", title: "Template & Contoh", titleEn: "Templates & Examples", desc: "Template siap guna untuk promosi, laporan dan lain-lain.", icon: "doc", url: "" },
-    { id: "prompts", title: "Pakej Prompt AI", titleEn: "AI Prompt Pack", desc: "Koleksi prompt siap guna untuk koperasi.", icon: "spark", url: "" },
-    { id: "videos", title: "Video Ringkas", titleEn: "Short Videos", desc: "Rakaman sesi, video tutorial dan klip pembelajaran.", icon: "book", url: "" },
-    { id: "docs", title: "SOP & Dokumen Sokongan", titleEn: "SOP & Support Docs", desc: "SOP, nota, rujukan dan dokumen tambahan.", icon: "document", url: "" },
+    {
+      id: "slides", icon: "slides", url: "",
+      title: { bm: "Slide Pembentangan", en: "Presentation Slides", zh: "演示幻灯片", iban: "Slide Pembentang" },
+      desc: { bm: "Bahan pembentangan rasmi sesi program.", en: "The official session slide decks.", zh: "课程环节的官方演示材料。", iban: "Bahan pembentang resmi sesi program." },
+    },
+    {
+      id: "toolkit", icon: "template", url: "",
+      title: { bm: "Toolkit & Panduan", en: "Toolkit & Guides", zh: "工具包与指南", iban: "Toolkit & Panduan" },
+      desc: { bm: "Toolkit praktikal, panduan langkah demi langkah.", en: "Practical toolkits and step-by-step guides.", zh: "实用工具包与逐步指南。", iban: "Toolkit praktikal, panduan selangkah-selangkah." },
+    },
+    {
+      id: "templates", icon: "doc", url: "",
+      title: { bm: "Template & Contoh", en: "Templates & Examples", zh: "模板与范例", iban: "Template & Chunto" },
+      desc: { bm: "Template siap guna untuk promosi, laporan dan lain-lain.", en: "Ready-to-use templates for promotion, reporting and more.", zh: "可直接使用的推广、报告等模板。", iban: "Template ti sedia dikena ke promosi, laporan enggau bukai." },
+    },
+    {
+      id: "prompts", icon: "spark", url: "",
+      title: { bm: "Pakej Prompt AI", en: "AI Prompt Pack", zh: "AI 提示包", iban: "Pakej Prompt AI" },
+      desc: { bm: "Koleksi prompt siap guna untuk koperasi.", en: "A ready-made prompt collection for co-operatives.", zh: "为合作社准备的现成提示集。", iban: "Kumpul prompt ti sedia dikena ke koperasi." },
+    },
+    {
+      id: "videos", icon: "book", url: "",
+      title: { bm: "Video Ringkas", en: "Short Videos", zh: "短视频", iban: "Video Pandak" },
+      desc: { bm: "Rakaman sesi, video tutorial dan klip pembelajaran.", en: "Session recordings, tutorials and learning clips.", zh: "课程录像、教学视频与学习短片。", iban: "Rakam sesi, video tutorial enggau klip belajar." },
+    },
+    {
+      id: "docs", icon: "document", url: "",
+      title: { bm: "SOP & Dokumen Sokongan", en: "SOP & Support Docs", zh: "标准程序与支援文件", iban: "SOP & Dokumen Sukung" },
+      desc: { bm: "SOP, nota, rujukan dan dokumen tambahan.", en: "SOPs, notes, references and supporting documents.", zh: "标准作业程序、笔记、参考与补充文件。", iban: "SOP, nota, rujukan enggau dokumen tambah." },
+    },
   ],
   moduleFolderUrl: "",
   galleryUrl: "",

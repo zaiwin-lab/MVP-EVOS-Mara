@@ -3,13 +3,22 @@
 // One maintainable content file (spec §9). NO paid AI API is used —
 // the app simply COMBINES the participant's inputs with a professional
 // prompt template, which they copy into ChatGPT / Claude / Gemini.
+//
+// LANGUAGES: the BM + English wording lives here, inline, next to each
+// mission. 中文 and Bahasa Iban for the parts people BROWSE (area names,
+// mission titles, one-line descriptions) live in promptLibrary.i18n.ts
+// and are merged in by assemble() below. The prompt TEMPLATE itself
+// (role / task / deliverables / disclaimer) stays Bahasa Melayu — that
+// is the text participants paste into ChatGPT, Claude or Gemini.
 // ─────────────────────────────────────────────────────────────
+
+import { pick, type Localized } from "../context/I18nContext";
+import { AREA_I18N, MISSION_I18N } from "./promptLibrary.i18n";
 
 export interface PromptField {
   id: string;
-  label: string; // BM
-  labelEn: string;
-  placeholder: string;
+  label: Localized;
+  placeholder: Localized;
   type: "text" | "textarea" | "select";
   options?: string[];
 }
@@ -17,10 +26,9 @@ export interface PromptField {
 export interface PromptMission {
   id: string; // e.g. "A1"
   n: number;
-  title: string; // BM
-  titleEn: string;
-  desc: string; // BM one-liner
-  role: string; // persona (set per area)
+  title: Localized;
+  desc: Localized; // one-liner
+  role: string; // persona, BM (set per area)
   fields: PromptField[];
   task: string; // BM
   deliverables: string[]; // BM
@@ -30,30 +38,64 @@ export interface PromptMission {
 export interface WorkArea {
   id: string;
   code: string; // "A".."F"
-  title: string; // BM
-  titleEn: string;
-  blurb: string; // BM
+  title: Localized;
+  blurb: Localized;
   icon: string;
   accent: string; // pastel accent key (mapped to classes in the UI)
   missions: PromptMission[];
 }
 
 // ── Reusable fields ──────────────────────────────────────────
-const cp: PromptField = { id: "coop", label: "Nama koperasi", labelEn: "Co-op name", placeholder: "cth. Koperasi Serba Guna Kuching Berhad", type: "text" };
-const cx: PromptField = { id: "context", label: "Maklumat / konteks tambahan", labelEn: "Context", placeholder: "Terangkan situasi, cabaran atau latar belakang ringkas", type: "textarea" };
-const ob: PromptField = { id: "objective", label: "Objektif utama", labelEn: "Objective", placeholder: "Apa yang anda mahu capai?", type: "text" };
-const au: PromptField = { id: "audience", label: "Sasaran / pihak terlibat", labelEn: "Audience", placeholder: "cth. anggota, pelanggan, kakitangan, Lembaga", type: "text" };
-const tp: PromptField = { id: "topic", label: "Tajuk / fokus", labelEn: "Topic", placeholder: "cth. produk, aktiviti, isu", type: "text" };
-const pr: PromptField = { id: "product", label: "Produk / perkhidmatan", labelEn: "Product / service", placeholder: "cth. barangan runcit, khidmat simpanan", type: "text" };
-const raw: PromptField = { id: "raw", label: "Kandungan / data mentah", labelEn: "Raw content", placeholder: "Tampal nota, senarai atau angka di sini", type: "textarea" };
+const cp: PromptField = {
+  id: "coop", type: "text",
+  label: { bm: "Nama koperasi", en: "Co-op name", zh: "合作社名称", iban: "Nama koperasi" },
+  placeholder: { bm: "cth. Koperasi Serba Guna Kuching Berhad", en: "e.g. Koperasi Serba Guna Kuching Berhad", zh: "例如：Koperasi Serba Guna Kuching Berhad" },
+};
+const cx: PromptField = {
+  id: "context", type: "textarea",
+  label: { bm: "Maklumat / konteks tambahan", en: "Context", zh: "补充资料／背景", iban: "Maklumat tambah" },
+  placeholder: { bm: "Terangkan situasi, cabaran atau latar belakang ringkas", en: "Describe the situation, challenge or brief background", zh: "简述情况、挑战或背景", iban: "Terangka pekara, penanggul tauka latar belakang pandak" },
+};
+const ob: PromptField = {
+  id: "objective", type: "text",
+  label: { bm: "Objektif utama", en: "Objective", zh: "主要目标", iban: "Tuju utama" },
+  placeholder: { bm: "Apa yang anda mahu capai?", en: "What do you want to achieve?", zh: "您想达成什么？", iban: "Nama utai ti deka dikemisi nuan?" },
+};
+const au: PromptField = {
+  id: "audience", type: "text",
+  label: { bm: "Sasaran / pihak terlibat", en: "Audience", zh: "目标对象", iban: "Orang ti dituju" },
+  placeholder: { bm: "cth. anggota, pelanggan, kakitangan, Lembaga", en: "e.g. members, customers, staff, the Board", zh: "例如：会员、顾客、员工、董事会", iban: "cth. anggota, pelanggan, pengawa, Lembaga" },
+};
+const tp: PromptField = {
+  id: "topic", type: "text",
+  label: { bm: "Tajuk / fokus", en: "Topic", zh: "主题／重点", iban: "Tajuk / fokus" },
+  placeholder: { bm: "cth. produk, aktiviti, isu", en: "e.g. a product, an activity, an issue", zh: "例如：产品、活动、问题", iban: "cth. produk, pengawa, pekara" },
+};
+const pr: PromptField = {
+  id: "product", type: "text",
+  label: { bm: "Produk / perkhidmatan", en: "Product / service", zh: "产品／服务", iban: "Produk / servis" },
+  placeholder: { bm: "cth. barangan runcit, khidmat simpanan", en: "e.g. grocery goods, savings services", zh: "例如：杂货商品、储蓄服务", iban: "cth. utai kedai, servis simpan duit" },
+};
+const raw: PromptField = {
+  id: "raw", type: "textarea",
+  label: { bm: "Kandungan / data mentah", en: "Raw content", zh: "原始内容／数据", iban: "Kandung / data mentah" },
+  placeholder: { bm: "Tampal nota, senarai atau angka di sini", en: "Paste notes, lists or figures here", zh: "在此贴上笔记、清单或数字", iban: "Tampal nota, senarai tauka angka ditu" },
+};
 
 const FIN_DISCLAIMER =
   "AI membantu analisis dan draf sahaja. Semua maklumat kewangan mesti disemak dan disahkan oleh pegawai kewangan / akauntan yang bertanggungjawab.";
 const GOV_DISCLAIMER =
   "AI menyokong penyediaan sahaja dan tidak menggantikan pertimbangan Lembaga, nasihat guaman atau pengesahan pihak berkuasa.";
 
-type Raw = Omit<PromptMission, "role" | "id" | "n"> & { fields: PromptField[] };
+/** How a mission is written below: plain BM + English strings. */
+type Raw = Omit<PromptMission, "role" | "id" | "n" | "title" | "desc"> & {
+  title: string; // BM
+  titleEn: string;
+  desc: string; // BM one-liner
+  fields: PromptField[];
+};
 
+/** Build a work area, folding in the zh/iban layer from promptLibrary.i18n.ts. */
 function assemble(
   id: string,
   code: string,
@@ -65,9 +107,24 @@ function assemble(
   role: string,
   missions: Raw[]
 ): WorkArea {
+  const areaX = AREA_I18N[id];
   return {
-    id, code, title, titleEn, blurb, icon, accent,
-    missions: missions.map((mm, i) => ({ ...mm, role, id: `${code}${i + 1}`, n: i + 1 })),
+    id, code, icon, accent,
+    title: { bm: title, en: titleEn, ...areaX?.title },
+    blurb: { bm: blurb, en: blurb, ...areaX?.blurb },
+    missions: missions.map((mm, i) => {
+      const missionId = `${code}${i + 1}`;
+      const mX = MISSION_I18N[missionId];
+      const { titleEn: mTitleEn, title: mTitle, desc: mDesc, ...rest } = mm;
+      return {
+        ...rest,
+        role,
+        id: missionId,
+        n: i + 1,
+        title: { bm: mTitle, en: mTitleEn, ...mX?.title },
+        desc: { bm: mDesc, en: mDesc, ...mX?.desc },
+      };
+    }),
   };
 }
 
@@ -341,7 +398,7 @@ export function buildPrompt(
     mission.fields
       .map((f) => {
         const v = (values[f.id] || "").trim();
-        return v ? `- ${f.label}: ${v}` : null;
+        return v ? `- ${pick(f.label, "bm")}: ${v}` : null;
       })
       .filter(Boolean)
       .join("\n") || "- (Tiada butiran tambahan diberikan)";

@@ -12,15 +12,16 @@ const WRAP = "mx-auto w-full max-w-6xl px-5 sm:px-8";
 
 /** ProgramOS Lite wordmark (text — we never redraw official partner logos). */
 export function ProgramWordmark({ inverted = false }: { inverted?: boolean }) {
+  const { t } = useI18n();
   return (
-    <Link to="/" className="flex items-center gap-2.5" aria-label="ProgramOS Lite — Utama">
+    <Link to="/" className="flex items-center gap-2.5" aria-label={t("homeAria")}>
       <LogoMark className="h-9 w-9" />
       <span className="leading-none">
         <span className={`font-display text-[17px] font-extrabold tracking-tight ${inverted ? "text-white" : "text-navy-900"}`}>
           ProgramOS <span className="text-gold-500">Lite</span>
         </span>
         <span className={`mt-0.5 block text-[10px] font-semibold ${inverted ? "text-navy-200" : "text-navy-400"}`}>
-          AI untuk Koperasi
+          {t("wordmarkSub")}
         </span>
       </span>
     </Link>
@@ -89,8 +90,8 @@ export function AccountMenu() {
         className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-gold-400 px-3.5 py-2 text-[13px] font-bold text-navy-900 shadow-gold hover:bg-gold-300 sm:px-4 sm:text-sm"
       >
         <Icon name="qr" className="h-4 w-4 shrink-0" />
-        <span className="hidden lg:inline">Log Masuk / Check-In</span>
-        <span className="lg:hidden">Check-In</span>
+        <span className="hidden lg:inline">{t("headerCta")}</span>
+        <span className="lg:hidden">{t("headerCtaShort")}</span>
       </Link>
     );
   }
@@ -159,7 +160,7 @@ export function AccountMenu() {
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
-  const { t } = useI18n();
+  const { t, pick } = useI18n();
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `rounded-full px-3 py-1.5 text-sm font-semibold transition ${
@@ -174,7 +175,7 @@ export function SiteHeader() {
       <div className="bg-navy-950 text-white">
         <div className={`${WRAP} flex items-center justify-between gap-3 py-1.5`}>
           <PartnerStrip className="text-gold-300" />
-          <span className="hidden text-[11px] text-navy-200 sm:block">{eventConfig.brandStrip}</span>
+          <span className="hidden text-[11px] text-navy-200 sm:block">{pick(eventConfig.brandStrip)}</span>
         </div>
       </div>
 
@@ -273,19 +274,20 @@ function MobileAccountLinks({ onNavigate }: { onNavigate: () => void }) {
 }
 
 export function SiteFooter() {
+  const { t, pick } = useI18n();
   return (
     <footer className="mt-auto bg-navy-950 text-white">
       {/* Pillars band */}
       <div className="border-b border-white/10">
         <div className={`${WRAP} grid gap-5 py-8 sm:grid-cols-3`}>
           {PILLARS.map((p) => (
-            <div key={p.title} className="flex items-start gap-3">
+            <div key={pick(p.title)} className="flex items-start gap-3">
               <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold-400/15 text-gold-300">
                 <Icon name="checkCircle" className="h-4 w-4" />
               </span>
               <div>
-                <div className="text-sm font-bold text-white">{p.title}</div>
-                <div className="text-xs text-navy-200">{p.desc}</div>
+                <div className="text-sm font-bold text-white">{pick(p.title)}</div>
+                <div className="text-xs text-navy-200">{pick(p.desc)}</div>
               </div>
             </div>
           ))}
@@ -294,14 +296,12 @@ export function SiteFooter() {
 
       <div className={`${WRAP} py-8`}>
         <div className="rounded-2xl border border-gold-400/20 bg-gold-400/10 px-5 py-4 text-center">
-          <p className="font-display text-sm font-bold text-gold-200">
-            AI Bukan Menggantikan Manusia, Tetapi Memperkasa Koperasi.
-          </p>
+          <p className="font-display text-sm font-bold text-gold-200">{t("footerTagline")}</p>
         </div>
 
         <div className="mt-6 flex flex-col items-center gap-2 text-center">
           <ProgramWordmark inverted />
-          <p className="mt-1 text-xs font-semibold tracking-wide text-gold-300">{eventConfig.motto}</p>
+          <p className="mt-1 text-xs font-semibold tracking-wide text-gold-300">{pick(eventConfig.motto)}</p>
           <PartnerStrip className="mt-2 justify-center text-navy-200" />
           <p className="mt-2 text-[11px] text-navy-300">{eventConfig.footerSecondary}</p>
           <p className="text-[11px] text-navy-400">{eventConfig.copyright}</p>
@@ -318,7 +318,7 @@ export function SiteFooter() {
             className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-semibold text-navy-400 underline-offset-4 hover:text-gold-300 hover:underline"
           >
             <Icon name="lock" className="h-3 w-3" />
-            Admin
+            {t("admin")}
           </Link>
         </div>
       </div>

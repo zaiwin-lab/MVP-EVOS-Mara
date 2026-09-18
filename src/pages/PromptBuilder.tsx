@@ -6,12 +6,14 @@ import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { areaAccent } from "../lib/accents";
 import { useParticipant } from "../context/ParticipantContext";
+import { useI18n, pick as pickLang } from "../context/I18nContext";
 import { store } from "../data/store";
 
 export default function PromptBuilder() {
   const { areaId, missionId } = useParams();
   const found = areaId && missionId ? getMission(areaId, missionId) : undefined;
   const { participantId, record, refresh } = useParticipant();
+  const { t, pick } = useI18n();
 
   const [values, setValues] = useState<Record<string, string>>({});
   const [output, setOutput] = useState<string>("");
@@ -51,7 +53,7 @@ export default function PromptBuilder() {
         participantId,
         areaId: area.id,
         missionId: mission.id,
-        promptTitle: mission.title,
+        promptTitle: pickLang(mission.title, "bm"),
         promptText: text,
         inputs: values,
       });
@@ -93,7 +95,7 @@ export default function PromptBuilder() {
     const entry: SavedPrompt = {
       id: mission.id,
       areaId: area.id,
-      title: mission.title,
+      title: pickLang(mission.title, "bm"),
       text: output,
       savedAt: new Date().toISOString(),
     };
@@ -108,14 +110,14 @@ export default function PromptBuilder() {
       <section className="bg-navy-950 text-white">
         <div className={`${SITE_WRAP} py-8`}>
           <Link to={`/prompt-hub/${area.id}`} className="inline-flex items-center gap-1.5 text-xs font-semibold text-navy-200 hover:text-white">
-            <Icon name="arrowLeft" className="h-4 w-4" /> {area.title}
+            <Icon name="arrowLeft" className="h-4 w-4" /> {pick(area.title)}
           </Link>
           <div className="mt-3 flex items-center gap-2">
-            <span className={`chip ${ac.soft}`}>Prompt {mission.n} / 10</span>
-            <span className="chip bg-white/10 text-white">{area.title}</span>
+            <span className={`chip ${ac.soft}`}>{t("pbPromptOfTen").replace("{n}", String(mission.n))}</span>
+            <span className="chip bg-white/10 text-white">{pick(area.title)}</span>
           </div>
-          <h1 className="mt-3 font-display text-2xl font-extrabold sm:text-3xl">{mission.title}</h1>
-          <p className="mt-1 text-sm text-navy-200">{mission.desc}</p>
+          <h1 className="mt-3 font-display text-2xl font-extrabold sm:text-3xl">{pick(mission.title)}</h1>
+          <p className="mt-1 text-sm text-navy-200">{pick(mission.desc)}</p>
         </div>
       </section>
 
@@ -127,20 +129,20 @@ export default function PromptBuilder() {
               <span className={`flex h-8 w-8 items-center justify-center rounded-lg ${ac.badge}`}>
                 <Icon name="template" className="h-4 w-4" />
               </span>
-              <h2 className="font-display text-base font-bold text-navy-900">Isi Butiran Anda</h2>
+              <h2 className="font-display text-base font-bold text-navy-900">{t("pbFillDetails")}</h2>
             </div>
-            <p className="mt-1 text-xs text-navy-400">Hanya beberapa maklumat ringkas. Medan kosong akan dilangkau.</p>
+            <p className="mt-1 text-xs text-navy-400">{t("pbFillNote")}</p>
 
             <div className="mt-5 space-y-4">
               {mission.fields.map((f) => (
                 <div key={f.id}>
                   <label className="field-label">
-                    {f.label} <span className="font-normal text-navy-300">· {f.labelEn}</span>
+                    {pick(f.label)}
                   </label>
                   {f.type === "textarea" ? (
                     <textarea
                       className="field-input min-h-[90px] resize-y"
-                      placeholder={f.placeholder}
+                      placeholder={pick(f.placeholder)}
                       value={values[f.id] ?? ""}
                       onChange={(e) => set(f.id, e.target.value)}
                     />
@@ -154,7 +156,7 @@ export default function PromptBuilder() {
                   ) : (
                     <input
                       className="field-input"
-                      placeholder={f.placeholder}
+                      placeholder={pick(f.placeholder)}
                       value={values[f.id] ?? ""}
                       onChange={(e) => set(f.id, e.target.value)}
                     />
@@ -170,28 +172,24 @@ export default function PromptBuilder() {
             )}
 
             <button onClick={generate} className="btn-gold mt-5 w-full">
-              <Icon name="spark" className="h-5 w-5" /> Jana Prompt Saya
+              <Icon name="spark" className="h-5 w-5" /> {t("pbGenerate")}
             </button>
 
             {needsAccount && (
               <div className="mt-4 rounded-2xl border border-gold-300 bg-gold-50 p-4">
-                <p className="text-sm font-bold text-navy-900">
-                  Log masuk dahulu untuk guna prompt ini
-                </p>
+                <p className="text-sm font-bold text-navy-900">{t("pbLoginTitle")}</p>
                 <p className="mt-1 text-xs leading-relaxed text-navy-600">
-                  Prompt yang anda jana akan disimpan dalam{" "}
-                  <b>Senarai Prompt Saya</b> supaya anda boleh rujuk semula selepas
-                  program. Melihat pustaka prompt kekal percuma.
+                  {t("pbLoginBodyA")} <b>{t("myPrompts")}</b> {t("pbLoginBodyB")}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <Link to="/check-in" className="btn-gold px-4 py-2 text-sm">
-                    Log Masuk / Daftar
+                    {t("pbLoginCta")}
                   </Link>
                   <Link
                     to={`/prompt-hub/${area.id}`}
                     className="rounded-full border border-navy-200 px-4 py-2 text-sm font-semibold text-navy-600 hover:bg-navy-50"
                   >
-                    Kembali ke senarai
+                    {t("pbBackToList")}
                   </Link>
                 </div>
               </div>
@@ -205,9 +203,9 @@ export default function PromptBuilder() {
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-navy-900 text-gold-300">
                   <Icon name="document" className="h-4 w-4" />
                 </span>
-                <h2 className="font-display text-base font-bold text-navy-900">Hasil Prompt Anda</h2>
+                <h2 className="font-display text-base font-bold text-navy-900">{t("pbResultTitle")}</h2>
               </div>
-              {output && <span className="chip bg-emerald-100 text-emerald-700"><Icon name="check" className="h-3 w-3" /> Sedia</span>}
+              {output && <span className="chip bg-emerald-100 text-emerald-700"><Icon name="check" className="h-3 w-3" /> {t("pbReady")}</span>}
             </div>
 
             {output ? (
@@ -217,24 +215,24 @@ export default function PromptBuilder() {
                 </pre>
                 <div className="mt-4 grid gap-2 sm:grid-cols-3">
                   <button onClick={copy} className="btn-primary text-sm">
-                    <Icon name={copied ? "check" : "clipboard"} className="h-4 w-4" /> {copied ? "Disalin!" : "Salin Prompt"}
+                    <Icon name={copied ? "check" : "clipboard"} className="h-4 w-4" /> {copied ? t("pbCopied") : t("pbCopy")}
                   </button>
                   <button onClick={downloadTxt} className="btn-outline text-sm">
-                    <Icon name="download" className="h-4 w-4" /> Muat Turun .txt
+                    <Icon name="download" className="h-4 w-4" /> {t("pbDownload")}
                   </button>
                   {participantId ? (
                     <button onClick={saveToList} disabled={alreadySaved || saved} className="btn-ghost text-sm disabled:opacity-60">
-                      <Icon name="book" className="h-4 w-4" /> {alreadySaved || saved ? "Disimpan" : "Simpan ke Senarai"}
+                      <Icon name="book" className="h-4 w-4" /> {alreadySaved || saved ? t("pbSavedState") : t("pbSaveToList")}
                     </button>
                   ) : (
                     <Link to="/check-in" className="btn-ghost text-sm">
-                      <Icon name="book" className="h-4 w-4" /> Daftar untuk simpan
+                      <Icon name="book" className="h-4 w-4" /> {t("pbRegisterToSave")}
                     </Link>
                   )}
                 </div>
                 <div className="mt-4 rounded-xl bg-sand-100 px-4 py-3 text-xs text-navy-600">
                   <Icon name="spark" className="mr-1 inline h-3.5 w-3.5 text-gold-600" />
-                  Salin prompt ini dan tampalkan ke dalam <b>ChatGPT</b>, <b>Claude</b> atau <b>Gemini</b> untuk mendapatkan hasil terbaik.
+                  {t("pbPasteHint")}
                 </div>
               </>
             ) : (
@@ -242,9 +240,7 @@ export default function PromptBuilder() {
                 <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-navy-50 text-navy-300">
                   <Icon name="spark" className="h-7 w-7" />
                 </span>
-                <p className="mt-4 max-w-xs text-sm text-navy-400">
-                  Isi butiran di sebelah dan tekan <b>“Jana Prompt Saya”</b>. Prompt profesional anda akan dipaparkan di sini, sedia untuk disalin.
-                </p>
+                <p className="mt-4 max-w-xs text-sm text-navy-400">{t("pbEmpty")}</p>
               </div>
             )}
           </div>
