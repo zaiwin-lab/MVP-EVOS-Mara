@@ -15,6 +15,7 @@ import type {
   CompanyProfile,
   Participant,
   ParticipantRecord,
+  PromptAttempt,
   Reflection,
 } from "./types";
 
@@ -44,6 +45,17 @@ export interface Store {
   markAttendance(participantId: string, session: string): Promise<boolean>;
   /** Permanently remove a participant and all of their related records. */
   deleteParticipant(id: string): Promise<void>;
+  /** Record that a participant used a prompt; bumps the count if repeated. */
+  recordPromptAttempt(input: PromptAttemptInput): Promise<void>;
+  /** Everything behind "Senarai Prompt Saya", newest use first. */
+  listPromptAttempts(participantId: string): Promise<PromptAttempt[]>;
+}
+
+export interface PromptAttemptInput {
+  participantId: string;
+  areaId: string;
+  missionId: string;
+  promptTitle: string;
 }
 
 const now = () => new Date().toISOString();
@@ -94,6 +106,7 @@ const K = {
   actionPlans: `${NS}:actionPlans`,
   reflections: `${NS}:reflections`,
   attendance: `${NS}:attendance`,
+  prompts: `${NS}:promptAttempts`,
 };
 
 function read<T>(key: string, fallback: T): T {
@@ -199,6 +212,31 @@ class LocalAdapter implements Store {
     });
     write(K.participants, next);
     return updated;
+  }
+
+  async recordPromptAttempt(input: PromptAttemptInput): Promise<void> {
+    const list = read<PromptAttempt[]>(K.prompts, []);
+    const i = list.findIndex(
+      (a) => a.participantId === input.participantId && a.missionId === input.missionId
+    );
+    if (i >= 0) {
+      list[i] = { ...list[i], attemptCount: list[i].attemptCount + 1, lastUsedAt: now() };
+    } else {
+      list.push({
+        ...input,
+        eventSlug: eventConfig.slug,
+        attemptCount: 1,
+        firstUsedAt: now(),
+        lastUsedAt: now(),
+      });
+    }
+    write(K.prompts, list);
+  }
+
+  async listPromptAttempts(participantId: string): Promise<PromptAttempt[]> {
+    return read<PromptAttempt[]>(K.prompts, [])
+      .filter((a) => a.participantId === participantId)
+      .sort((a, b) => new Date(b.lastUsedAt).getTime() - new Date(a.lastUsedAt).getTime());
   }
 
   async saveProfile(profile: CompanyProfile): Promise<void> {
@@ -414,6 +452,57 @@ class SupabaseAdapter implements Store {
       this.db.from("company_profiles").delete().eq("participant_id", id),
     ]);
     await this.db.from("participants").delete().eq("id", id);
+  }
+
+  async recordPromptAttempt(input: PromptAttemptInput): Promise<void> {
+    const { data: existing, error: readErr } = await this.db
+      .from("prompt_attempts")
+      .select("attempt_count")
+      .eq("participant_id", input.participantId)
+      .eq("mission_id", input.missionId)
+      .maybeSingle();
+    if (readErr) throw readErr;
+
+    if (existing) {
+      const { error } = await this.db
+        .from("prompt_attempts")
+        .update({
+          attempt_count: (existing.attempt_count ?? 1) + 1,
+          last_used_at: now(),
+        })
+        .eq("participant_id", input.participantId)
+        .eq("mission_id", input.missionId);
+      if (error) throw error;
+      return;
+    }
+
+    const { error } = await this.db.from("prompt_attempts").insert({
+      participant_id: input.participantId,
+      event_slug: eventConfig.slug,
+      area_id: input.areaId,
+      mission_id: input.missionId,
+      prompt_title: input.promptTitle,
+    });
+    if (error) throw error;
+  }
+
+  async listPromptAttempts(participantId: string): Promise<PromptAttempt[]> {
+    const { data, error } = await this.db
+      .from("prompt_attempts")
+      .select("*")
+      .eq("participant_id", participantId)
+      .order("last_used_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []).map((r) => ({
+      participantId: r.participant_id as string,
+      eventSlug: r.event_slug as string,
+      areaId: (r.area_id as string) ?? "",
+      missionId: r.mission_id as string,
+      promptTitle: (r.prompt_title as string) ?? "",
+      attemptCount: (r.attempt_count as number) ?? 1,
+      firstUsedAt: r.first_used_at as string,
+      lastUsedAt: r.last_used_at as string,
+    }));
   }
 }
 

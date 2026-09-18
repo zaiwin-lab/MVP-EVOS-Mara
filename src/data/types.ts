@@ -22,6 +22,22 @@ export interface SavedPrompt {
   savedAt: string;
 }
 
+/**
+ * One row per participant per prompt, in its own table rather than buried in
+ * the participant JSON — so "Senarai Prompt Saya" and the admin dashboard can
+ * query prompt activity directly.
+ */
+export interface PromptAttempt {
+  participantId: string;
+  eventSlug: string;
+  areaId: string;
+  missionId: string;
+  promptTitle: string;
+  attemptCount: number;
+  firstUsedAt: string;
+  lastUsedAt: string;
+}
+
 export interface Participant {
   id: string;
   ref: string; // human-friendly confirmation reference, e.g. VDP-4821

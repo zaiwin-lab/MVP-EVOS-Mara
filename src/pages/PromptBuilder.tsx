@@ -17,6 +17,7 @@ export default function PromptBuilder() {
   const [output, setOutput] = useState<string>("");
   const [copied, setCopied] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [needsAccount, setNeedsAccount] = useState(false);
 
   const alreadySaved = useMemo(
     () => Boolean(record?.participant.savedPrompts?.some((s) => s.id === missionId)),
@@ -30,18 +31,38 @@ export default function PromptBuilder() {
   const set = (id: string, v: string) => setValues((prev) => ({ ...prev, [id]: v }));
 
   async function generate() {
+    // Browsing the library is open to everyone, but using a prompt is tied to
+    // an account so it lands in "Senarai Prompt Saya".
+    if (!participantId) {
+      setNeedsAccount(true);
+      return;
+    }
+    setNeedsAccount(false);
+
     const text = buildPrompt(area, mission, values);
     setOutput(text);
     setCopied(false);
     setSaved(false);
-    // Light tracking: mark this mission as "tried".
-    if (participantId) {
-      const prev = record?.participant.triedPromptIds ?? [];
-      if (!prev.includes(mission.id)) {
-        await store.updateParticipant(participantId, { triedPromptIds: [...prev, mission.id] });
-        await refresh();
-      }
+
+    // Durable record, one row per participant per prompt.
+    try {
+      await store.recordPromptAttempt({
+        participantId,
+        areaId: area.id,
+        missionId: mission.id,
+        promptTitle: mission.title,
+      });
+    } catch (err) {
+      // Never let tracking block the participant from using their prompt.
+      console.warn("Could not record prompt attempt", err);
     }
+
+    // Keep the legacy summary field in step for the admin dashboard.
+    const prev = record?.participant.triedPromptIds ?? [];
+    if (!prev.includes(mission.id)) {
+      await store.updateParticipant(participantId, { triedPromptIds: [...prev, mission.id] });
+    }
+    await refresh();
   }
 
   async function copy() {
@@ -148,6 +169,30 @@ export default function PromptBuilder() {
             <button onClick={generate} className="btn-gold mt-5 w-full">
               <Icon name="spark" className="h-5 w-5" /> Jana Prompt Saya
             </button>
+
+            {needsAccount && (
+              <div className="mt-4 rounded-2xl border border-gold-300 bg-gold-50 p-4">
+                <p className="text-sm font-bold text-navy-900">
+                  Log masuk dahulu untuk guna prompt ini
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-navy-600">
+                  Prompt yang anda jana akan disimpan dalam{" "}
+                  <b>Senarai Prompt Saya</b> supaya anda boleh rujuk semula selepas
+                  program. Melihat pustaka prompt kekal percuma.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Link to="/check-in" className="btn-gold px-4 py-2 text-sm">
+                    Log Masuk / Daftar
+                  </Link>
+                  <Link
+                    to={`/prompt-hub/${area.id}`}
+                    className="rounded-full border border-navy-200 px-4 py-2 text-sm font-semibold text-navy-600 hover:bg-navy-50"
+                  >
+                    Kembali ke senarai
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Result */}

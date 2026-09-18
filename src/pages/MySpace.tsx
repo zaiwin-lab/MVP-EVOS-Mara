@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { eventConfig } from "../config/eventConfig";
 import { getWorkArea } from "../content/promptLibrary";
@@ -5,10 +6,30 @@ import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { areaAccent } from "../lib/accents";
 import { useParticipant } from "../context/ParticipantContext";
+import { store } from "../data/store";
+import type { PromptAttempt } from "../data/types";
 
 export default function MySpace() {
   const { participantId, record, loading, signOut } = useParticipant();
   const navigate = useNavigate();
+  const [attempts, setAttempts] = useState<PromptAttempt[]>([]);
+
+  // Every prompt this participant has actually used, from its own table —
+  // not just the ones they explicitly saved.
+  useEffect(() => {
+    if (!participantId) {
+      setAttempts([]);
+      return;
+    }
+    let cancelled = false;
+    store
+      .listPromptAttempts(participantId)
+      .then((rows) => !cancelled && setAttempts(rows))
+      .catch((err) => console.warn("Could not load prompt attempts", err));
+    return () => {
+      cancelled = true;
+    };
+  }, [participantId]);
 
   if (!participantId && !loading) return <Navigate to="/check-in" replace />;
   if (loading || !record) {
@@ -22,7 +43,7 @@ export default function MySpace() {
   const p = record.participant;
   const area = p.selectedWorkArea ? getWorkArea(p.selectedWorkArea) : undefined;
   const saved = p.savedPrompts ?? [];
-  const tried = p.triedPromptIds?.length ?? 0;
+  const tried = attempts.length || (p.triedPromptIds?.length ?? 0);
   const attended = record.attendance.length > 0;
 
   return (
@@ -108,20 +129,44 @@ export default function MySpace() {
             <div className="text-xs font-bold uppercase tracking-wide text-navy-400">Senarai Prompt Saya</div>
             <Link to="/prompt-hub" className="text-xs font-semibold text-navy-600 underline">Tambah lagi</Link>
           </div>
-          {saved.length ? (
+          {attempts.length ? (
             <ul className="mt-3 divide-y divide-navy-50">
-              {saved.map((s) => (
-                <li key={s.id} className="flex items-center justify-between gap-3 py-3">
-                  <div className="min-w-0">
-                    <div className="truncate text-sm font-semibold text-navy-900">{s.title}</div>
-                    <div className="text-[11px] text-navy-400">{getWorkArea(s.areaId)?.title}</div>
-                  </div>
-                  <Link to={`/prompt-hub/${s.areaId}/${s.id}`} className="btn-ghost shrink-0 text-xs">Buka</Link>
-                </li>
-              ))}
+              {attempts.map((a) => {
+                const isSaved = saved.some((s) => s.id === a.missionId);
+                return (
+                  <li key={a.missionId} className="flex items-center justify-between gap-3 py-3">
+                    <div className="min-w-0">
+                      <div className="truncate text-sm font-semibold text-navy-900">
+                        {a.promptTitle || a.missionId}
+                      </div>
+                      <div className="flex flex-wrap items-center gap-x-2 text-[11px] text-navy-400">
+                        <span>{getWorkArea(a.areaId)?.title}</span>
+                        <span aria-hidden="true">·</span>
+                        <span>
+                          {a.attemptCount > 1 ? `${a.attemptCount} kali guna` : "1 kali guna"}
+                        </span>
+                        {isSaved && (
+                          <span className="rounded bg-emerald-100 px-1.5 py-0.5 font-semibold text-emerald-700">
+                            Disimpan
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <Link
+                      to={`/prompt-hub/${a.areaId}/${a.missionId}`}
+                      className="btn-ghost shrink-0 text-xs"
+                    >
+                      Buka
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           ) : (
-            <p className="mt-3 text-sm text-navy-500">Belum ada prompt disimpan. Jana prompt dan tekan “Simpan ke Senarai”.</p>
+            <p className="mt-3 text-sm text-navy-500">
+              Belum ada prompt digunakan. Buka Prompt Hub, isi butiran koperasi anda dan
+              tekan “Jana Prompt Saya” — ia akan muncul di sini.
+            </p>
           )}
         </div>
 
