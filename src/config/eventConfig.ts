@@ -151,11 +151,22 @@ export const eventConfig: EventConfig = {
 // Route base for this event (keeps deep links / QR targets consistent)
 export const eventBase = `/event/${eventConfig.slug}`;
 
-// Admin gate — username + password (overridable via env for production).
+// Admin gate — username + passcode, supplied at build time.
+//
+// IMPORTANT, and deliberately not a default: whatever is set here is compiled
+// into the public JavaScript bundle, so anyone can read it. This gate keeps
+// the dashboard out of the way of casual visitors; it is NOT access control.
+// The participant tables are readable with the anon key regardless, so real
+// protection means Supabase Auth plus RLS — see IMPROVEMENTS.md P0.
+//
+// There is no fallback value on purpose. A missing VITE_ADMIN_PASSWORD
+// disables the gate's submit button rather than silently shipping a guessable
+// default (it used to fall back to "123456").
 export const ADMIN_USERNAME =
   (import.meta.env.VITE_ADMIN_USERNAME as string | undefined) || "admin";
 export const ADMIN_PASSWORD =
-  (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined) || "123456";
+  (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined) ?? "";
+export const ADMIN_PASSWORD_SET = ADMIN_PASSWORD.trim().length > 0;
 
 // Public origin used when generating QR codes / share links.
 export function publicOrigin(): string {

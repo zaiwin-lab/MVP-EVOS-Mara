@@ -49,6 +49,8 @@ export interface Store {
   recordPromptAttempt(input: PromptAttemptInput): Promise<void>;
   /** Everything behind "Senarai Prompt Saya", newest use first. */
   listPromptAttempts(participantId: string): Promise<PromptAttempt[]>;
+  /** Every prompt attempt for this event — admin dashboard. */
+  listAllPromptAttempts(): Promise<PromptAttempt[]>;
 }
 
 export interface PromptAttemptInput {
@@ -248,6 +250,12 @@ class LocalAdapter implements Store {
     return read<PromptAttempt[]>(K.prompts, [])
       .filter((a) => a.participantId === participantId)
       .sort((a, b) => new Date(b.lastUsedAt).getTime() - new Date(a.lastUsedAt).getTime());
+  }
+
+  async listAllPromptAttempts(): Promise<PromptAttempt[]> {
+    return read<PromptAttempt[]>(K.prompts, []).sort(
+      (a, b) => new Date(b.lastUsedAt).getTime() - new Date(a.lastUsedAt).getTime()
+    );
   }
 
   async saveProfile(profile: CompanyProfile): Promise<void> {
@@ -507,6 +515,27 @@ class SupabaseAdapter implements Store {
       .from("prompt_attempts")
       .select("*")
       .eq("participant_id", participantId)
+      .order("last_used_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []).map((r) => ({
+      participantId: r.participant_id as string,
+      eventSlug: r.event_slug as string,
+      areaId: (r.area_id as string) ?? "",
+      missionId: r.mission_id as string,
+      promptTitle: (r.prompt_title as string) ?? "",
+      promptText: (r.prompt_text as string) ?? "",
+      inputs: (r.inputs as Record<string, string>) ?? {},
+      attemptCount: (r.attempt_count as number) ?? 1,
+      firstUsedAt: r.first_used_at as string,
+      lastUsedAt: r.last_used_at as string,
+    }));
+  }
+
+  async listAllPromptAttempts(): Promise<PromptAttempt[]> {
+    const { data, error } = await this.db
+      .from("prompt_attempts")
+      .select("*")
+      .eq("event_slug", eventConfig.slug)
       .order("last_used_at", { ascending: false });
     if (error) throw error;
     return (data ?? []).map((r) => ({

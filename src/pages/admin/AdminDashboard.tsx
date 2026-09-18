@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { eventConfig, ADMIN_PASSWORD, publicOrigin } from "../../config/eventConfig";
+import { eventConfig, ADMIN_PASSWORD, ADMIN_PASSWORD_SET, publicOrigin } from "../../config/eventConfig";
 import { store, storageMode } from "../../data/store";
-import type { ParticipantRecord } from "../../data/types";
+import type { ParticipantRecord, PromptAttempt } from "../../data/types";
 import { WORK_AREAS, getWorkArea, PROMPT_COUNT } from "../../content/promptLibrary";
 import { READINESS_BANDS } from "../../content/readiness";
 import { Icon } from "../../components/Icon";
@@ -22,7 +22,8 @@ function Gate({ onOk }: { onOk: () => void }) {
   const [err, setErr] = useState(false);
   const navigate = useNavigate();
   function submit() {
-    if (pw === ADMIN_PASSWORD) {
+    // Refuse to let an empty configured passcode match an empty input.
+    if (ADMIN_PASSWORD_SET && pw === ADMIN_PASSWORD) {
       sessionStorage.setItem(AUTH_KEY, "1");
       onOk();
     } else setErr(true);
@@ -45,7 +46,19 @@ function Gate({ onOk }: { onOk: () => void }) {
           autoFocus
         />
         {err && <p className="mt-2 text-sm text-red-600">Kata laluan tidak betul.</p>}
-        <button onClick={submit} className="btn-gold mt-4 w-full">Log Masuk</button>
+        {!ADMIN_PASSWORD_SET && (
+          <p className="mt-3 rounded-xl bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-800">
+            <b>VITE_ADMIN_PASSWORD belum ditetapkan.</b> Tetapkan pemboleh ubah
+            persekitaran ini di Netlify dan bina semula untuk mengaktifkan admin.
+          </p>
+        )}
+        <button
+          onClick={submit}
+          disabled={!ADMIN_PASSWORD_SET}
+          className="btn-gold mt-4 w-full disabled:opacity-50"
+        >
+          Log Masuk
+        </button>
         <button onClick={() => navigate("/")} className="mt-3 w-full text-center text-xs text-navy-400 underline">Kembali ke laman utama</button>
       </div>
     </div>
@@ -57,10 +70,15 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [prompts, setPrompts] = useState<PromptAttempt[]>([]);
 
   const load = () => {
     setLoading(true);
     store.listRecords().then((r) => { setRecords(r); setLoading(false); });
+    store
+      .listAllPromptAttempts()
+      .then(setPrompts)
+      .catch((err) => console.warn("Could not load prompt activity", err));
   };
   useEffect(load, []);
 
@@ -252,6 +270,8 @@ function Dashboard() {
           )}
         </Panel>
 
+        <PromptActivityPanel prompts={prompts} records={records} />
+
         <p className="pb-6 text-center text-[11px] text-navy-400">
           {PROMPT_COUNT} prompt · {WORK_AREAS.length} bidang · {eventConfig.eventName}
         </p>
@@ -363,6 +383,143 @@ function exportCsv(records: ParticipantRecord[]) {
   const a = document.createElement("a");
   a.href = url;
   a.download = `programos-lite-peserta-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Prompt activity ──────────────────────────────────────────
+/**
+ * Who used which prompt, and the exact text they generated. This is the
+ * reason the admin no longer needs the Supabase dashboard to see what
+ * participants actually produced.
+ */
+function PromptActivityPanel({
+  prompts,
+  records,
+}: {
+  prompts: PromptAttempt[];
+  records: ParticipantRecord[];
+}) {
+  const [open, setOpen] = useState<string | null>(null);
+
+  const nameFor = (participantId: string) =>
+    records.find((r) => r.participant.id === participantId)?.participant ?? null;
+
+  const uniqueUsers = new Set(prompts.map((p) => p.participantId)).size;
+  const totalUses = prompts.reduce((n, p) => n + p.attemptCount, 0);
+
+  return (
+    <Panel
+      title="Aktiviti Prompt"
+      subtitle={`${prompts.length} prompt · ${uniqueUsers} peserta · ${totalUses} kali guna`}
+      action={
+        prompts.length ? (
+          <button onClick={() => exportPromptCsv(prompts, records)} className="btn-ghost text-xs">
+            <Icon name="download" className="h-3.5 w-3.5" /> CSV
+          </button>
+        ) : null
+      }
+    >
+      {!prompts.length ? (
+        <p className="py-6 text-center text-sm text-navy-400">
+          Belum ada prompt digunakan oleh peserta.
+        </p>
+      ) : (
+        <div className="divide-y divide-navy-50">
+          {prompts.map((a) => {
+            const p = nameFor(a.participantId);
+            const key = `${a.participantId}:${a.missionId}`;
+            const isOpen = open === key;
+            return (
+              <div key={key} className="py-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="truncate text-sm font-bold text-navy-900">
+                      {p?.fullName ?? "Peserta dipadam"}
+                      <span className="ml-2 font-normal text-navy-400">
+                        {p?.coopName || p?.companyName}
+                      </span>
+                    </div>
+                    <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[11px] text-navy-500">
+                      <span className="font-semibold text-navy-700">{a.promptTitle}</span>
+                      <span aria-hidden="true">·</span>
+                      <span>{getWorkArea(a.areaId)?.title ?? a.areaId}</span>
+                      <span aria-hidden="true">·</span>
+                      <span>{a.attemptCount}× guna</span>
+                      <span aria-hidden="true">·</span>
+                      <span>{new Date(a.lastUsedAt).toLocaleString("ms-MY")}</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setOpen(isOpen ? null : key)}
+                    className="shrink-0 rounded-lg border border-navy-200 px-2.5 py-1.5 text-xs font-semibold text-navy-600 hover:bg-navy-50"
+                  >
+                    {isOpen ? "Tutup" : "Lihat"}
+                  </button>
+                </div>
+
+                {isOpen && (
+                  <div className="mt-3 space-y-3">
+                    {Object.keys(a.inputs ?? {}).length > 0 && (
+                      <div>
+                        <div className="text-[11px] font-bold uppercase tracking-wide text-navy-400">
+                          Jawapan peserta
+                        </div>
+                        <dl className="mt-1 grid gap-1 sm:grid-cols-2">
+                          {Object.entries(a.inputs).map(([k, v]) => (
+                            <div key={k} className="rounded-lg bg-navy-50 px-3 py-2">
+                              <dt className="text-[10px] font-semibold uppercase text-navy-400">{k}</dt>
+                              <dd className="text-xs text-navy-800">{v || "—"}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                      </div>
+                    )}
+                    {a.promptText ? (
+                      <pre className="max-h-64 overflow-auto whitespace-pre-wrap rounded-xl bg-navy-900 p-4 text-[12px] leading-relaxed text-navy-100">
+{a.promptText}
+                      </pre>
+                    ) : (
+                      <p className="text-xs text-navy-400">
+                        Direkod sebelum teks prompt disimpan.
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+function exportPromptCsv(prompts: PromptAttempt[], records: ParticipantRecord[]) {
+  const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const rows = [
+    ["Nama", "Koperasi", "E-mel", "Prompt", "Bidang", "Kali Guna", "Kali Terakhir", "Jawapan", "Teks Prompt"],
+    ...prompts.map((a) => {
+      const p = records.find((r) => r.participant.id === a.participantId)?.participant;
+      return [
+        p?.fullName ?? "",
+        p?.coopName || p?.companyName || "",
+        p?.email ?? "",
+        a.promptTitle,
+        getWorkArea(a.areaId)?.title ?? a.areaId,
+        a.attemptCount,
+        new Date(a.lastUsedAt).toLocaleString("ms-MY"),
+        JSON.stringify(a.inputs ?? {}),
+        a.promptText ?? "",
+      ];
+    }),
+  ];
+  const csv = rows.map((r) => r.map(esc).join(",")).join("\n");
+  const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `aktiviti-prompt-${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
