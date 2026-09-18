@@ -4,19 +4,21 @@
 // ─────────────────────────────────────────────────────────────
 
 export interface NavItem {
+  /** Fallback label (Malay) used if the key is missing from the dictionary. */
   label: string;
   to: string;
+  /** Key into the i18n dictionary, so the header can be translated. */
+  key: string;
 }
 
 // Main navigation (spec §4).
 export const NAV: NavItem[] = [
-  { label: "Utama", to: "/" },
-  { label: "Program", to: "/program" },
-  { label: "Prompt Hub", to: "/prompt-hub" },
-  { label: "Sumber", to: "/sumber" },
-  { label: "Galeri Foto", to: "/galeri" },
-  { label: "Modul Google Folder", to: "/sumber" },
-  { label: "FAQ", to: "/faq" },
+  { label: "Utama", to: "/", key: "home" },
+  { label: "Program", to: "/program", key: "navProgramme" },
+  { label: "Prompt Hub", to: "/prompt-hub", key: "navPromptHub" },
+  { label: "Sumber", to: "/sumber", key: "resources" },
+  { label: "Galeri Foto", to: "/galeri", key: "navGallery" },
+  { label: "FAQ", to: "/faq", key: "navFaq" },
 ];
 
 // Six premium feature cards on the landing page.

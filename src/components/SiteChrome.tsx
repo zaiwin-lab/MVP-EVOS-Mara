@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { eventConfig } from "../config/eventConfig";
 import { NAV, PILLARS } from "../content/site";
+import { useI18n } from "../context/I18nContext";
 import { useParticipant } from "../context/ParticipantContext";
+import { LangToggle } from "./LangToggle";
 import { LogoMark } from "./Brand";
 import { Icon } from "./Icon";
 
@@ -50,6 +52,7 @@ function initials(name = ""): string {
  */
 export function AccountMenu() {
   const { record, signOut } = useParticipant();
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -75,22 +78,25 @@ export function AccountMenu() {
 
   const p = record?.participant;
 
-  // Signed out — the existing check-in call to action stands in.
+  // Signed out — the existing check-in call to action stands in. On the
+  // check-in page itself it would point at the current page, so it is
+  // suppressed there rather than sitting in the way.
   if (!p) {
+    if (pathname === "/check-in" || pathname === "/register") return null;
     return (
       <Link
         to="/check-in"
-        className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-gold-400 px-4 py-2 text-sm font-bold text-navy-900 shadow-gold hover:bg-gold-300 lg:ml-2"
+        className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-gold-400 px-3.5 py-2 text-[13px] font-bold text-navy-900 shadow-gold hover:bg-gold-300 sm:px-4 sm:text-sm"
       >
-        <Icon name="qr" className="h-4 w-4" />
-        <span className="hidden sm:inline">Log Masuk / Check-In</span>
-        <span className="sm:hidden">Check-In</span>
+        <Icon name="qr" className="h-4 w-4 shrink-0" />
+        <span className="hidden lg:inline">Log Masuk / Check-In</span>
+        <span className="lg:hidden">Check-In</span>
       </Link>
     );
   }
 
   return (
-    <div ref={boxRef} className="relative ml-auto lg:ml-2">
+    <div ref={boxRef} className="relative shrink-0">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -127,10 +133,10 @@ export function AccountMenu() {
             )}
           </div>
           <Link to="/my" role="menuitem" className="block px-4 py-2.5 text-sm font-semibold text-navy-800 hover:bg-navy-50">
-            Profil Saya
+            {t("myProfile")}
           </Link>
           <Link to="/my#prompts" role="menuitem" className="block px-4 py-2.5 text-sm font-semibold text-navy-800 hover:bg-navy-50">
-            Senarai Prompt Saya
+            {t("myPrompts")}
           </Link>
           <button
             type="button"
@@ -142,7 +148,7 @@ export function AccountMenu() {
             }}
             className="block w-full border-t border-navy-100 px-4 py-2.5 text-left text-sm font-semibold text-navy-500 hover:bg-navy-50"
           >
-            Log Keluar
+            {t("logOut")}
           </button>
         </div>
       )}
@@ -153,6 +159,7 @@ export function AccountMenu() {
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
+  const { t } = useI18n();
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `rounded-full px-3 py-1.5 text-sm font-semibold transition ${
@@ -177,11 +184,21 @@ export function SiteHeader() {
         <nav className="ml-auto hidden items-center gap-1 lg:flex">
           {NAV.map((n) => (
             <NavLink key={n.label} to={n.to} end={n.to === "/"} className={linkClass}>
-              {n.label}
+              {t(n.key) || n.label}
             </NavLink>
           ))}
         </nav>
-        <AccountMenu />
+        {/* The four-language system existed but nothing ever rendered its
+            toggle, so participants had no way to switch. The full four-button
+            bar is 143px wide, which does not fit beside the wordmark, the
+            check-in CTA and the menu button on a 390px phone — so below `sm`
+            it moves into the mobile menu instead of pushing them off-screen. */}
+        <div className="ml-auto flex shrink-0 items-center gap-2 lg:ml-2">
+          <div className="hidden sm:block">
+            <LangToggle tone="light" />
+          </div>
+          <AccountMenu />
+        </div>
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
@@ -198,6 +215,11 @@ export function SiteHeader() {
       {/* Mobile menu */}
       {open && (
         <nav className="border-t border-navy-100 bg-white lg:hidden">
+          {/* Language first — it changes everything below it. */}
+          <div className={`${WRAP} flex items-center justify-between gap-3 border-b border-navy-50 py-3 sm:hidden`}>
+            <span className="text-xs font-bold uppercase tracking-wide text-navy-400">{t("language")}</span>
+            <LangToggle tone="light" />
+          </div>
           <div className={`${WRAP} grid grid-cols-2 gap-1 py-3`}>
             {NAV.map((n) => (
               <Link
@@ -208,7 +230,7 @@ export function SiteHeader() {
                   pathname === n.to ? "bg-navy-900 text-white" : "bg-navy-50 text-navy-700"
                 }`}
               >
-                {n.label}
+                {t(n.key) || n.label}
               </Link>
             ))}
           </div>
@@ -222,6 +244,7 @@ export function SiteHeader() {
 /** Profile + log out inside the mobile menu, where the account chip is cramped. */
 function MobileAccountLinks({ onNavigate }: { onNavigate: () => void }) {
   const { record, signOut } = useParticipant();
+  const { t } = useI18n();
   const navigate = useNavigate();
   if (!record?.participant) return null;
 
@@ -232,7 +255,7 @@ function MobileAccountLinks({ onNavigate }: { onNavigate: () => void }) {
         onClick={onNavigate}
         className="mt-3 rounded-xl bg-gold-400 px-3 py-2.5 text-center text-sm font-bold text-navy-900"
       >
-        Profil Saya
+        {t("myProfile")}
       </Link>
       <button
         type="button"
@@ -243,7 +266,7 @@ function MobileAccountLinks({ onNavigate }: { onNavigate: () => void }) {
         }}
         className="mt-3 rounded-xl bg-navy-50 px-3 py-2.5 text-sm font-semibold text-navy-600"
       >
-        Log Keluar
+        {t("logOut")}
       </button>
     </div>
   );

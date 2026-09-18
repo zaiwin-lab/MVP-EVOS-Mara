@@ -32,6 +32,13 @@ export function pick(value: Localized, lang: Lang): string {
 const DICT: Record<string, Localized> = {
   // navigation & common actions
   home: { en: "Home", bm: "Utama", zh: "首页", iban: "Utama" },
+  // Site navigation labels — added so the header can be translated.
+  navProgramme: { en: "Programme", bm: "Program", zh: "课程", iban: "Program" },
+  navPromptHub: { en: "Prompt Hub", bm: "Prompt Hub", zh: "提示中心", iban: "Prompt Hub" },
+  navGallery: { en: "Photo Gallery", bm: "Galeri Foto", zh: "照片库", iban: "Galeri Gambar" },
+  navFaq: { en: "FAQ", bm: "Soalan Lazim", zh: "常见问题", iban: "Tanya Selalu" },
+  logOut: { en: "Log Out", bm: "Log Keluar", zh: "退出登录", iban: "Pansut" },
+  myPrompts: { en: "My Prompt List", bm: "Senarai Prompt Saya", zh: "我的提示列表", iban: "Senarai Prompt Aku" },
   checkIn: { en: "Check In", bm: "Daftar Kehadiran", zh: "签到", iban: "Daftar Kehadiran" },
   myProfile: { en: "My Profile", bm: "Profil Saya", zh: "我的资料", iban: "Profil Aku" },
   assessment: { en: "Assessment", bm: "Penilaian", zh: "评估", iban: "Penilaian" },

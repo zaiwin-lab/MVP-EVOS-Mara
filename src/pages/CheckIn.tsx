@@ -96,13 +96,20 @@ export default function CheckIn({ mode = "checkin" }: { mode?: Mode }) {
       {/* Hero banner */}
       <section className="relative overflow-hidden bg-navy-950 text-white">
         <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gold-500/15 blur-3xl" />
-        <div className={`relative ${SITE_WRAP} py-9`}>
-          <span className="section-eyebrow text-gold-300">{c.eyebrow}</span>
-          <h1 className="mt-2 font-display text-3xl font-extrabold sm:text-4xl">{c.title}</h1>
-          <p className="mt-2 text-sm text-navy-200">{c.subtitle}</p>
-          <div className="mt-4 flex flex-wrap gap-2 text-xs">
-            <span className="chip bg-white/10 text-white"><Icon name="calendar" className="h-3.5 w-3.5" /> {eventConfig.dates}</span>
-            <span className="chip bg-white/10 text-white"><Icon name="location" className="h-3.5 w-3.5" /> {eventConfig.venue}</span>
+        {/* Compact on phones: someone arriving from the QR code at the venue
+            should see the first field without scrolling, so the full hero is
+            kept for wider screens only. */}
+        <div className={`relative ${SITE_WRAP} py-4 sm:py-9`}>
+          <span className="hidden section-eyebrow text-gold-300 sm:inline">{c.eyebrow}</span>
+          <h1 className="font-display text-xl font-extrabold sm:mt-2 sm:text-4xl">{c.title}</h1>
+          <p className="mt-1 hidden text-sm text-navy-200 sm:mt-2 sm:block">{c.subtitle}</p>
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-navy-200 sm:mt-4 sm:gap-2 sm:text-xs">
+            <span className="inline-flex items-center gap-1.5 sm:chip sm:bg-white/10 sm:text-white">
+              <Icon name="calendar" className="h-3.5 w-3.5 text-gold-300" /> {eventConfig.dates}
+            </span>
+            <span className="inline-flex items-center gap-1.5 sm:chip sm:bg-white/10 sm:text-white">
+              <Icon name="location" className="h-3.5 w-3.5 text-gold-300" /> {eventConfig.venue}
+            </span>
           </div>
         </div>
       </section>
