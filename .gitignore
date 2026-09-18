@@ -11,3 +11,6 @@ dist-types
 !.vscode/extensions.json
 npm-debug.log*
 .netlify
+
+# Deployable bundles built for drag-and-drop deploys (regenerate with vite build)
+*.zip
