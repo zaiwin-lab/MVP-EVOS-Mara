@@ -131,36 +131,13 @@ export default function MySpace() {
           </div>
           {attempts.length ? (
             <ul className="mt-3 divide-y divide-navy-50">
-              {attempts.map((a) => {
-                const isSaved = saved.some((s) => s.id === a.missionId);
-                return (
-                  <li key={a.missionId} className="flex items-center justify-between gap-3 py-3">
-                    <div className="min-w-0">
-                      <div className="truncate text-sm font-semibold text-navy-900">
-                        {a.promptTitle || a.missionId}
-                      </div>
-                      <div className="flex flex-wrap items-center gap-x-2 text-[11px] text-navy-400">
-                        <span>{getWorkArea(a.areaId)?.title}</span>
-                        <span aria-hidden="true">·</span>
-                        <span>
-                          {a.attemptCount > 1 ? `${a.attemptCount} kali guna` : "1 kali guna"}
-                        </span>
-                        {isSaved && (
-                          <span className="rounded bg-emerald-100 px-1.5 py-0.5 font-semibold text-emerald-700">
-                            Disimpan
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <Link
-                      to={`/prompt-hub/${a.areaId}/${a.missionId}`}
-                      className="btn-ghost shrink-0 text-xs"
-                    >
-                      Buka
-                    </Link>
-                  </li>
-                );
-              })}
+              {attempts.map((a) => (
+                <PromptRow
+                  key={a.missionId}
+                  attempt={a}
+                  isSaved={saved.some((s) => s.id === a.missionId)}
+                />
+              ))}
             </ul>
           ) : (
             <p className="mt-3 text-sm text-navy-500">
@@ -186,5 +163,82 @@ export default function MySpace() {
         <p className="mt-6 text-center text-xs text-navy-400">{eventConfig.eventName} · {eventConfig.venue}</p>
       </section>
     </SiteLayout>
+  );
+}
+
+/**
+ * One saved prompt. Collapsed it is a title; expanded it shows the exact text
+ * the participant generated, with their own answers in it, ready to copy.
+ */
+function PromptRow({ attempt, isSaved }: { attempt: PromptAttempt; isSaved: boolean }) {
+  const [copied, setCopied] = useState(false);
+  const area = getWorkArea(attempt.areaId);
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(attempt.promptText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard unavailable — the text is on screen to select manually */
+    }
+  }
+
+  const used = new Date(attempt.lastUsedAt).toLocaleDateString("ms-MY", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+
+  return (
+    <li className="py-3">
+      <details className="group">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="truncate text-sm font-semibold text-navy-900">
+              {attempt.promptTitle || attempt.missionId}
+            </div>
+            <div className="flex flex-wrap items-center gap-x-2 text-[11px] text-navy-400">
+              <span>{area?.title}</span>
+              <span aria-hidden="true">·</span>
+              <span>{attempt.attemptCount > 1 ? `${attempt.attemptCount} kali guna` : "1 kali guna"}</span>
+              <span aria-hidden="true">·</span>
+              <span>{used}</span>
+              {isSaved && (
+                <span className="rounded bg-emerald-100 px-1.5 py-0.5 font-semibold text-emerald-700">
+                  Disimpan
+                </span>
+              )}
+            </div>
+          </div>
+          <span className="shrink-0 rounded-full border border-navy-200 px-3 py-1 text-xs font-semibold text-navy-600 group-open:bg-navy-50">
+            <span className="group-open:hidden">Lihat prompt</span>
+            <span className="hidden group-open:inline">Tutup</span>
+          </span>
+        </summary>
+
+        {attempt.promptText ? (
+          <div className="mt-3">
+            <pre className="max-h-72 overflow-auto whitespace-pre-wrap rounded-xl bg-navy-50 p-4 text-[12.5px] leading-relaxed text-navy-800">
+{attempt.promptText}
+            </pre>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button type="button" onClick={copy} className="btn-ghost text-xs">
+                <Icon name={copied ? "check" : "clipboard"} className="h-3.5 w-3.5" />
+                {copied ? "Disalin!" : "Salin prompt"}
+              </button>
+              <Link to={`/prompt-hub/${attempt.areaId}/${attempt.missionId}`} className="btn-ghost text-xs">
+                Jana semula
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <p className="mt-3 text-xs text-navy-400">
+            Prompt ini direkodkan sebelum teks disimpan. Jana semula untuk menyimpan
+            salinannya.
+          </p>
+        )}
+      </details>
+    </li>
   );
 }

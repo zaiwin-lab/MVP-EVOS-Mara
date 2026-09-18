@@ -33,6 +33,10 @@ export interface PromptAttempt {
   areaId: string;
   missionId: string;
   promptTitle: string;
+  /** The exact prompt text generated, with the participant's answers filled in. */
+  promptText: string;
+  /** The field values they typed, so the builder can be re-opened pre-filled. */
+  inputs: Record<string, string>;
   attemptCount: number;
   firstUsedAt: string;
   lastUsedAt: string;

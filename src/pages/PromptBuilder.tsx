@@ -44,13 +44,16 @@ export default function PromptBuilder() {
     setCopied(false);
     setSaved(false);
 
-    // Durable record, one row per participant per prompt.
+    // Durable record, one row per participant per prompt — including the
+    // finished text and their answers, so they can read it back later.
     try {
       await store.recordPromptAttempt({
         participantId,
         areaId: area.id,
         missionId: mission.id,
         promptTitle: mission.title,
+        promptText: text,
+        inputs: values,
       });
     } catch (err) {
       // Never let tracking block the participant from using their prompt.

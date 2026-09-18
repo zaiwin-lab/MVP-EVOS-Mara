@@ -56,6 +56,10 @@ export interface PromptAttemptInput {
   areaId: string;
   missionId: string;
   promptTitle: string;
+  /** The generated prompt, exactly as the participant sees it. */
+  promptText: string;
+  /** What they typed into the builder fields. */
+  inputs: Record<string, string>;
 }
 
 const now = () => new Date().toISOString();
@@ -220,7 +224,14 @@ class LocalAdapter implements Store {
       (a) => a.participantId === input.participantId && a.missionId === input.missionId
     );
     if (i >= 0) {
-      list[i] = { ...list[i], attemptCount: list[i].attemptCount + 1, lastUsedAt: now() };
+      list[i] = {
+        ...list[i],
+        promptTitle: input.promptTitle,
+        promptText: input.promptText,
+        inputs: input.inputs,
+        attemptCount: list[i].attemptCount + 1,
+        lastUsedAt: now(),
+      };
     } else {
       list.push({
         ...input,
@@ -469,6 +480,9 @@ class SupabaseAdapter implements Store {
         .update({
           attempt_count: (existing.attempt_count ?? 1) + 1,
           last_used_at: now(),
+          prompt_title: input.promptTitle,
+          prompt_text: input.promptText,
+          inputs: input.inputs,
         })
         .eq("participant_id", input.participantId)
         .eq("mission_id", input.missionId);
@@ -482,6 +496,8 @@ class SupabaseAdapter implements Store {
       area_id: input.areaId,
       mission_id: input.missionId,
       prompt_title: input.promptTitle,
+      prompt_text: input.promptText,
+      inputs: input.inputs,
     });
     if (error) throw error;
   }
@@ -499,6 +515,8 @@ class SupabaseAdapter implements Store {
       areaId: (r.area_id as string) ?? "",
       missionId: r.mission_id as string,
       promptTitle: (r.prompt_title as string) ?? "",
+      promptText: (r.prompt_text as string) ?? "",
+      inputs: (r.inputs as Record<string, string>) ?? {},
       attemptCount: (r.attempt_count as number) ?? 1,
       firstUsedAt: r.first_used_at as string,
       lastUsedAt: r.last_used_at as string,
