@@ -14,7 +14,14 @@ const AUTH_KEY = "attendify:adminAuthed";
 export default function AdminDashboard() {
   const [authed, setAuthed] = useState(() => sessionStorage.getItem(AUTH_KEY) === "1");
   if (!authed) return <Gate onOk={() => setAuthed(true)} />;
-  return <Dashboard />;
+  return (
+    <Dashboard
+      onSignOut={() => {
+        sessionStorage.removeItem(AUTH_KEY);
+        setAuthed(false);
+      }}
+    />
+  );
 }
 
 function Gate({ onOk }: { onOk: () => void }) {
@@ -65,7 +72,7 @@ function Gate({ onOk }: { onOk: () => void }) {
   );
 }
 
-function Dashboard() {
+function Dashboard({ onSignOut }: { onSignOut: () => void }) {
   const [records, setRecords] = useState<ParticipantRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
@@ -120,6 +127,13 @@ function Dashboard() {
             <span className={`h-2 w-2 rounded-full ${online ? "bg-emerald-400" : "bg-amber-400"}`} />
             {online ? "Shared Database Connected" : "Local Mode"}
           </span>
+          <button
+            type="button"
+            onClick={onSignOut}
+            className="shrink-0 rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10"
+          >
+            Log Keluar
+          </button>
         </div>
       </header>
 
