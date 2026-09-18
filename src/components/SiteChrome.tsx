@@ -287,6 +287,16 @@ export function SiteFooter() {
               <span key={h}>{h}</span>
             ))}
           </div>
+
+          {/* Organiser entry point. Kept quiet rather than hidden — the gate is
+              a convenience, not access control, so obscurity buys nothing. */}
+          <Link
+            to="/admin"
+            className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-semibold text-navy-400 underline-offset-4 hover:text-gold-300 hover:underline"
+          >
+            <Icon name="lock" className="h-3 w-3" />
+            Admin
+          </Link>
         </div>
       </div>
     </footer>
