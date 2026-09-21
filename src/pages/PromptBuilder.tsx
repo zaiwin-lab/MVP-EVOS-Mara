@@ -107,8 +107,9 @@ export default function PromptBuilder() {
 
   return (
     <SiteLayout>
-      <section className="bg-navy-950 text-white">
-        <div className={`${SITE_WRAP} py-8`}>
+      <section className="hero-glow relative overflow-hidden bg-navy-950 text-white">
+        <div className="hero-grid pointer-events-none absolute inset-0" />
+        <div className={`relative ${SITE_WRAP} py-9`}>
           <Link to={`/prompt-hub/${area.id}`} className="inline-flex items-center gap-1.5 text-xs font-semibold text-navy-200 hover:text-white">
             <Icon name="arrowLeft" className="h-4 w-4" /> {pick(area.title)}
           </Link>

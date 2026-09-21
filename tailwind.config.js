@@ -31,11 +31,23 @@ export default {
           800: "#704820",
           900: "#603d20",
         },
-        // Warm neutral / beige
+        // Cool neutral ground. Replaced the old warm beige when the site moved
+        // to the Sales Portal layout: gold reads brighter and more modern
+        // against a cool grey-blue page than against sand.
         sand: {
-          50: "#faf8f4",
-          100: "#f3eee4",
-          200: "#e7ddca",
+          50: "#F7F9FD",
+          100: "#F1F4FA",
+          200: "#E3E8F2",
+        },
+        // Page furniture — surfaces, hairlines and muted text.
+        slate2: {
+          page: "#F4F6FB",
+          soft: "#FAFBFE",
+          sunk: "#EDF1F8",
+          line: "#E3E8F2",
+          line2: "#CCD5E6",
+          mut: "#55648A",
+          dim: "#91A0BE",
         },
       },
       fontFamily: {
@@ -43,12 +55,14 @@ export default {
         display: ['"Plus Jakarta Sans"', '"Manrope"', "system-ui", "sans-serif"],
       },
       boxShadow: {
-        card: "0 1px 2px rgba(10,20,40,0.04), 0 8px 24px -12px rgba(10,20,40,0.18)",
-        lift: "0 12px 40px -12px rgba(10,20,40,0.28)",
+        card: "0 1px 2px rgba(11,18,36,0.05), 0 6px 18px rgba(11,18,36,0.06)",
+        lift: "0 10px 34px rgba(11,18,36,0.13)",
+        pop: "0 24px 60px rgba(11,18,36,0.18)",
         gold: "0 8px 24px -10px rgba(200,149,44,0.55)",
       },
       borderRadius: {
-        xl: "0.9rem",
+        lg: "0.625rem",
+        xl: "0.875rem",
         "2xl": "1.25rem",
         "3xl": "1.75rem",
       },
@@ -64,6 +78,10 @@ export default {
           "0%": { opacity: "0", transform: "scale(0.96)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
+        "glow-drift": {
+          "0%,100%": { transform: "translate3d(0,0,0) scale(1)" },
+          "50%": { transform: "translate3d(2%,-3%,0) scale(1.08)" },
+        },
         "ring-draw": {
           "0%": { strokeDashoffset: "var(--ring-circumference)" },
         },
@@ -71,6 +89,7 @@ export default {
       animation: {
         "fade-up": "fade-up 0.5s cubic-bezier(0.16,1,0.3,1) both",
         "scale-in": "scale-in 0.4s cubic-bezier(0.16,1,0.3,1) both",
+        "glow-drift": "glow-drift 18s ease-in-out infinite",
       },
     },
   },

@@ -50,8 +50,9 @@ export default function MySpace() {
 
   return (
     <SiteLayout>
-      <section className="bg-navy-950 text-white">
-        <div className={`${SITE_WRAP} py-9`}>
+      <section className="hero-glow relative overflow-hidden bg-navy-950 text-white">
+        <div className="hero-grid pointer-events-none absolute inset-0" />
+        <div className={`relative ${SITE_WRAP} py-9`}>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <span className="section-eyebrow text-gold-300">{t("msEyebrow")}</span>

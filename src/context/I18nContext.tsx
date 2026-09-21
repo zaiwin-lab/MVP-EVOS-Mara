@@ -436,6 +436,19 @@ const DICT: Record<string, Localized> = {
   },
 
   // ── Landing page ──
+  ldFeatEyebrow: { en: "The programme", bm: "Program Ini", zh: "关于课程", iban: "Program Tu" },
+  ldFeatTitle: {
+    en: "Everything runs from one place",
+    bm: "Semuanya bermula dari satu tempat",
+    zh: "一切从同一个地方开始",
+    iban: "Semua berengkah ari siti endur",
+  },
+  ldFeatDesc: {
+    en: "Check in, measure where your co-op stands, then work through prompts built for the job in front of you.",
+    bm: "Daftar kehadiran, ukur kedudukan koperasi anda, kemudian gunakan prompt yang dibina untuk kerja di hadapan anda.",
+    zh: "先签到，评估贵合作社的现况，再用为您手上工作而设的提示。",
+    iban: "Daftar kehadiran, ukur penatai koperasi nuan, udah nya kena prompt ti digaga ke pengawa ti bisi di mua nuan.",
+  },
   ldStartJourney: {
     en: "Start Your AI Journey",
     bm: "Mulakan Perjalanan AI Anda",

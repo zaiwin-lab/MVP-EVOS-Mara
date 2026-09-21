@@ -21,77 +21,77 @@ export default function Landing() {
   return (
     <SiteLayout>
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-navy-950 text-white">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage:
-              "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
-            backgroundSize: "30px 30px",
-          }}
-        />
-        <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-gold-500/20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-sky-500/10 blur-3xl" />
+      <section className="hero-glow relative overflow-hidden bg-navy-950 text-white">
+        <div className="hero-grid pointer-events-none absolute inset-0" />
 
-        <div className={`relative ${SITE_WRAP} py-12 lg:py-16`}>
-          <span className="section-eyebrow text-gold-300">{pick(eventConfig.heroKicker)}</span>
-          <h1 className="mt-3 font-display text-4xl font-extrabold leading-[1.02] tracking-tight sm:text-5xl lg:text-6xl">
-            <span className="block">{pick(eventConfig.heroLines[0])}</span>
-            <span className="block bg-gradient-to-r from-sky-300 via-cyan-200 to-gold-300 bg-clip-text text-transparent">
-              {pick(eventConfig.heroLines[1])}
-            </span>
-            <span className="block">{pick(eventConfig.heroLines[2])}</span>
+        <div className={`relative ${SITE_WRAP} py-14 lg:py-20`}>
+          <span className="inline-flex items-center gap-2 rounded-full border border-gold-400/25 bg-gold-400/10 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.14em] text-gold-300">
+            <span className="h-1.5 w-1.5 rounded-full bg-gold-400" aria-hidden="true" />
+            {pick(eventConfig.heroKicker)}
+          </span>
+
+          <h1 className="h-display mt-5 max-w-4xl text-[38px] sm:text-[54px] lg:text-[64px]">
+            <span className="block text-white">{pick(eventConfig.heroLines[0])}</span>
+            <span className="grad-text block">{pick(eventConfig.heroLines[1])}</span>
+            <span className="block text-white">{pick(eventConfig.heroLines[2])}</span>
           </h1>
-          <p className="mt-4 text-sm font-semibold text-gold-200 sm:text-base">
+
+          <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-white/60 sm:text-[17px]">
             {pick(eventConfig.heroSubline)}
           </p>
 
           {/* Event meta */}
-          <div className="mt-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
-            {META.map((m) => {
-              const label = "labelKey" in m ? t(m.labelKey).replace("{n}", String(m.labelN)) : m.label;
-              const sub = "subKey" in m ? t(m.subKey) : m.sub;
-              return (
-                <div key={m.icon} className="rounded-2xl border border-white/10 bg-white/5 p-3.5 backdrop-blur">
-                  <div className="flex items-center gap-2 text-gold-300">
-                    <Icon name={m.icon} className="h-4 w-4" />
-                  </div>
-                  <div className="mt-2 text-sm font-bold leading-tight">{label}</div>
-                  <div className="text-[11px] text-navy-200">{sub}</div>
-                </div>
-              );
-            })}
-          </div>
-
           {/* CTAs */}
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <Link to="/check-in" className="btn-gold text-base sm:px-8">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <Link to="/check-in" className="btn-gold px-7 py-3.5 text-base">
               {t("ldStartJourney")}
               <Icon name="arrowRight" className="h-5 w-5" />
             </Link>
-            <Link to="/sumber" className="btn-ghost bg-white/10 text-sm text-white hover:bg-white/20">
+            <Link to="/sumber" className="btn-on-dark">
               <Icon name="book" className="h-4 w-4" /> {t("ldAccessModules")}
             </Link>
-            <Link to="/galeri" className="btn-ghost bg-white/10 text-sm text-white hover:bg-white/20">
+            <Link to="/galeri" className="btn-on-dark">
               <Icon name="slides" className="h-4 w-4" /> {t("ldPhotoGallery")}
             </Link>
           </div>
 
-          <p className="mt-6 text-xs font-medium tracking-wide text-navy-300">{pick(eventConfig.motto)}</p>
+          {/* Facts, under a hairline — the Sales Portal stat-row device. */}
+          <div className="mt-10 border-t border-white/10 pt-6">
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-5 sm:flex sm:flex-wrap sm:gap-x-12">
+              {META.map((m) => {
+                const label = "labelKey" in m ? t(m.labelKey).replace("{n}", String(m.labelN)) : m.label;
+                const sub = "subKey" in m ? t(m.subKey) : m.sub;
+                return (
+                  <div key={m.icon}>
+                    <dt className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
+                      <Icon name={m.icon} className="h-3.5 w-3.5 text-gold-400" />
+                      {sub}
+                    </dt>
+                    <dd className="mt-1.5 text-[15px] font-bold leading-tight text-white">{label}</dd>
+                  </div>
+                );
+              })}
+            </dl>
+          </div>
         </div>
       </section>
 
       {/* ── Feature cards ────────────────────────────────────── */}
-      <section className={`${SITE_WRAP} py-12 lg:py-16`}>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <section className={`${SITE_WRAP} py-14 lg:py-20`}>
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="section-eyebrow">{t("ldFeatEyebrow")}</span>
+          <h2 className="h-section mt-4">{t("ldFeatTitle")}</h2>
+          <p className="lede mx-auto mt-3 max-w-xl">{t("ldFeatDesc")}</p>
+        </div>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((f) => (
-            <Link key={f.to + pick(f.title)} to={f.to} className="card group flex flex-col gap-3 p-5 transition hover:shadow-lift">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy-900 text-gold-300">
+            <Link key={f.to + pick(f.title)} to={f.to} className="card-hover group flex flex-col gap-3 p-6">
+              <span className="icon-tile h-11 w-11 bg-gold-400/12 text-gold-600 ring-1 ring-inset ring-gold-400/20">
                 <Icon name={f.icon} className="h-5 w-5" />
               </span>
-              <div className="font-display text-lg font-bold text-navy-900">{pick(f.title)}</div>
-              <p className="text-sm text-navy-500">{pick(f.desc)}</p>
-              <span className="mt-auto inline-flex items-center gap-1 pt-1 text-sm font-semibold text-navy-700 group-hover:text-gold-600">
+              <div className="font-display text-[17px] font-extrabold tracking-[-0.01em] text-navy-950">{pick(f.title)}</div>
+              <p className="text-sm leading-relaxed text-slate2-mut">{pick(f.desc)}</p>
+              <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[13px] font-bold text-navy-700 transition group-hover:gap-2 group-hover:text-gold-600">
                 {t("ldExplore")} <Icon name="arrowRight" className="h-4 w-4" />
               </span>
             </Link>
@@ -100,23 +100,25 @@ export default function Landing() {
       </section>
 
       {/* ── Quick access ─────────────────────────────────────── */}
-      <section className="bg-sand-100 py-12 lg:py-16">
+      <section className="border-y border-slate2-line bg-white py-14 lg:py-20">
         <div className={SITE_WRAP}>
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <span className="section-eyebrow">{t("ldQuickEyebrow")}</span>
-              <h2 className="mt-2 font-display text-2xl font-extrabold text-navy-900 sm:text-3xl">{t("ldQuickTitle")}</h2>
-              <p className="mt-1 text-sm text-navy-500">{t("ldQuickDesc")}</p>
-            </div>
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="section-eyebrow">{t("ldQuickEyebrow")}</span>
+            <h2 className="h-section mt-4">{t("ldQuickTitle")}</h2>
+            <p className="lede mx-auto mt-3 max-w-lg">{t("ldQuickDesc")}</p>
           </div>
-          <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+          <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
             {QUICK_LINKS.map((q) => (
-              <Link key={q.to + pick(q.title)} to={q.to} className="group flex flex-col gap-2 rounded-2xl bg-white p-4 shadow-card transition hover:shadow-lift">
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-navy-50 text-navy-700 group-hover:bg-navy-900 group-hover:text-gold-300">
+              <Link
+                key={q.to + pick(q.title)}
+                to={q.to}
+                className="group flex flex-col gap-2.5 rounded-2xl border border-slate2-line bg-sand-50 p-4 transition hover:-translate-y-0.5 hover:border-gold-200 hover:bg-white hover:shadow-lift"
+              >
+                <span className="icon-tile h-10 w-10 bg-white text-navy-700 ring-1 ring-inset ring-slate2-line transition group-hover:bg-navy-950 group-hover:text-gold-300 group-hover:ring-navy-950">
                   <Icon name={q.icon} className="h-5 w-5" />
                 </span>
-                <div className="text-sm font-bold leading-tight text-navy-900">{pick(q.title)}</div>
-                <div className="text-[11px] text-navy-400">{pick(q.desc)}</div>
+                <div className="text-[13.5px] font-bold leading-tight text-navy-950">{pick(q.title)}</div>
+                <div className="text-[11px] leading-snug text-slate2-dim">{pick(q.desc)}</div>
               </Link>
             ))}
           </div>
@@ -124,40 +126,47 @@ export default function Landing() {
       </section>
 
       {/* ── 6 Work areas teaser ──────────────────────────────── */}
-      <section className={`${SITE_WRAP} py-12 lg:py-16`}>
-        <div className="max-w-2xl">
+      <section className={`${SITE_WRAP} py-14 lg:py-20`}>
+        <div className="mx-auto max-w-2xl text-center">
           <span className="section-eyebrow">{t("ldAreasEyebrow")}</span>
-          <h2 className="mt-2 font-display text-2xl font-extrabold text-navy-900 sm:text-3xl">
-            {t("ldAreasTitle").replace("{n}", String(PROMPT_COUNT))}
-          </h2>
-          <p className="mt-3 text-sm text-navy-500 sm:text-base">{t("ldAreasDesc")}</p>
+          <h2 className="h-section mt-4">{t("ldAreasTitle").replace("{n}", String(PROMPT_COUNT))}</h2>
+          <p className="lede mx-auto mt-3 max-w-xl">{t("ldAreasDesc")}</p>
         </div>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+        {/* Numbered grid — the ordinals are real: the areas run A to F and the
+            prompts inside them are numbered from those letters. */}
+        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {WORK_AREAS.map((a) => {
             const ac = areaAccent(a.accent);
             return (
-              <Link key={a.id} to={`/prompt-hub/${a.id}`} className={`group flex flex-col gap-3 rounded-2xl border p-5 transition hover:shadow-lift ${ac.card}`}>
-                <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${ac.badge}`}>
-                  <Icon name={a.icon} className="h-5 w-5" />
-                </span>
-                <div className="font-display text-base font-bold text-navy-900">{pick(a.title)}</div>
-                <p className="text-xs text-navy-500">{pick(a.blurb)}</p>
-                <span className="mt-auto inline-flex items-center gap-1 pt-1 text-sm font-semibold text-navy-700 group-hover:text-gold-600">
+              <Link key={a.id} to={`/prompt-hub/${a.id}`} className="card-hover group flex flex-col gap-3 p-5">
+                <div className="flex items-center justify-between gap-3">
+                  <span className={`icon-tile h-10 w-10 ${ac.badge}`}>
+                    <Icon name={a.icon} className="h-5 w-5" />
+                  </span>
+                  <span className="ordinal">{a.code}0{a.missions.length === 10 ? "" : a.missions.length}</span>
+                </div>
+                <div className="font-display text-[15.5px] font-extrabold tracking-[-0.01em] text-navy-950">{pick(a.title)}</div>
+                <p className="text-[13px] leading-relaxed text-slate2-mut">{pick(a.blurb)}</p>
+                <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[12.5px] font-bold text-navy-700 transition group-hover:gap-2 group-hover:text-gold-600">
                   {t("ldMissionsChip")} <Icon name="arrowRight" className="h-4 w-4" />
                 </span>
               </Link>
             );
           })}
         </div>
-        <div className="mt-8 rounded-3xl bg-navy-950 p-6 text-white sm:p-8">
-          <div className="grid items-center gap-6 sm:grid-cols-[1fr_auto]">
+
+        {/* Closing panel — a navy block inside the light section. */}
+        <div className="panel-dark hero-glow mt-10 p-7 sm:p-10">
+          <div className="hero-grid pointer-events-none absolute inset-0" />
+          <div className="relative grid items-center gap-6 sm:grid-cols-[1fr_auto]">
             <div>
-              <h3 className="font-display text-xl font-extrabold sm:text-2xl">{t("ldUnsureTitle")}</h3>
-              <p className="mt-2 text-sm text-navy-200">
+              <h3 className="h-display text-[23px] sm:text-[30px]">{t("ldUnsureTitle")}</h3>
+              <p className="mt-3 max-w-xl text-[14.5px] leading-relaxed text-white/60">
                 {t("ldUnsureDesc").replace("{n}", String(READINESS_AREAS.length))}
               </p>
             </div>
-            <Link to="/readiness" className="btn-gold shrink-0">
+            <Link to="/readiness" className="btn-gold shrink-0 px-6 py-3.5">
               {t("phStartAssessment")} <Icon name="arrowRight" className="h-5 w-5" />
             </Link>
           </div>

@@ -2,9 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────────────────────────────────────────────────────────
+   ProgramOS Lite — visual system
+   Layout, spacing, radii and surface treatment follow the Sales
+   Portal house style. The accent stays ANGKASA gold rather than
+   the Sales Portal blue, so the two read as siblings rather than
+   copies. Neutrals are cool grey-blue: gold sits brighter on that
+   than on the warm sand this site used before.
+   ───────────────────────────────────────────────────────────── */
+
 @layer base {
   :root {
     --ring-circumference: 339.292;
+
+    /* Surfaces */
+    --page: #f4f6fb;
+    --line: #e3e8f2;
+
+    /* The signature gradient. On navy it reads as lit metal; it is used
+       for the hero headline, primary buttons and the AI motif. */
+    --grad-gold: linear-gradient(100deg, #f6e7b6, #d9ad45 46%, #f0dba4);
+    --grad-btn: linear-gradient(100deg, #e2c069, #c8952c 55%, #b5852a);
   }
 
   html {
@@ -13,7 +31,7 @@
   }
 
   body {
-    @apply bg-sand-50 text-navy-900 font-sans antialiased;
+    @apply bg-[--page] text-navy-900 font-sans antialiased;
     text-rendering: optimizeLegibility;
   }
 
@@ -36,52 +54,174 @@
 }
 
 @layer components {
+  /* ── Form controls ──────────────────────────────────── */
   .field-label {
-    @apply block text-sm font-semibold text-navy-700 mb-1.5;
+    @apply block text-[13px] font-semibold text-navy-700 mb-1.5;
   }
 
   .field-input {
-    @apply w-full rounded-xl border border-navy-100 bg-white px-4 py-3 text-navy-900
-      placeholder:text-navy-300 shadow-sm transition
-      focus:border-navy-400 focus:ring-4 focus:ring-navy-100 focus:outline-none;
+    @apply w-full rounded-xl border border-slate2-line bg-white px-4 py-3 text-navy-900
+      placeholder:text-slate2-dim transition
+      focus:border-gold-400 focus:ring-4 focus:ring-gold-400/[0.15] focus:outline-none;
   }
 
   .field-hint {
-    @apply text-xs text-navy-400 mt-1;
+    @apply text-xs text-slate2-mut mt-1;
   }
 
+  /* ── Buttons ────────────────────────────────────────── */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3.5
-      font-semibold transition active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3
+      text-[15px] font-bold transition active:scale-[0.98]
+      disabled:opacity-50 disabled:pointer-events-none
       focus-visible:outline-none focus-visible:ring-4;
   }
 
-  .btn-primary {
-    @apply btn bg-navy-800 text-white shadow-card hover:bg-navy-700 focus-visible:ring-navy-200;
-  }
-
+  /* Primary. The gradient is the one flourish the system spends on itself. */
   .btn-gold {
-    @apply btn bg-gold-400 text-navy-900 shadow-gold hover:bg-gold-300 focus-visible:ring-gold-200;
+    @apply btn text-navy-950 shadow-gold hover:brightness-[1.06] focus-visible:ring-gold-300/50;
+    background-image: var(--grad-btn);
   }
 
-  .btn-ghost {
-    @apply btn bg-navy-50 text-navy-800 hover:bg-navy-100 focus-visible:ring-navy-200;
+  .btn-primary {
+    @apply btn bg-navy-900 text-white shadow-card hover:bg-navy-800 focus-visible:ring-navy-300/[0.4];
   }
 
   .btn-outline {
-    @apply btn border border-navy-200 bg-white text-navy-800 hover:bg-navy-50 focus-visible:ring-navy-100;
+    @apply btn border border-slate2-line2 bg-white text-navy-800
+      hover:border-navy-300 hover:bg-sand-50 focus-visible:ring-navy-100;
   }
 
+  .btn-ghost {
+    @apply btn bg-sand-100 text-navy-800 hover:bg-sand-200 focus-visible:ring-navy-100;
+  }
+
+  /* On a navy ground, where a white border would glare. */
+  .btn-on-dark {
+    @apply btn border border-white/[0.15] bg-white/10 text-white
+      hover:bg-white/[0.15] focus-visible:ring-white/25;
+  }
+
+  /* ── Surfaces ───────────────────────────────────────── */
   .card {
-    @apply rounded-2xl border border-navy-100/70 bg-white shadow-card;
+    @apply rounded-2xl border border-slate2-line bg-white shadow-card;
   }
 
+  .card-hover {
+    @apply card transition hover:-translate-y-0.5 hover:border-slate2-line2 hover:shadow-lift;
+  }
+
+  /* The one dark card in a light grid — used to mark the primary path. */
+  .card-dark {
+    @apply rounded-2xl border border-white/10 bg-navy-950 text-white shadow-lift;
+  }
+
+  /* A full-width navy panel sitting inside a light section. */
+  .panel-dark {
+    @apply relative overflow-hidden rounded-3xl bg-navy-950 text-white shadow-pop;
+  }
+
+  /* ── Labels & chips ─────────────────────────────────── */
   .chip {
     @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
   }
 
+  /* Small pill above a section heading. Works on light and on navy —
+     pages that sit on navy add their own text-gold-300. */
   .section-eyebrow {
-    @apply text-xs font-bold uppercase tracking-[0.18em] text-gold-600;
+    @apply inline-flex items-center rounded-full bg-gold-100 px-3 py-1
+      text-[11px] font-extrabold uppercase tracking-[0.16em] text-gold-700
+      ring-1 ring-inset ring-gold-200;
+  }
+
+  /* Rounded-square icon holder that precedes a card title. */
+  .icon-tile {
+    @apply flex items-center justify-center rounded-xl;
+  }
+
+  /* ── Type ───────────────────────────────────────────── */
+  .h-section {
+    @apply font-display text-[27px] font-extrabold leading-[1.1] tracking-[-0.02em]
+      text-navy-950 sm:text-[34px];
+    text-wrap: balance;
+  }
+
+  .h-display {
+    @apply font-display font-extrabold leading-[1.04] tracking-[-0.03em];
+    text-wrap: balance;
+  }
+
+  .lede {
+    @apply text-[15px] leading-relaxed text-slate2-mut sm:text-base;
+  }
+
+  /* Gradient headline. Falls back to the solid gold if the clip is
+     unsupported, so the text is never invisible. */
+  .grad-text {
+    color: #e2c069;
+    background-image: var(--grad-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  @supports (-webkit-background-clip: text) or (background-clip: text) {
+    .grad-text {
+      color: transparent;
+    }
+  }
+
+  /* Figures that line up in a row or column. */
+  .num {
+    @apply font-display font-extrabold tabular-nums tracking-[-0.02em];
+  }
+
+  .stat-label {
+    @apply mt-1 text-[10px] font-bold uppercase tracking-[0.14em];
+  }
+
+  /* Ordinal used on the numbered module grid (01, 02, …). */
+  .ordinal {
+    @apply text-[11px] font-bold tabular-nums tracking-[0.1em] text-slate2-dim;
+  }
+}
+
+@layer utilities {
+  /* Soft coloured glows behind the navy hero. Two blurred radials, drifting
+     slowly, are what give the dark sections depth instead of flatness. */
+  .hero-glow::before,
+  .hero-glow::after {
+    content: "";
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(72px);
+    pointer-events: none;
+  }
+
+  .hero-glow::before {
+    inset-block-start: -18%;
+    inset-inline-end: -8%;
+    width: 46rem;
+    height: 32rem;
+    background: radial-gradient(closest-side, rgba(217, 173, 69, 0.42), transparent);
+    animation: glow-drift 18s ease-in-out infinite;
+  }
+
+  .hero-glow::after {
+    inset-block-end: -30%;
+    inset-inline-start: -12%;
+    width: 40rem;
+    height: 30rem;
+    background: radial-gradient(closest-side, rgba(70, 104, 190, 0.55), transparent);
+    animation: glow-drift 22s ease-in-out infinite reverse;
+  }
+
+  /* Faint grid, the same device the Sales Portal hero uses. */
+  .hero-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+    background-size: 34px 34px;
+    mask-image: radial-gradient(ellipse 85% 70% at 50% 25%, #000 45%, transparent 100%);
   }
 }
 
@@ -96,4 +236,3 @@
     scroll-behavior: auto !important;
   }
 }
-

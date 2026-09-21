@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
+import { SiteLayout, SITE_WRAP, PageHero } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { useParticipant } from "../context/ParticipantContext";
 import { useI18n, type Localized } from "../context/I18nContext";
@@ -115,17 +115,11 @@ export default function Journey90() {
 
   return (
     <SiteLayout>
-      <section className="relative overflow-hidden bg-navy-950 text-white">
-        <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-gold-500/15 blur-3xl" />
-        <div className={`relative ${SITE_WRAP} py-10 lg:py-12`}>
-          <span className="section-eyebrow text-gold-300">{t("j9Eyebrow")}</span>
-          <h1 className="mt-2 font-display text-3xl font-extrabold sm:text-4xl">{t("j9Title")}</h1>
-          <p className="mt-3 max-w-2xl text-sm text-navy-200">{t("j9Intro")}</p>
-          <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-gold-200">
-            <Icon name="checkCircle" className="h-3.5 w-3.5" /> {t("j9Note")}
-          </span>
-        </div>
-      </section>
+      <PageHero eyebrow={t("j9Eyebrow")} title={t("j9Title")} lede={t("j9Intro")}>
+        <span className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-xs font-semibold text-gold-200">
+          <Icon name="checkCircle" className="h-3.5 w-3.5" /> {t("j9Note")}
+        </span>
+      </PageHero>
 
       <section className={`${SITE_WRAP} py-12`}>
         <div className="grid gap-4 lg:grid-cols-3">

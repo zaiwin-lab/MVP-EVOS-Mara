@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FAQS } from "../content/site";
-import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
+import { SiteLayout, SITE_WRAP, PageHero } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { useI18n } from "../context/I18nContext";
 
@@ -10,13 +10,7 @@ export default function Faq() {
   const { t, pick } = useI18n();
   return (
     <SiteLayout>
-      <section className="bg-navy-950 text-white">
-        <div className={`${SITE_WRAP} py-10 lg:py-12`}>
-          <span className="section-eyebrow text-gold-300">{t("navFaq")}</span>
-          <h1 className="mt-2 font-display text-3xl font-extrabold sm:text-4xl">{t("faqTitle")}</h1>
-          <p className="mt-3 max-w-2xl text-sm text-navy-200">{t("faqIntro")}</p>
-        </div>
-      </section>
+      <PageHero eyebrow={t("navFaq")} title={t("faqTitle")} lede={t("faqIntro")} />
 
       <section className={`${SITE_WRAP} py-12`}>
         <div className="mx-auto max-w-3xl space-y-3">

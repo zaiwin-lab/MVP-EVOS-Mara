@@ -30,21 +30,22 @@ export default function WorkArea() {
 
   return (
     <SiteLayout>
-      <section className="bg-navy-950 text-white">
-        <div className={`${SITE_WRAP} py-10 lg:py-12`}>
-          <Link to="/prompt-hub" className="inline-flex items-center gap-1.5 text-xs font-semibold text-navy-200 hover:text-white">
+      <section className="hero-glow relative overflow-hidden bg-navy-950 text-white">
+        <div className="hero-grid pointer-events-none absolute inset-0" />
+        <div className={`relative ${SITE_WRAP} py-10 lg:py-14`}>
+          <Link to="/prompt-hub" className="inline-flex items-center gap-1.5 text-[12px] font-bold text-white/50 transition hover:text-gold-300">
             <Icon name="arrowLeft" className="h-4 w-4" /> {t("waAllAreas")}
           </Link>
-          <div className="mt-4 flex items-start gap-4">
-            <span className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${ac.badge}`}>
+          <div className="mt-5 flex items-start gap-4">
+            <span className={`icon-tile h-14 w-14 shrink-0 rounded-2xl ${ac.badge}`}>
               <Icon name={area.icon} className="h-7 w-7" />
             </span>
-            <div>
-              <h1 className="font-display text-2xl font-extrabold sm:text-3xl">{pick(area.title)}</h1>
+            <div className="min-w-0">
+              <h1 className="h-display text-[27px] sm:text-[36px]">{pick(area.title)}</h1>
               {lang !== "en" && lang !== "zh" && (
-                <p className="text-sm font-semibold text-gold-200">{pickLang(area.title, "en")}</p>
+                <p className="mt-1 text-[13px] font-bold uppercase tracking-[0.1em] text-gold-400/80">{pickLang(area.title, "en")}</p>
               )}
-              <p className="mt-1 text-sm text-navy-200">{pick(area.blurb)}</p>
+              <p className="mt-2 max-w-2xl text-[14.5px] leading-relaxed text-white/60">{pick(area.blurb)}</p>
             </div>
           </div>
 

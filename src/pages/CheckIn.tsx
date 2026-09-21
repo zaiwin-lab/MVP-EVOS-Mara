@@ -163,21 +163,22 @@ export default function CheckIn({ mode = "checkin" }: { mode?: Mode }) {
   return (
     <SiteLayout>
       {/* Hero banner */}
-      <section className="relative overflow-hidden bg-navy-950 text-white">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gold-500/15 blur-3xl" />
-        {/* Compact on phones: someone arriving from the QR code at the venue
-            should see the first field without scrolling, so the full hero is
-            kept for wider screens only. */}
-        <div className={`relative ${SITE_WRAP} py-4 sm:py-9`}>
-          <span className="hidden section-eyebrow text-gold-300 sm:inline">{pick(c.eyebrow)}</span>
-          <h1 className="font-display text-xl font-extrabold sm:mt-2 sm:text-4xl">{pick(c.title)}</h1>
-          <p className="mt-1 hidden text-sm text-navy-200 sm:mt-2 sm:block">{pick(c.subtitle)}</p>
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-navy-200 sm:mt-4 sm:gap-2 sm:text-xs">
-            <span className="inline-flex items-center gap-1.5 sm:chip sm:bg-white/10 sm:text-white">
-              <Icon name="calendar" className="h-3.5 w-3.5 text-gold-300" /> {eventConfig.dates}
+      {/* Compact on phones: someone arriving from the QR code at the venue
+          should see the first field without scrolling. */}
+      <section className="hero-glow relative overflow-hidden bg-navy-950 text-white">
+        <div className="hero-grid pointer-events-none absolute inset-0" />
+        <div className={`relative ${SITE_WRAP} py-5 sm:py-11`}>
+          <span className="hidden items-center rounded-full border border-gold-400/25 bg-gold-400/10 px-3 py-1 text-[10.5px] font-extrabold uppercase tracking-[0.15em] text-gold-300 sm:inline-flex">
+            {pick(c.eyebrow)}
+          </span>
+          <h1 className="h-display text-[23px] sm:mt-4 sm:text-[40px]">{pick(c.title)}</h1>
+          <p className="mt-1.5 hidden max-w-2xl text-[14.5px] leading-relaxed text-white/60 sm:mt-3 sm:block">{pick(c.subtitle)}</p>
+          <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-white/55 sm:mt-5 sm:gap-2 sm:text-xs">
+            <span className="inline-flex items-center gap-1.5 sm:chip sm:border sm:border-white/10 sm:bg-white/10 sm:text-white">
+              <Icon name="calendar" className="h-3.5 w-3.5 text-gold-400" /> {eventConfig.dates}
             </span>
-            <span className="inline-flex items-center gap-1.5 sm:chip sm:bg-white/10 sm:text-white">
-              <Icon name="location" className="h-3.5 w-3.5 text-gold-300" /> {eventConfig.venue}
+            <span className="inline-flex items-center gap-1.5 sm:chip sm:border sm:border-white/10 sm:bg-white/10 sm:text-white">
+              <Icon name="location" className="h-3.5 w-3.5 text-gold-400" /> {eventConfig.venue}
             </span>
           </div>
         </div>

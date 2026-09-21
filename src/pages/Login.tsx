@@ -39,7 +39,7 @@ export default function Login() {
 
   return (
     <SiteLayout>
-      <section className={`${SITE_WRAP} py-12`}>
+      <section className={`${SITE_WRAP} py-14`}>
         <div className="mx-auto max-w-md">
           <div className="card p-6 sm:p-7">
             <div className="text-center">

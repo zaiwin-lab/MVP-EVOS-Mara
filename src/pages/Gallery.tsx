@@ -1,5 +1,5 @@
 import { eventConfig } from "../config/eventConfig";
-import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
+import { SiteLayout, SITE_WRAP, PageHero } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { useI18n } from "../context/I18nContext";
 
@@ -10,13 +10,7 @@ export default function Gallery() {
 
   return (
     <SiteLayout>
-      <section className="bg-navy-950 text-white">
-        <div className={`${SITE_WRAP} py-10 lg:py-12`}>
-          <span className="section-eyebrow text-gold-300">{t("glEyebrow")}</span>
-          <h1 className="mt-2 font-display text-3xl font-extrabold sm:text-4xl">{t("glTitle")}</h1>
-          <p className="mt-3 max-w-2xl text-sm text-navy-200">{t("glIntro")}</p>
-        </div>
-      </section>
+      <PageHero eyebrow={t("glEyebrow")} title={t("glTitle")} lede={t("glIntro")} />
 
       <section className={`${SITE_WRAP} py-12`}>
         {hasImages ? (

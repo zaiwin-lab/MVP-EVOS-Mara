@@ -6,7 +6,7 @@ import {
   type ReadinessOutcome,
 } from "../content/readiness";
 import { getWorkArea } from "../content/promptLibrary";
-import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
+import { SiteLayout, SITE_WRAP, PageHero } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { ScoreRing } from "../components/ScoreRing";
 import { RadarChart } from "../components/RadarChart";
@@ -67,23 +67,16 @@ export default function Readiness() {
 
   return (
     <SiteLayout>
-      <section className="bg-navy-950 text-white">
-        <div className={`${SITE_WRAP} py-8`}>
-          <span className="section-eyebrow text-gold-300">{t("rdEyebrow")}</span>
-          <h1 className="mt-2 font-display text-2xl font-extrabold sm:text-3xl">{t("rdTitle")}</h1>
-          <p className="mt-1 text-sm text-navy-200">{t("rdIntro").replace("{n}", String(total))}</p>
-
-          {/* progress */}
-          <div className="mt-5 flex items-center gap-1.5">
-            {READINESS_AREAS.map((a, i) => (
-              <div key={a.id} className="flex flex-1 flex-col items-center gap-1">
-                <div className={`h-1.5 w-full rounded-full ${i < step || isResult ? "bg-gold-400" : i === step ? "bg-white/70" : "bg-white/15"}`} />
-                <span className="hidden text-[9px] font-semibold text-navy-300 sm:block">{pick(a.radarLabel)}</span>
-              </div>
-            ))}
-          </div>
+      <PageHero size="sm" eyebrow={t("rdEyebrow")} title={t("rdTitle")} lede={t("rdIntro").replace("{n}", String(total))}>
+        <div className="mt-7 flex items-center gap-1.5">
+          {READINESS_AREAS.map((a, i) => (
+            <div key={a.id} className="flex flex-1 flex-col items-center gap-1.5">
+              <div className={`h-1.5 w-full rounded-full transition ${i < step || isResult ? "bg-gold-400" : i === step ? "bg-white/70" : "bg-white/15"}`} />
+              <span className="hidden text-[9px] font-bold uppercase tracking-wide text-white/40 sm:block">{pick(a.radarLabel)}</span>
+            </div>
+          ))}
         </div>
-      </section>
+      </PageHero>
 
       <section className={`${SITE_WRAP} py-10`}>
         {!isResult ? (
