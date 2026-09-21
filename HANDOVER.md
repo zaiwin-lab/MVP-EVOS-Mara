@@ -147,6 +147,18 @@ Powered by **KBT EventOS — Attendify™** · An Innovation by KOBIS Berhad
 
 ## Programme day: attendance and the e-certificate
 
+### Registering is not attending
+
+These are two separate steps, deliberately:
+
+1. **Before the day** — people create an account at `/check-in` or `/register`,
+   or sign in at `/login`. Nothing about this marks them present.
+2. **On the day** — they scan the QR at the venue, which marks attendance.
+
+No sign-up path touches the attendance table. The only two things that mark
+someone present are the scan page and the organiser's toggle in the admin
+participant list.
+
 ### The QR everyone scans on the day
 
 The admin console (`/admin`) generates it under **QR Kehadiran — Hari Program**.
@@ -158,6 +170,9 @@ What a participant sees when they scan:
    redirect: bouncing people between pages after they have scanned is where
    check-ins get lost at a venue.
 2. Signed in → their name, and one **Saya Hadir** button.
+   - A walk-in with no account follows "Daftar di sini", which carries
+     `?next=/hadir`; after registering, the success screen's main button takes
+     them straight back to the scan page rather than leaving them stranded.
 3. Tapped → confirmation, and the room counter moves.
 
 The counter on that page and on the admin dashboard reads **present / expected**.

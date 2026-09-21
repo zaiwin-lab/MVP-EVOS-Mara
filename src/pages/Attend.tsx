@@ -218,7 +218,7 @@ export default function Attend() {
 
               <p className="mt-5 text-center text-sm text-slate2-mut">
                 {t("notRegistered")}{" "}
-                <Link to="/check-in" className="font-bold text-navy-800 underline">{t("registerHere")}</Link>
+                <Link to="/check-in?next=/hadir" className="font-bold text-navy-800 underline">{t("registerHere")}</Link>
               </p>
             </div>
           )}

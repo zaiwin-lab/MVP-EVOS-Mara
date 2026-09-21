@@ -510,8 +510,8 @@ const DICT: Record<string, Localized> = {
   msCertPending: { en: "After the programme day", bm: "Selepas hari program", zh: "课程当天之后", iban: "Udah hari program" },
 
   // ── Site chrome ──
-  headerCta: { en: "Sign In / Check-In", bm: "Log Masuk / Check-In", zh: "登录／签到", iban: "Login / Check-In" },
-  headerCtaShort: { en: "Check-In", bm: "Check-In", zh: "签到", iban: "Check-In" },
+  headerCta: { en: "Register / Sign In", bm: "Daftar / Log Masuk", zh: "注册／登录", iban: "Daftar / Login" },
+  headerCtaShort: { en: "Register", bm: "Daftar", zh: "注册", iban: "Daftar" },
   wordmarkSub: { en: "AI for Co-operatives", bm: "AI untuk Koperasi", zh: "合作社的 AI", iban: "AI ke Koperasi" },
   footerTagline: {
     en: "AI Does Not Replace People — It Empowers Co-operatives.",

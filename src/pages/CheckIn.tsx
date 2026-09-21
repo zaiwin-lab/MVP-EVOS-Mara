@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { eventConfig } from "../config/eventConfig";
 import { store } from "../data/store";
 import { useParticipant } from "../context/ParticipantContext";
@@ -7,11 +7,8 @@ import { useI18n, type Localized } from "../context/I18nContext";
 import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 
-const SESSION = eventConfig.attendanceSessions[0].id;
-
-type Mode = "checkin" | "register";
-
 // ⚠️ Iban here still needs a native-speaker review — see src/content/site.ts.
+/** The copy for this page. It registers people; it does not mark them present. */
 interface ModeCopy {
   eyebrow: Localized; title: Localized; subtitle: Localized;
   cardHeading: Localized; cardNote: Localized;
@@ -20,57 +17,7 @@ interface ModeCopy {
   benefits: { icon: string; title: Localized; desc: Localized }[];
 }
 
-const COPY: Record<Mode, ModeCopy> = {
-  checkin: {
-    eyebrow: { bm: "QR Check-In & Registration", en: "QR Check-In & Registration", zh: "二维码签到与注册", iban: "QR Check-In & Daftar" },
-    title: { bm: "Daftar Masuk Peserta", en: "Participant Check-In", zh: "参与者签到", iban: "Daftar Masuk Peserta" },
-    subtitle: {
-      bm: "Daftar masuk dengan mudah untuk pengesahan kehadiran program.",
-      en: "Check in quickly so your attendance is recorded.",
-      zh: "快速签到，确认您的出席记录。",
-      iban: "Daftar masuk enggau mudah kena ngesahka kehadiran program.",
-    },
-    cardHeading: {
-      bm: "Lengkapkan Maklumat Pendaftaran",
-      en: "Complete your registration details",
-      zh: "填写您的签到资料",
-      iban: "Ngaga Penerang Pendaftar",
-    },
-    cardNote: {
-      bm: "Maklumat anda digunakan untuk rekod kehadiran program.",
-      en: "Your details are used for the programme attendance record.",
-      zh: "您的资料将用于课程出席记录。",
-      iban: "Penerang nuan dikena ke rekod kehadiran program.",
-    },
-    cta: { bm: "Daftar Sekarang", en: "Check In Now", zh: "立即签到", iban: "Daftar Diatu" },
-    ctaBusy: { bm: "Mendaftar…", en: "Checking in…", zh: "签到中…", iban: "Benung daftar…" },
-    successNew: { bm: "Pendaftaran Berjaya!", en: "You are checked in!", zh: "签到成功！", iban: "Pendaftar Udah Nyadi!" },
-    successReturn: { bm: "Selamat Kembali!", en: "Welcome back!", zh: "欢迎回来！", iban: "Selamat Pulai!" },
-    successDesc: {
-      bm: `Kehadiran anda untuk ${eventConfig.eventName} telah direkodkan.`,
-      en: `Your attendance for ${eventConfig.eventNameLocal} has been recorded.`,
-      zh: `您在「${eventConfig.eventNameLocal}」的出席已记录。`,
-      iban: `Kehadiran nuan ke ${eventConfig.eventName} udah direkod.`,
-    },
-    benefits: [
-      {
-        icon: "users",
-        title: { bm: "Rekod Kehadiran Lebih Tepat", en: "More accurate attendance records", zh: "更准确的出席记录", iban: "Rekod Kehadiran Ti Betul Agi" },
-        desc: { bm: "Sistem merekod kehadiran secara automatik dan masa sebenar.", en: "Attendance is recorded automatically, in real time.", zh: "系统自动实时记录出席情况。", iban: "Sistem ngerekod kehadiran empu enggau maya amat." },
-      },
-      {
-        icon: "spark",
-        title: { bm: "Semakan Pantas", en: "Quick to check in", zh: "签到快捷", iban: "Semak Chelap" },
-        desc: { bm: "Proses daftar masuk yang cepat dan mudah tanpa borang manual.", en: "A fast, simple check-in with no paper forms.", zh: "签到快速简单，无需手写表格。", iban: "Pengawa daftar masuk ti chelap sereta mudah, nadai borang kertas." },
-      },
-      {
-        icon: "checkCircle",
-        title: { bm: "E-Sijil Penyertaan", en: "e-Certificate of participation", zh: "参与电子证书", iban: "E-Sijil Penyerta" },
-        desc: { bm: "Rekod kehadiran digunakan untuk penjanaan e-sijil selepas program.", en: "Attendance records are used to issue e-certificates after the programme.", zh: "出席记录将用于课程后签发电子证书。", iban: "Rekod kehadiran dikena ngaga e-sijil udah program." },
-      },
-    ],
-  },
-  register: {
+const COPY: ModeCopy = {
     eyebrow: { bm: "Pendaftaran Penyertaan · Register", en: "Programme Registration", zh: "报名参加", iban: "Pendaftar Penyerta" },
     title: { bm: "Daftar Penyertaan Anda", en: "Register your place", zh: "登记您的席位", iban: "Daftar Penyerta Nuan" },
     subtitle: {
@@ -88,13 +35,13 @@ const COPY: Record<Mode, ModeCopy> = {
     },
     cta: { bm: "Hantar Pendaftaran", en: "Submit Registration", zh: "提交报名", iban: "Kirim Pendaftar" },
     ctaBusy: { bm: "Menghantar…", en: "Submitting…", zh: "提交中…", iban: "Benung ngirim…" },
-    successNew: { bm: "Pendaftaran Berjaya!", en: "You are registered!", zh: "报名成功！", iban: "Pendaftar Udah Nyadi!" },
+    successNew: { bm: "Akaun Anda Sedia!", en: "Your account is ready", zh: "账户已就绪！", iban: "Akaun Nuan Udah Sedia!" },
     successReturn: { bm: "Anda Sudah Berdaftar!", en: "You are already registered!", zh: "您已经报名了！", iban: "Nuan Udah Daftar!" },
     successDesc: {
-      bm: `Terima kasih! Penyertaan anda untuk ${eventConfig.eventName} telah direkodkan. Simpan rujukan ini dan tunjukkannya semasa hari program untuk daftar masuk (check-in).`,
-      en: `Thank you. Your place on ${eventConfig.eventNameLocal} is recorded. Keep this reference and show it on the day to check in.`,
-      zh: `谢谢您！您在「${eventConfig.eventNameLocal}」的席位已记录。请保存此参考编号，并在活动当天出示以便签到。`,
-      iban: `Terima kasih! Penyerta nuan ke ${eventConfig.eventName} udah direkod. Simpan rujukan tu lalu tunjuk iya ba hari program kena daftar masuk.`,
+      bm: `Terima kasih! Akaun anda untuk ${eventConfig.eventName} telah dibuka. Simpan rujukan ini. Pada hari program, imbas kod QR di tempat acara untuk menandakan kehadiran anda.`,
+      en: `Thank you. Your account for ${eventConfig.eventNameLocal} is open. Keep this reference. On the programme day, scan the QR code at the venue to mark your attendance.`,
+      zh: `谢谢您！您在「${eventConfig.eventNameLocal}」的账户已开通。请保存此参考编号。课程当天，请扫描现场的二维码来登记出席。`,
+      iban: `Terima kasih! Akaun nuan ke ${eventConfig.eventName} udah dibuka. Simpan rujukan tu. Ba hari program, imbas kod QR ba endur acara kena nandaka kehadiran nuan.`,
     },
     benefits: [
       {
@@ -113,14 +60,17 @@ const COPY: Record<Mode, ModeCopy> = {
         desc: { bm: `Maksimum ${eventConfig.maxPerCoop} wakil setiap koperasi digalakkan menyertai.`, en: `Up to ${eventConfig.maxPerCoop} representatives per co-operative are encouraged to attend.`, zh: `每家合作社建议最多派 ${eventConfig.maxPerCoop} 位代表参加。`, iban: `Maksimum ${eventConfig.maxPerCoop} wakil tiap koperasi dikeransing datai.` },
       },
     ],
-  },
 };
 
-export default function CheckIn({ mode = "checkin" }: { mode?: Mode }) {
+export default function CheckIn() {
   const navigate = useNavigate();
   const { setParticipantId, refresh } = useParticipant();
   const { t, pick } = useI18n();
-  const c = COPY[mode];
+  const [params] = useSearchParams();
+  // Someone who scanned the day-of QR without an account lands here; `next`
+  // carries them straight back to it once they have one.
+  const next = params.get("next") === "/hadir" ? "/hadir" : null;
+  const c = COPY;
 
   const [fullName, setFullName] = useState("");
   const [coopName, setCoopName] = useState("");
@@ -145,11 +95,8 @@ export default function CheckIn({ mode = "checkin" }: { mode?: Mode }) {
       if (!participant) {
         participant = await store.createParticipant({ fullName, mobile, email, coopName, role });
       }
-      // Only the on-site check-in marks event-day attendance.
-      // Promo registration signs people up without marking them present.
-      if (mode === "checkin") {
-        await store.markAttendance(participant.id, SESSION);
-      }
+      // Registering is not attending. Attendance is only ever marked by
+      // scanning the QR code on the programme day — see src/pages/Attend.tsx.
       setParticipantId(participant.id);
       await refresh();
       setDone({ ref: participant.ref, returning });
@@ -187,7 +134,7 @@ export default function CheckIn({ mode = "checkin" }: { mode?: Mode }) {
       <section className={`${SITE_WRAP} py-10`}>
         <div className="mx-auto max-w-xl">
           {done ? (
-            <Success mode={mode} ref_={done.ref} returning={done.returning} onContinue={() => navigate("/my")} />
+            <Success ref_={done.ref} returning={done.returning} next={next} onContinue={() => navigate(next ?? "/my")} />
           ) : (
             <div className="card p-6 sm:p-7">
               <div className="flex items-center gap-2">
@@ -242,9 +189,9 @@ export default function CheckIn({ mode = "checkin" }: { mode?: Mode }) {
   );
 }
 
-function Success({ mode, ref_, returning, onContinue }: { mode: Mode; ref_: string; returning: boolean; onContinue: () => void }) {
+function Success({ ref_, returning, next, onContinue }: { ref_: string; returning: boolean; next: string | null; onContinue: () => void }) {
   const { t, pick } = useI18n();
-  const c = COPY[mode];
+  const c = COPY;
   return (
     <div className="card p-7 text-center">
       <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
@@ -259,8 +206,12 @@ function Success({ mode, ref_, returning, onContinue }: { mode: Mode; ref_: stri
         <span className="font-display text-2xl font-extrabold text-navy-900">{ref_}</span>
       </div>
       <div className="mt-6 grid gap-2 sm:grid-cols-2">
-        <button onClick={onContinue} className="btn-gold">{t("rdToMySpace")} <Icon name="arrowRight" className="h-5 w-5" /></button>
-        <Link to="/readiness" className="btn-outline">{t("msStartAssessment")}</Link>
+        <button onClick={onContinue} className="btn-gold">
+          {next ? t("atMarkCta") : t("rdToMySpace")} <Icon name="arrowRight" className="h-5 w-5" />
+        </button>
+        <Link to={next ? "/my" : "/readiness"} className="btn-outline">
+          {next ? t("rdToMySpace") : t("msStartAssessment")}
+        </Link>
       </div>
     </div>
   );
