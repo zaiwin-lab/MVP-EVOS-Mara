@@ -66,6 +66,16 @@ export interface CertificateConfig {
   metaColor: string;
   /** Print the serial and issue date along the bottom edge. */
   showSerial: boolean;
+  /**
+   * Which date the sheet carries.
+   *
+   * "programme" — the programme date, so every certificate for this event
+   *   reads the same. This is what the printed reference shows.
+   * "attendance" — the moment that participant's attendance was recorded.
+   *   Truthful per person, but someone marked present a day late by the
+   *   organiser would carry a different date to everyone else.
+   */
+  issuedDate: "programme" | "attendance";
 }
 
 export interface EventConfig {
@@ -256,6 +266,7 @@ export const eventConfig: EventConfig = {
     nameColor: "#0a1428",
     metaColor: "#55648A",
     showSerial: true,
+    issuedDate: "programme",
   },
 };
 

@@ -59,18 +59,23 @@ export default function Certificate() {
     );
   }
 
-  const issued = markedAt ? new Date(markedAt) : new Date();
-  const serial = certificateSerial(p.ref);
   const art = eventConfig.certificate;
+  const serial = certificateSerial(p.ref);
   const coop = p.coopName || p.companyName;
   const certPartners = CERT_PARTNER_ORDER
     .map((name) => eventConfig.partners.find((x) => x.name === name))
     .filter((x): x is (typeof eventConfig.partners)[number] => Boolean(x));
-  const issuedLabel = `${t("certIssued")} ${issued.toLocaleDateString("en-MY", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  })}`;
+  // The printed reference carries the programme date, which keeps every
+  // certificate for this event identical. Switching to "attendance" makes it
+  // the moment this person was marked present instead — see eventConfig.
+  const issuedLabel =
+    art.issuedDate === "attendance" && markedAt
+      ? `${t("certIssued")} ${new Date(markedAt).toLocaleDateString("en-MY", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })}`
+      : `${t("certIssued")} ${eventConfig.dates}`;
 
   return (
     <SiteLayout>

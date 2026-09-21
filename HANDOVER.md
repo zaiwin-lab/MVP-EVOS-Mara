@@ -252,6 +252,28 @@ The certificate shows the partners in the printed design's order —
 KOBIS · ANGKASA · SDEC — which is not the order the site footer uses. That
 order is `CERT_PARTNER_ORDER` at the top of `src/pages/Certificate.tsx`.
 
+### The date on the certificate
+
+`certificate.issuedDate` in `src/config/eventConfig.ts` decides it:
+
+- `"programme"` (current) — every certificate reads the programme date, which
+  is what the printed reference shows and what keeps them all identical.
+- `"attendance"` — the moment that person was actually marked present. More
+  literally true, but someone the organiser marks present a day late would
+  carry a different date to everyone else.
+
+The attendance timestamp is recorded either way; this only changes what the
+sheet prints.
+
+### Adding signatures
+
+The layout has no signature lines yet. When the signed images are available:
+export each signature as a PNG with a **transparent** background (a white box
+will show as a white box on the sheet), drop them in `public/logos/` beside the
+partner logos, and they can sit above the partner names with a ruled line and
+the signatory's name and title beneath. Expect the partner row to need
+rebalancing once signatures are added above it.
+
 ### Using your own certificate design
 
 The site draws a certificate by default. To use your own instead:
