@@ -153,7 +153,10 @@ function Dashboard({ onSignOut }: { onSignOut: () => void }) {
     finally { setDeletingId(null); }
   }
 
+  // Two different jobs: one QR signs people up before the day, the other
+  // marks attendance on the day for people who already have an account.
   const checkInUrl = `${publicOrigin()}/check-in`;
+  const attendUrl = `${publicOrigin()}/hadir`;
   const online = storageMode === "supabase";
 
   return (
@@ -188,6 +191,9 @@ function Dashboard({ onSignOut }: { onSignOut: () => void }) {
             : "🟡 Local Mode — Supabase belum dikonfigurasikan; data disimpan pada peranti ini sahaja."}
         </div>
 
+        {/* Room counter — the number the organiser watches on the day. */}
+        <AttendanceCounter present={stats.present} target={eventConfig.expectedParticipants} registered={stats.total} />
+
         {/* Summary cards */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           <StatCard icon="users" label="Peserta" sub="Total Participants" value={stats.total} tone="navy" />
@@ -216,19 +222,36 @@ function Dashboard({ onSignOut }: { onSignOut: () => void }) {
           </div>
 
           {/* QR generator */}
-          <Panel title="QR Generator Kehadiran" subtitle="Jana · Cetak · Muat Turun">
+          <Panel title="QR Kehadiran — Hari Program" subtitle="Jana · Cetak · Muat Turun">
             <QRCodeCard
-              value={checkInUrl}
-              caption="Imbas untuk daftar kehadiran ProgramOS Lite"
-              downloadName="programos-lite-checkin-qr.png"
+              value={attendUrl}
+              caption="Imbas pada hari program untuk menandakan kehadiran"
+              downloadName="programos-lite-kehadiran-qr.png"
               size={190}
             />
             <div className="mt-3 rounded-xl bg-sand-100 px-3 py-2 text-[11px] text-navy-500">
-              QR menghala ke: <span className="break-all font-semibold">{checkInUrl}</span>
+              QR menghala ke: <span className="break-all font-semibold">{attendUrl}</span>
             </div>
             <button onClick={() => window.print()} className="btn-outline mt-3 w-full text-sm">
               <Icon name="document" className="h-4 w-4" /> Cetak QR
             </button>
+
+            <details className="mt-4 border-t border-slate2-line pt-3">
+              <summary className="cursor-pointer text-[12px] font-bold text-navy-600">
+                QR Pendaftaran (sebelum program)
+              </summary>
+              <div className="mt-3">
+                <QRCodeCard
+                  value={checkInUrl}
+                  caption="Imbas untuk mendaftar penyertaan"
+                  downloadName="programos-lite-pendaftaran-qr.png"
+                  size={160}
+                />
+                <div className="mt-2 rounded-xl bg-sand-100 px-3 py-2 text-[11px] text-navy-500">
+                  <span className="break-all font-semibold">{checkInUrl}</span>
+                </div>
+              </div>
+            </details>
           </Panel>
         </div>
 
@@ -342,6 +365,8 @@ function Dashboard({ onSignOut }: { onSignOut: () => void }) {
 // ── Stats ────────────────────────────────────────────────────
 interface Stats {
   total: number; coops: number; readinessDone: number; promptsTried: number;
+  /** How many are marked present for the programme session. */
+  present: number;
   areaCounts: Record<string, number>; bandCounts: Record<string, number>;
   topAreaShort: string; topAreaLabel: string; topAreaCount: number;
 }
@@ -351,6 +376,7 @@ function computeStats(records: ParticipantRecord[]): Stats {
   const bandCounts: Record<string, number> = {};
   let readinessDone = 0;
   let promptsTried = 0;
+  let present = 0;
   for (const r of records) {
     const p = r.participant;
     const coop = (p.coopName || p.companyName || "").trim().toLowerCase();
@@ -362,12 +388,13 @@ function computeStats(records: ParticipantRecord[]): Stats {
       if (band) bandCounts[band] = (bandCounts[band] ?? 0) + 1;
     }
     promptsTried += p.triedPromptIds?.length ?? 0;
+    if (r.attendance.some((a) => a.session === SESSION)) present++;
   }
   let topId = ""; let topCount = 0;
   for (const [id, c] of Object.entries(areaCounts)) if (c > topCount) { topId = id; topCount = c; }
   const topArea = topId ? getWorkArea(topId) : undefined;
   return {
-    total: records.length, coops: coopSet.size, readinessDone, promptsTried,
+    total: records.length, coops: coopSet.size, readinessDone, promptsTried, present,
     areaCounts, bandCounts,
     topAreaShort: topArea ? bm(topArea.title).split(" ")[0] : "—",
     topAreaLabel: topArea ? "Most Selected" : "Belum ada",
@@ -617,5 +644,51 @@ function AttendanceToggle({
       <Icon name={present ? "checkCircle" : "clock"} className="h-3.5 w-3.5" />
       {present ? "Hadir" : "Tandakan"}
     </button>
+  );
+}
+
+
+/**
+ * Live room counter. Present over expected — the figure that tells the
+ * organiser whether the room is full without counting heads.
+ */
+function AttendanceCounter({
+  present,
+  target,
+  registered,
+}: {
+  present: number;
+  target: number;
+  registered: number;
+}) {
+  const pct = Math.min(100, Math.round((present / Math.max(1, target)) * 100));
+  return (
+    <div className="panel-dark hero-glow p-5 sm:p-6">
+      <div className="hero-grid pointer-events-none absolute inset-0" />
+      <div className="relative flex flex-wrap items-center justify-between gap-5">
+        <div>
+          <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">
+            Kehadiran Hari Ini · Attendance
+          </div>
+          <div className="mt-1.5 flex items-end gap-2">
+            <span className="num text-[46px] leading-none text-gold-400 sm:text-[56px]">{present}</span>
+            <span className="num pb-1.5 text-[22px] leading-none text-white/35">/ {target}</span>
+          </div>
+          <div className="mt-1 text-[12px] text-white/45">
+            {registered} peserta berdaftar · {Math.max(0, target - present)} belum hadir
+          </div>
+        </div>
+
+        <div className="w-full sm:w-72">
+          <div className="h-2.5 overflow-hidden rounded-full bg-white/10">
+            <div
+              className="h-full rounded-full transition-[width] duration-700 ease-out"
+              style={{ width: `${pct}%`, backgroundImage: "var(--grad-btn)" }}
+            />
+          </div>
+          <div className="mt-2 text-right text-[11px] font-bold text-white/50">{pct}%</div>
+        </div>
+      </div>
+    </div>
   );
 }

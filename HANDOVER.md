@@ -142,3 +142,67 @@ reworking the core.
 ---
 
 Powered by **KBT EventOS — Attendify™** · An Innovation by KOBIS Berhad
+
+---
+
+## Programme day: attendance and the e-certificate
+
+### The QR everyone scans on the day
+
+The admin console (`/admin`) generates it under **QR Kehadiran — Hari Program**.
+It points at `/hadir`, not at the registration form.
+
+What a participant sees when they scan:
+
+1. Not signed in → phone number and email, right there on the page. No
+   redirect: bouncing people between pages after they have scanned is where
+   check-ins get lost at a venue.
+2. Signed in → their name, and one **Saya Hadir** button.
+3. Tapped → confirmation, and the room counter moves.
+
+The counter on that page and on the admin dashboard reads **present / expected**.
+The denominator is `expectedParticipants` in `src/config/eventConfig.ts` — change
+that one number if the group size changes. It refreshes every 12 seconds while
+the page is open, so the organiser can leave the dashboard up on a laptop.
+
+Scanning twice does not double count.
+
+The second QR, collapsed under the first, still points at `/check-in` for
+sign-ups before the day.
+
+### Who counts as present
+
+Check-in is self-service: anyone holding the QR link can mark themselves. The
+organiser has the last word in the participant table — the attendance cell is a
+button. Clicking it marks someone present, or revokes it after a confirmation
+that warns their e-certificate goes with it.
+
+### The e-certificate
+
+Lives at `/sijil`. It is issued off attendance: no attendance mark, no
+certificate. Participants reach it from My Space, which tells them whether it is
+ready or what it is waiting for.
+
+They save it with **Cetak / Simpan PDF**, which opens the print dialog — "Save as
+PDF" there gives them the sheet on its own, without the site's header and footer.
+This works on a phone as well as a laptop.
+
+### Using your own certificate design
+
+The site draws a certificate by default. To use your own instead:
+
+1. Export your design as an image, A4 landscape (297×210mm). At 300dpi that is
+   3508×2480px, which prints cleanly.
+2. Put it in `public/` — for example `public/sijil.png`.
+3. In `src/config/eventConfig.ts`, set `certificate.artworkUrl` to `"/sijil.png"`.
+
+Your image then becomes the certificate, and the site overlays only what changes
+per participant: their name, their co-operative, and (if `showSerial` is on) the
+serial and issue date along the bottom. Leave space for those in your design.
+
+The other knobs in `certificate`:
+
+- `namePositionPct` — how far down the sheet the name sits, as a percentage.
+- `nameColor` / `metaColor` — ink for the overlaid text, so it can be tuned to
+  your artwork.
+- `showSerial` — set to `false` if your design carries its own reference.

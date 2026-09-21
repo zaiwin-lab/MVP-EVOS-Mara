@@ -58,6 +58,13 @@ export default function Certificate() {
 
   const issued = markedAt ? new Date(markedAt) : new Date();
   const serial = certificateSerial(p.ref);
+  const art = eventConfig.certificate;
+  const coop = p.coopName || p.companyName;
+  const issuedLabel = `${t("certIssued")} ${issued.toLocaleDateString("en-MY", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  })}`;
 
   return (
     <SiteLayout>
@@ -89,6 +96,44 @@ export default function Certificate() {
             id="sijil"
             className="relative mx-auto aspect-[297/210] w-full min-w-[720px] overflow-hidden rounded-2xl border border-slate2-line bg-white shadow-pop print:min-w-0 print:rounded-none print:border-0 print:shadow-none"
           >
+            {art.artworkUrl ? (
+              /* The organiser's own design. The site fills in only the parts
+                 that change from one participant to the next. */
+              <>
+                <img
+                  src={art.artworkUrl}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+                <div
+                  className="absolute inset-x-[8%] text-center"
+                  style={{ top: `${art.namePositionPct}%`, transform: "translateY(-50%)" }}
+                >
+                  <p
+                    className="font-display text-[38px] font-extrabold leading-tight tracking-[-0.02em]"
+                    style={{ color: art.nameColor }}
+                  >
+                    {p.fullName}
+                  </p>
+                  {coop && (
+                    <p className="mt-1 text-[16px] font-semibold" style={{ color: art.metaColor }}>
+                      {coop}
+                    </p>
+                  )}
+                </div>
+                {art.showSerial && (
+                  <div
+                    className="absolute inset-x-[6%] bottom-[4%] flex items-center justify-between text-[10px]"
+                    style={{ color: art.metaColor }}
+                  >
+                    <span className="font-mono font-semibold">{serial}</span>
+                    <span>{issuedLabel}</span>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
             {/* Gold rule inside a navy edge */}
             <div className="absolute inset-0 border-[10px] border-navy-950" aria-hidden="true" />
             <div className="absolute inset-[10px] border border-gold-400/60" aria-hidden="true" />
@@ -121,11 +166,7 @@ export default function Certificate() {
                   {p.fullName}
                 </p>
 
-                {(p.coopName || p.companyName) && (
-                  <p className="mt-1 text-[16px] font-semibold text-gold-700">
-                    {p.coopName || p.companyName}
-                  </p>
-                )}
+                {coop && <p className="mt-1 text-[16px] font-semibold text-gold-700">{coop}</p>}
 
                 <p className="mx-auto mt-4 max-w-[72%] text-[13.5px] leading-relaxed text-slate2-mut">
                   {t("certBody")}
@@ -149,13 +190,12 @@ export default function Certificate() {
 
               <div className="mt-4 flex w-full items-center justify-between text-[10px] text-slate2-dim">
                 <span className="font-mono font-semibold">{serial}</span>
-                <span>
-                  {t("certIssued")}{" "}
-                  {issued.toLocaleDateString("en-MY", { day: "numeric", month: "long", year: "numeric" })}
-                </span>
+                <span>{issuedLabel}</span>
               </div>
               </div>
             </div>
+              </>
+            )}
           </div>
         </div>
 

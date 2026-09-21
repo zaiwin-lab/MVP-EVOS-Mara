@@ -424,6 +424,45 @@ const DICT: Record<string, Localized> = {
   metaPerCoop: { en: "Per co-operative", bm: "Setiap Koperasi", zh: "每家合作社", iban: "Tiap Koperasi" },
   homeAria: { en: "ProgramOS Lite — Home", bm: "ProgramOS Lite — Utama", zh: "ProgramOS Lite — 首页", iban: "ProgramOS Lite — Utama" },
 
+  // ── Scan to attend (programme day) ──
+  atEyebrow: { en: "Programme day", bm: "Hari Program", zh: "课程当天", iban: "Hari Program" },
+  atTitle: { en: "Mark your attendance", bm: "Tandakan Kehadiran Anda", zh: "登记您的出席", iban: "Tandaka Kehadiran Nuan" },
+  atCounterLabel: {
+    en: "Participants checked in",
+    bm: "Peserta telah hadir",
+    zh: "已签到人数",
+    iban: "Peserta ti udah datai",
+  },
+  atGreeting: { en: "Signed in as", bm: "Log masuk sebagai", zh: "当前登录", iban: "Login nyadi" },
+  atMarkCta: { en: "I'm here", bm: "Saya Hadir", zh: "我到了", iban: "Aku Udah Datai" },
+  atMarking: { en: "Recording…", bm: "Merekod…", zh: "记录中…", iban: "Benung ngerekod…" },
+  atMarkHint: {
+    en: "One tap. Your attendance is what your e-certificate is issued from.",
+    bm: "Satu tekan sahaja. Kehadiran anda inilah asas penjanaan e-sijil.",
+    zh: "只需点一下。您的出席记录就是电子证书的依据。",
+    iban: "Semina sekali tekan. Kehadiran nuan nya ti dikena ngaga e-sijil.",
+  },
+  atDoneTitle: { en: "You're marked present", bm: "Kehadiran Direkodkan", zh: "出席已记录", iban: "Kehadiran Udah Direkod" },
+  atDoneBody: {
+    en: "Thank you, {name}. Enjoy the programme — your e-certificate will be waiting in My Space.",
+    bm: "Terima kasih, {name}. Selamat mengikuti program — e-sijil anda menanti di Ruang Saya.",
+    zh: "谢谢您，{name}。祝您学有所得——电子证书已在「我的空间」等候。",
+    iban: "Terima kasih, {name}. Selamat nitihka program — e-sijil nuan nganti ba Ruang Aku.",
+  },
+  atSignInTitle: {
+    en: "Sign in to mark attendance",
+    bm: "Log Masuk untuk Tandakan Kehadiran",
+    zh: "登录以登记出席",
+    iban: "Login kena Nandaka Kehadiran",
+  },
+  atSignInBody: {
+    en: "Use the phone number and email you registered with.",
+    bm: "Guna nombor telefon dan emel yang anda daftarkan.",
+    zh: "请使用您注册时填写的手机号码与电子邮箱。",
+    iban: "Kena no. telefon enggau e-mel ti udah didaftar nuan.",
+  },
+  atSignInCta: { en: "Sign in & mark attendance", bm: "Log Masuk & Tandakan Hadir", zh: "登录并登记出席", iban: "Login & Tandaka Hadir" },
+
   // ── e-Certificate ──
   certEyebrow: { en: "Certificate of participation", bm: "Sijil Penyertaan", zh: "参与证书", iban: "Sijil Penyerta" },
   certTitle: { en: "Your e-certificate", bm: "E-Sijil Anda", zh: "您的电子证书", iban: "E-Sijil Nuan" },

@@ -45,6 +45,23 @@ export interface RoleOption {
   label: Localized;
 }
 
+/**
+ * Certificate artwork. Leave `artworkUrl` blank and the site draws its own
+ * certificate. Set it to an image in /public (A4 landscape, 297×210mm — 3508×2480px
+ * at 300dpi prints cleanly) and that image becomes the certificate: the site
+ * then overlays only the parts it has to fill in.
+ */
+export interface CertificateConfig {
+  artworkUrl: string;
+  /** How far down the sheet the participant's name sits, as a percentage. */
+  namePositionPct: number;
+  /** Ink for the overlaid text, so it can be tuned to the artwork. */
+  nameColor: string;
+  metaColor: string;
+  /** Print the serial and issue date along the bottom edge. */
+  showSerial: boolean;
+}
+
 export interface EventConfig {
   product: string;
   module: string;
@@ -90,6 +107,7 @@ export interface EventConfig {
   intro: string;
   introLocalized: Record<string, string>;
   attendanceSessions: AttendanceSession[];
+  certificate: CertificateConfig;
 }
 
 export const eventConfig: EventConfig = {
@@ -218,6 +236,14 @@ export const eventConfig: EventConfig = {
   attendanceSessions: [
     { id: "main", label: "Sesi Program", date: "24 September 2026", weekday: "Khamis / Thursday" },
   ],
+  certificate: {
+    // Drop your own design at public/sijil.png and set this to "/sijil.png".
+    artworkUrl: "",
+    namePositionPct: 52,
+    nameColor: "#0a1428",
+    metaColor: "#55648A",
+    showSerial: true,
+  },
 };
 
 // Route base for this event (keeps deep links / QR targets consistent)
