@@ -234,6 +234,24 @@ They save it with **Cetak / Simpan PDF**, which opens the print dialog — "Save
 PDF" there gives them the sheet on its own, without the site's header and footer.
 This works on a phone as well as a laptop.
 
+### Partner logos
+
+The three logos live in `public/logos/` (`kobis.png`, `angkasa.png`,
+`sdec.png`) and are referenced from `partners[].logo` in
+`src/config/eventConfig.ts`. To replace one, drop a new PNG with a
+transparent or white background in that folder under the same name.
+
+`partners[].logoScale` next to it is an optical correction, not a bug: the
+logos are set to one common height, which makes a wide wordmark like KO-BIS
+dominate a squarer emblem like ANGKASA even though both are technically the
+same size. The current values were measured off the printed reference —
+KOBIS 1.4, ANGKASA 2.45, SDEC 1.7. Adjust until the row looks even, not until
+the numbers match.
+
+The certificate shows the partners in the printed design's order —
+KOBIS · ANGKASA · SDEC — which is not the order the site footer uses. That
+order is `CERT_PARTNER_ORDER` at the top of `src/pages/Certificate.tsx`.
+
 ### Using your own certificate design
 
 The site draws a certificate by default. To use your own instead:

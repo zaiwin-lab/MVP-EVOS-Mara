@@ -26,6 +26,12 @@ export interface Partner {
   /** Optional logo image path (public/…). When absent a text chip is shown
    *  — we never invent or redraw an official logo. */
   logo?: string;
+  /**
+   * Optical size correction for the certificate's logo row. Logos are set to a
+   * common height, which makes a wide wordmark dominate a squarer emblem even
+   * though both are "the same size". Tune per logo until the row looks even.
+   */
+  logoScale?: number;
 }
 
 /** A resource / Google Folder button. Empty url → "coming soon". */
@@ -174,16 +180,16 @@ export const eventConfig: EventConfig = {
   hashtags: ["#AIuntukKoperasi", "#ProgramOSLite", "#BersamaKoperasi", "#MasaDepanBersama"],
   partners: [
     {
-      name: "ANGKASA", url: "https://www.angkasa.coop",
+      name: "ANGKASA", url: "https://www.angkasa.coop", logo: "/logos/angkasa.png", logoScale: 2.45,
       role: { bm: "Penganjur", en: "Organiser", zh: "主办单位", iban: "Penganjur" },
     },
     {
-      name: "KOBIS Berhad", url: "https://www.kobisberhad.com",
-      role: { bm: "Kolaborator & Pemilik Produk", en: "Collaborator & Product Owner", zh: "协办与产品拥有者", iban: "Kolaborator & Tuai Produk" },
+      name: "KOBIS Berhad", url: "https://www.kobisberhad.com", logo: "/logos/kobis.png", logoScale: 1.4,
+      role: { bm: "Kolaborator Strategik", en: "Strategic Collaborator", zh: "战略协作伙伴", iban: "Kolaborator Strategik" },
     },
     {
-      name: "SDEC", url: "https://sdec.com.my",
-      role: { bm: "Sokongan Digital Sarawak", en: "Sarawak Digital Support", zh: "砂拉越数码支持", iban: "Sukung Digital Sarawak" },
+      name: "SDEC", url: "https://sdec.com.my", logo: "/logos/sdec.png", logoScale: 1.7,
+      role: { bm: "Rakan Pendigitalan", en: "Digitalisation Partner", zh: "数码化伙伴", iban: "Rakan Pendigitalan" },
     },
   ],
   roleOptions: [
