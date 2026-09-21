@@ -5,8 +5,8 @@ import { Icon } from "../components/Icon";
 import { LogoMark } from "../components/Brand";
 import { useParticipant } from "../context/ParticipantContext";
 import { useI18n } from "../context/I18nContext";
+import { SESSION } from "../lib/attendance";
 
-const SESSION = eventConfig.attendanceSessions[0].id;
 
 /**
  * Serial for one participant's certificate. Derived from the reference they

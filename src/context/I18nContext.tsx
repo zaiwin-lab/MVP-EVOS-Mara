@@ -424,6 +424,61 @@ const DICT: Record<string, Localized> = {
   metaPerCoop: { en: "Per co-operative", bm: "Setiap Koperasi", zh: "每家合作社", iban: "Tiap Koperasi" },
   homeAria: { en: "ProgramOS Lite — Home", bm: "ProgramOS Lite — Utama", zh: "ProgramOS Lite — 首页", iban: "ProgramOS Lite — Utama" },
 
+  // ── In-page QR scanner ──
+  msScanTitle: {
+    en: "Mark your attendance",
+    bm: "Tandakan Kehadiran Anda",
+    zh: "登记您的出席",
+    iban: "Tandaka Kehadiran Nuan",
+  },
+  msScanBody: {
+    en: "On the programme day, scan the QR code at the venue.",
+    bm: "Pada hari program, imbas kod QR di tempat acara.",
+    zh: "课程当天，请扫描现场的二维码。",
+    iban: "Ba hari program, imbas kod QR ba endur acara.",
+  },
+  scanTitle: { en: "Scan the attendance QR", bm: "Imbas QR Kehadiran", zh: "扫描出席二维码", iban: "Imbas QR Kehadiran" },
+  scanCta: { en: "Scan QR", bm: "Imbas QR", zh: "扫描二维码", iban: "Imbas QR" },
+  scanStarting: { en: "Starting the camera…", bm: "Membuka kamera…", zh: "正在启动相机…", iban: "Benung muka kamera…" },
+  scanHint: {
+    en: "Point the camera at the QR code displayed at the venue.",
+    bm: "Halakan kamera ke kod QR yang dipaparkan di tempat acara.",
+    zh: "将相机对准现场展示的二维码。",
+    iban: "Tuju kamera ngagai kod QR ti dipegarika ba endur acara.",
+  },
+  scanClose: { en: "Close", bm: "Tutup", zh: "关闭", iban: "Tutup" },
+  scanDenied: {
+    en: "Camera access was blocked",
+    bm: "Akses kamera disekat",
+    zh: "相机权限被拒绝",
+    iban: "Akses kamera ditagang",
+  },
+  scanNoCamera: { en: "No camera found", bm: "Kamera tidak dijumpai", zh: "找不到相机", iban: "Kamera nadai ditemu" },
+  scanInsecure: {
+    en: "The camera needs a secure (https) connection",
+    bm: "Kamera memerlukan sambungan selamat (https)",
+    zh: "使用相机需要安全（https）连接",
+    iban: "Kamera minta sambung ti aman (https)",
+  },
+  scanUnsupported: {
+    en: "This browser cannot open the camera",
+    bm: "Pelayar ini tidak boleh membuka kamera",
+    zh: "此浏览器无法打开相机",
+    iban: "Pelayar tu enda ulih muka kamera",
+  },
+  scanFallbackHint: {
+    en: "You can still mark attendance with the button on this page, or scan the QR with your phone's own camera app.",
+    bm: "Anda masih boleh menandakan kehadiran dengan butang di halaman ini, atau imbas QR menggunakan aplikasi kamera telefon anda.",
+    zh: "您仍可用本页的按钮登记出席，或用手机自带的相机扫描二维码。",
+    iban: "Nuan agi ulih nandaka kehadiran ngena butang ba laman tu, tauka imbas QR ngena aplikasi kamera telefon nuan empu.",
+  },
+  scanWrongCode: {
+    en: "That is not the attendance QR for this programme.",
+    bm: "Itu bukan kod QR kehadiran untuk program ini.",
+    zh: "那不是本课程的出席二维码。",
+    iban: "Nya ukai kod QR kehadiran ke program tu.",
+  },
+
   // ── Scan to attend (programme day) ──
   atEyebrow: { en: "Programme day", bm: "Hari Program", zh: "课程当天", iban: "Hari Program" },
   atTitle: { en: "Mark your attendance", bm: "Tandakan Kehadiran Anda", zh: "登记您的出席", iban: "Tandaka Kehadiran Nuan" },

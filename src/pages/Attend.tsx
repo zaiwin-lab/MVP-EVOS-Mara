@@ -6,8 +6,9 @@ import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { useParticipant } from "../context/ParticipantContext";
 import { useI18n } from "../context/I18nContext";
+import { QrScanner } from "../components/QrScanner";
+import { SESSION, isAttendanceCode } from "../lib/attendance";
 
-const SESSION = eventConfig.attendanceSessions[0].id;
 const TARGET = eventConfig.expectedParticipants;
 
 /** How often the room count refreshes while the page sits open. */
@@ -28,6 +29,7 @@ export default function Attend() {
   const [count, setCount] = useState<number | null>(null);
   const [marking, setMarking] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [scanning, setScanning] = useState(false);
 
   // Inline sign-in
   const [mobile, setMobile] = useState("");
@@ -52,6 +54,16 @@ export default function Attend() {
     const id = window.setInterval(loadCount, POLL_MS);
     return () => window.clearInterval(id);
   }, [loadCount]);
+
+  /** A scan only counts if the code is this programme's. */
+  async function handleScan(text: string) {
+    setScanning(false);
+    if (!isAttendanceCode(text)) {
+      setError(t("scanWrongCode"));
+      return;
+    }
+    await markPresent();
+  }
 
   async function markPresent() {
     if (!participantId || marking) return;
@@ -163,8 +175,20 @@ export default function Attend() {
                 <p className="text-sm font-semibold text-gold-700">{record.participant.coopName}</p>
               )}
 
-              <button onClick={markPresent} disabled={marking} className="btn-gold mt-6 w-full py-4 text-base">
-                <Icon name="checkCircle" className="h-5 w-5" />
+              <button
+                onClick={() => { setError(null); setScanning(true); }}
+                disabled={marking}
+                className="btn-gold mt-6 w-full py-4 text-base"
+              >
+                <Icon name="qr" className="h-5 w-5" />
+                {t("scanCta")}
+              </button>
+              <button
+                onClick={markPresent}
+                disabled={marking}
+                className="btn-outline mt-2 w-full text-sm"
+              >
+                <Icon name="checkCircle" className="h-4 w-4" />
                 {marking ? t("atMarking") : t("atMarkCta")}
               </button>
               {error && <p className="mt-3 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
@@ -224,6 +248,7 @@ export default function Attend() {
           )}
         </div>
       </section>
+      {scanning && <QrScanner onResult={handleScan} onClose={() => setScanning(false)} />}
     </SiteLayout>
   );
 }

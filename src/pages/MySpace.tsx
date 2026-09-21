@@ -7,14 +7,40 @@ import { Icon } from "../components/Icon";
 import { areaAccent } from "../lib/accents";
 import { useParticipant } from "../context/ParticipantContext";
 import { useI18n } from "../context/I18nContext";
+import { QrScanner } from "../components/QrScanner";
+import { SESSION, isAttendanceCode } from "../lib/attendance";
 import { store } from "../data/store";
 import type { PromptAttempt } from "../data/types";
 
 export default function MySpace() {
-  const { participantId, record, loading, signOut } = useParticipant();
+  const { participantId, record, loading, signOut, refresh } = useParticipant();
   const { t, pick } = useI18n();
   const navigate = useNavigate();
   const [attempts, setAttempts] = useState<PromptAttempt[]>([]);
+  const [scanning, setScanning] = useState(false);
+  const [scanError, setScanError] = useState<string | null>(null);
+  const [marking, setMarking] = useState(false);
+
+  /** Scanning the venue QR from here marks attendance without leaving the page. */
+  async function handleScan(text: string) {
+    setScanning(false);
+    if (!isAttendanceCode(text)) {
+      setScanError(t("scanWrongCode"));
+      return;
+    }
+    if (!participantId) return;
+    setScanError(null);
+    setMarking(true);
+    try {
+      await store.markAttendance(participantId, SESSION);
+      await refresh();
+    } catch (e) {
+      console.error(e);
+      setScanError(t("commonError"));
+    } finally {
+      setMarking(false);
+    }
+  }
 
   // Every prompt this participant has actually used, from its own table —
   // not just the ones they explicitly saved.
@@ -78,6 +104,45 @@ export default function MySpace() {
       </section>
 
       <section className={`${SITE_WRAP} py-10`}>
+        {/* Attendance. Once marked this collapses to a quiet confirmation so it
+            stops competing with the rest of the page. */}
+        {attended ? (
+          <div className="mb-5 flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4">
+            <span className="icon-tile h-10 w-10 shrink-0 bg-emerald-100 text-emerald-600">
+              <Icon name="checkCircle" className="h-5 w-5" />
+            </span>
+            <div>
+              <div className="text-sm font-bold text-navy-950">{t("atDoneTitle")}</div>
+              <div className="text-xs text-slate2-mut">{t("msCertReady")}</div>
+            </div>
+          </div>
+        ) : (
+          <div className="card-dark hero-glow relative mb-5 overflow-hidden p-5 sm:p-6">
+            <div className="hero-grid pointer-events-none absolute inset-0" />
+            <div className="relative flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <span className="icon-tile h-12 w-12 shrink-0 bg-gold-400/15 text-gold-300">
+                  <Icon name="qr" className="h-6 w-6" />
+                </span>
+                <div>
+                  <div className="text-[15px] font-bold text-white">{t("msScanTitle")}</div>
+                  <div className="mt-0.5 text-[13px] leading-relaxed text-white/55">{t("msScanBody")}</div>
+                </div>
+              </div>
+              <button
+                onClick={() => { setScanError(null); setScanning(true); }}
+                disabled={marking}
+                className="btn-gold shrink-0"
+              >
+                <Icon name="qr" className="h-5 w-5" /> {marking ? t("atMarking") : t("scanCta")}
+              </button>
+            </div>
+            {scanError && (
+              <p className="relative mt-3 rounded-xl bg-red-500/15 px-4 py-2.5 text-sm text-red-200">{scanError}</p>
+            )}
+          </div>
+        )}
+
         <div className="grid gap-5 lg:grid-cols-3">
           {/* Readiness */}
           <div className="card p-5 lg:col-span-1">
@@ -188,6 +253,7 @@ export default function MySpace() {
 
         <p className="mt-6 text-center text-xs text-navy-400">{eventConfig.eventName} · {eventConfig.venue}</p>
       </section>
+      {scanning && <QrScanner onResult={handleScan} onClose={() => setScanning(false)} />}
     </SiteLayout>
   );
 }

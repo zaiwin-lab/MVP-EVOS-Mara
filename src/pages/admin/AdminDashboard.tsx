@@ -6,8 +6,8 @@ import type { ParticipantRecord, PromptAttempt } from "../../data/types";
 import { WORK_AREAS, getWorkArea, PROMPT_COUNT } from "../../content/promptLibrary";
 import { READINESS_BANDS } from "../../content/readiness";
 import { Icon } from "../../components/Icon";
+import { SESSION } from "../../lib/attendance";
 
-const SESSION = eventConfig.attendanceSessions[0].id;
 import { QRCodeCard } from "../../components/QRCode";
 import { areaAccent } from "../../lib/accents";
 import { pick as pickLang, type Localized } from "../../context/I18nContext";

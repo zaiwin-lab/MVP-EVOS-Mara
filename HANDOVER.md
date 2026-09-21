@@ -185,6 +185,38 @@ Scanning twice does not double count.
 The second QR, collapsed under the first, still points at `/check-in` for
 sign-ups before the day.
 
+### Scanning inside the website
+
+Participants do not have to leave the site. **Ruang Saya** (the profile page)
+carries an **Imbas QR** button: it opens the phone camera inside the page, reads
+the QR, and marks attendance without navigating anywhere. The same button is on
+`/hadir`.
+
+Both paths work, deliberately:
+
+- Scanning with the phone's own camera app opens `/hadir`, where one tap marks
+  attendance.
+- Scanning from inside the site marks it directly.
+
+That is why the QR holds a URL rather than a bare token.
+
+A scan only counts if the code belongs to this programme — anything else is
+rejected with "bukan kod QR kehadiran". The check accepts any URL whose path
+ends in `/hadir` or `/attend`; the origin is deliberately not pinned, so a code
+generated against a preview URL still works on the day.
+
+Requirements and fallbacks:
+
+- The camera needs **https**. Netlify provides it. Over plain http the page says
+  so rather than failing silently.
+- If the camera is blocked or missing, the panel explains and points at the
+  **Saya Hadir** button, which marks attendance without a camera.
+- Decoding uses the browser's native barcode reader where there is one
+  (Chrome on Android) and falls back to jsQR everywhere else, including iOS
+  Safari. jsQR is a separate 130KB chunk fetched only when the scanner opens,
+  so it costs nothing to anyone who never scans.
+- The camera is released as soon as the panel closes.
+
 ### Who counts as present
 
 Check-in is self-service: anyone holding the QR link can mark themselves. The
