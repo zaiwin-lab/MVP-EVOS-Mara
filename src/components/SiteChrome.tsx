@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { eventConfig } from "../config/eventConfig";
+import { eventConfig, IS_REHEARSAL } from "../config/eventConfig";
 import { NAV, PILLARS } from "../content/site";
 import { useI18n } from "../context/I18nContext";
 import { useParticipant } from "../context/ParticipantContext";
@@ -177,6 +177,11 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 bg-navy-950 shadow-[0_1px_0_rgba(255,255,255,0.06)]">
+      {IS_REHEARSAL && (
+        <div className="bg-amber-400 px-4 py-1.5 text-center text-[11px] font-extrabold uppercase tracking-[0.12em] text-amber-950">
+          Mod Ujian · Test Mode — data di sini tidak dikira untuk program sebenar
+        </div>
+      )}
       <div className={`${WRAP} flex items-center gap-3 py-2.5`}>
         <ProgramWordmark inverted />
 

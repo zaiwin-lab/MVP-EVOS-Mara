@@ -110,6 +110,9 @@ export interface EventConfig {
   certificate: CertificateConfig;
 }
 
+/** The real event. Anything else means this build is a rehearsal. */
+export const LIVE_SLUG = "angkasa-ai-coop-2026";
+
 export const eventConfig: EventConfig = {
   product: "ProgramOS",
   module: "Lite",
@@ -122,7 +125,11 @@ export const eventConfig: EventConfig = {
     zh: "合作社数字与 AI 转型课程",
     iban: "Transformasi Digital & AI ke Koperasi",
   },
-  slug: "angkasa-ai-coop-2026",
+  // Every Supabase query filters on this, so a build with a different slug
+  // shares the database but cannot see — or be seen by — the real event's
+  // data. That is what VITE_EVENT_SLUG is for: rehearsing the whole flow on a
+  // throwaway deployment without touching live registrations.
+  slug: (import.meta.env.VITE_EVENT_SLUG as string | undefined)?.trim() || LIVE_SLUG,
   refPrefix: "POS",
   dates: "24 September 2026",
   time: "8:30 AM – 5:00 PM",
@@ -245,6 +252,13 @@ export const eventConfig: EventConfig = {
     showSerial: true,
   },
 };
+
+/**
+ * True when this build points at a scratch dataset rather than the live event.
+ * The UI says so loudly — a rehearsal build reaching production by accident
+ * would otherwise look identical while quietly collecting nothing real.
+ */
+export const IS_REHEARSAL = eventConfig.slug !== LIVE_SLUG;
 
 // Route base for this event (keeps deep links / QR targets consistent)
 export const eventBase = `/event/${eventConfig.slug}`;
