@@ -21,7 +21,7 @@ export interface AttendanceSession {
 /** A collaborating organisation shown in the brand strip / footer. */
 export interface Partner {
   name: string;
-  role: string; // short descriptor, e.g. "Penganjur"
+  role: Localized; // short descriptor, e.g. "Penganjur"
   url?: string;
   /** Optional logo image path (public/…). When absent a text chip is shown
    *  — we never invent or redraw an official logo. */
@@ -51,6 +51,8 @@ export interface EventConfig {
   tagline: string;
   eventName: string;
   eventNameLocal: string;
+  /** The programme name as it should read on the certificate, per language. */
+  eventNameLocalized: Localized;
   slug: string;
   refPrefix: string;
   dates: string;
@@ -96,6 +98,12 @@ export const eventConfig: EventConfig = {
   tagline: "Transformasi Digital & AI untuk Koperasi",
   eventName: "Transformasi Digital & AI untuk Koperasi",
   eventNameLocal: "Digital & AI Transformation for Co-operatives",
+  eventNameLocalized: {
+    bm: "Transformasi Digital & AI untuk Koperasi",
+    en: "Digital & AI Transformation for Co-operatives",
+    zh: "合作社数字与 AI 转型课程",
+    iban: "Transformasi Digital & AI ke Koperasi",
+  },
   slug: "angkasa-ai-coop-2026",
   refPrefix: "POS",
   dates: "24 September 2026",
@@ -140,9 +148,18 @@ export const eventConfig: EventConfig = {
   copyright: "© 2026 ProgramOS Lite. Inisiatif bersama ANGKASA × KOBIS Berhad × SDEC.",
   hashtags: ["#AIuntukKoperasi", "#ProgramOSLite", "#BersamaKoperasi", "#MasaDepanBersama"],
   partners: [
-    { name: "ANGKASA", role: "Penganjur", url: "https://www.angkasa.coop" },
-    { name: "KOBIS Berhad", role: "Kolaborator & Pemilik Produk", url: "https://www.kobisberhad.com" },
-    { name: "SDEC", role: "Sokongan Digital Sarawak", url: "https://sdec.com.my" },
+    {
+      name: "ANGKASA", url: "https://www.angkasa.coop",
+      role: { bm: "Penganjur", en: "Organiser", zh: "主办单位", iban: "Penganjur" },
+    },
+    {
+      name: "KOBIS Berhad", url: "https://www.kobisberhad.com",
+      role: { bm: "Kolaborator & Pemilik Produk", en: "Collaborator & Product Owner", zh: "协办与产品拥有者", iban: "Kolaborator & Tuai Produk" },
+    },
+    {
+      name: "SDEC", url: "https://sdec.com.my",
+      role: { bm: "Sokongan Digital Sarawak", en: "Sarawak Digital Support", zh: "砂拉越数码支持", iban: "Sukung Digital Sarawak" },
+    },
   ],
   roleOptions: [
     { value: "Anggota Koperasi", label: { bm: "Anggota Koperasi", en: "Co-op member", zh: "合作社会员", iban: "Anggota Koperasi" } },

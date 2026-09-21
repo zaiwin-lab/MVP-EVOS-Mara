@@ -12,6 +12,7 @@ import Gallery from "./pages/Gallery";
 import Faq from "./pages/Faq";
 import CheckIn from "./pages/CheckIn";
 import MySpace from "./pages/MySpace";
+import Certificate from "./pages/Certificate";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminParticipant from "./pages/admin/AdminParticipant";
@@ -50,6 +51,8 @@ export default function App() {
       <Route path={`/event/${slug}/register`} element={<CheckIn mode="register" />} />
       <Route path="/login" element={<Login />} />
       <Route path="/my" element={<MySpace />} />
+      <Route path="/sijil" element={<Certificate />} />
+      <Route path="/certificate" element={<Certificate />} />
 
       {/* Admin */}
       <Route path="/admin" element={<AdminDashboard />} />

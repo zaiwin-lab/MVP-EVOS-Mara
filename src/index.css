@@ -225,6 +225,37 @@
   }
 }
 
+/* ─────────────────────────────────────────────────────────────
+   Printing. Only the e-certificate is meant to reach paper, and it is
+   a landscape A4 sheet, so the page furniture is dropped and the
+   certificate is released from its on-screen frame.
+   ───────────────────────────────────────────────────────────── */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  header,
+  footer {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  /* The card sits inside a max-width wrapper on screen; on paper it is
+     the page. */
+  #sijil {
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    aspect-ratio: 297 / 210;
+    break-inside: avoid;
+  }
+}
+
 /* Respect reduced-motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *,

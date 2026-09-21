@@ -424,6 +424,52 @@ const DICT: Record<string, Localized> = {
   metaPerCoop: { en: "Per co-operative", bm: "Setiap Koperasi", zh: "每家合作社", iban: "Tiap Koperasi" },
   homeAria: { en: "ProgramOS Lite — Home", bm: "ProgramOS Lite — Utama", zh: "ProgramOS Lite — 首页", iban: "ProgramOS Lite — Utama" },
 
+  // ── e-Certificate ──
+  certEyebrow: { en: "Certificate of participation", bm: "Sijil Penyertaan", zh: "参与证书", iban: "Sijil Penyerta" },
+  certTitle: { en: "Your e-certificate", bm: "E-Sijil Anda", zh: "您的电子证书", iban: "E-Sijil Nuan" },
+  certHint: {
+    en: "Print it, or choose “Save as PDF” in the print dialog to keep a copy.",
+    bm: "Cetak, atau pilih “Save as PDF” dalam tetingkap cetak untuk menyimpan salinan.",
+    zh: "可直接打印，或在打印窗口选择「另存为 PDF」保存副本。",
+    iban: "Chetak, tauka pilih “Save as PDF” ba tetingkap chetak kena nyimpan salin.",
+  },
+  certPrint: { en: "Print / Save as PDF", bm: "Cetak / Simpan PDF", zh: "打印／保存 PDF", iban: "Chetak / Simpan PDF" },
+  certBadge: { en: "Certificate of Participation", bm: "Sijil Penyertaan", zh: "参与证书", iban: "Sijil Penyerta" },
+  certHeading: {
+    en: "This is to certify that",
+    bm: "Dengan ini disahkan bahawa",
+    zh: "兹证明",
+    iban: "Ditu disahka bahawa",
+  },
+  certBody: {
+    en: "attended the programme in full and completed it.",
+    bm: "telah menghadiri program ini sepenuhnya dan menyempurnakannya.",
+    zh: "已全程出席并完成本课程。",
+    iban: "udah datai ba program tu penuh sereta ngelamatka iya.",
+  },
+  certIssued: { en: "Issued", bm: "Dikeluarkan", zh: "签发日期", iban: "Dikeluarka" },
+  certVerifyNote: {
+    en: "Serial {serial}. The organiser can confirm it against the programme attendance record.",
+    bm: "Siri {serial}. Penganjur boleh mengesahkannya dengan rekod kehadiran program.",
+    zh: "编号 {serial}。主办单位可对照课程出席记录核实。",
+    iban: "Siri {serial}. Penganjur ulih ngesahka iya enggau rekod kehadiran program.",
+  },
+  certLockedTitle: {
+    en: "Not available yet",
+    bm: "Belum Tersedia",
+    zh: "尚未可用",
+    iban: "Apin Sedia",
+  },
+  certLockedBody: {
+    en: "Your e-certificate appears here once your attendance on the programme day has been recorded.",
+    bm: "E-sijil anda akan dipaparkan di sini sebaik kehadiran anda pada hari program direkodkan.",
+    zh: "当您在课程当天的出席记录完成后，电子证书就会显示在这里。",
+    iban: "E-sijil nuan deka pegari ditu lebuh kehadiran nuan ba hari program udah direkod.",
+  },
+  msCertificate: { en: "My e-certificate", bm: "E-Sijil Saya", zh: "我的电子证书", iban: "E-Sijil Aku" },
+  msCertReady: { en: "Ready to download", bm: "Sedia dimuat turun", zh: "可供下载", iban: "Sedia diambi" },
+  msCertPending: { en: "After the programme day", bm: "Selepas hari program", zh: "课程当天之后", iban: "Udah hari program" },
+
   // ── Site chrome ──
   headerCta: { en: "Sign In / Check-In", bm: "Log Masuk / Check-In", zh: "登录／签到", iban: "Login / Check-In" },
   headerCtaShort: { en: "Check-In", bm: "Check-In", zh: "签到", iban: "Check-In" },

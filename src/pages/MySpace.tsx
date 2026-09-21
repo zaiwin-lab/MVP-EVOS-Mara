@@ -160,6 +160,32 @@ export default function MySpace() {
           </Link>
         </div>
 
+        {/* The e-certificate. Shown either way so people know it exists and
+            what it waits on, rather than wondering where it went. */}
+        <Link
+          to="/sijil"
+          className={`mt-3 flex items-center gap-4 rounded-2xl border p-5 transition ${
+            attended
+              ? "border-gold-200 bg-gold-50 hover:-translate-y-0.5 hover:shadow-lift"
+              : "border-slate2-line bg-white"
+          }`}
+        >
+          <span
+            className={`icon-tile h-11 w-11 shrink-0 ${
+              attended ? "bg-gold-400 text-navy-950" : "bg-sand-100 text-slate2-dim"
+            }`}
+          >
+            <Icon name={attended ? "checkCircle" : "clock"} className="h-5 w-5" />
+          </span>
+          <div className="min-w-0">
+            <div className="text-sm font-bold text-navy-950">{t("msCertificate")}</div>
+            <div className="text-xs text-slate2-mut">
+              {attended ? t("msCertReady") : t("msCertPending")}
+            </div>
+          </div>
+          <Icon name="arrowRight" className={`ml-auto h-5 w-5 shrink-0 ${attended ? "text-gold-700" : "text-slate2-dim"}`} />
+        </Link>
+
         <p className="mt-6 text-center text-xs text-navy-400">{eventConfig.eventName} · {eventConfig.venue}</p>
       </section>
     </SiteLayout>

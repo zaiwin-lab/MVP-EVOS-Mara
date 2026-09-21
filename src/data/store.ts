@@ -43,6 +43,12 @@ export interface Store {
   saveReflection(reflection: Reflection): Promise<void>;
   /** Mark attendance for a session; no-op (returns false) if already marked. */
   markAttendance(participantId: string, session: string): Promise<boolean>;
+  /**
+   * Undo an attendance mark. Check-in is self-service, so an organiser needs
+   * a way to correct someone who marked themselves present by mistake —
+   * especially once the e-certificate depends on it.
+   */
+  clearAttendance(participantId: string, session: string): Promise<void>;
   /** Permanently remove a participant and all of their related records. */
   deleteParticipant(id: string): Promise<void>;
   /** Record that a participant used a prompt; bumps the count if repeated. */
@@ -203,6 +209,14 @@ class LocalAdapter implements Store {
       { participantId, session, markedAt: now() },
     ]);
     return true;
+  }
+
+  async clearAttendance(participantId: string, session: string): Promise<void> {
+    const list = read<AttendanceRecord[]>(K.attendance, []);
+    write(
+      K.attendance,
+      list.filter((a) => !(a.participantId === participantId && a.session === session))
+    );
   }
 
   async updateParticipant(
@@ -404,6 +418,10 @@ class SupabaseAdapter implements Store {
       .insert({ id, participant_id: participantId, session, data: record });
     // Unique PK on id → a duplicate insert errors, which is our dup-prevention.
     return !error;
+  }
+
+  async clearAttendance(participantId: string, session: string): Promise<void> {
+    await this.db.from("attendance").delete().eq("id", `${participantId}:${session}`);
   }
 
   async updateParticipant(

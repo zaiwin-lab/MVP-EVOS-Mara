@@ -6,6 +6,8 @@ import type { ParticipantRecord, PromptAttempt } from "../../data/types";
 import { WORK_AREAS, getWorkArea, PROMPT_COUNT } from "../../content/promptLibrary";
 import { READINESS_BANDS } from "../../content/readiness";
 import { Icon } from "../../components/Icon";
+
+const SESSION = eventConfig.attendanceSessions[0].id;
 import { QRCodeCard } from "../../components/QRCode";
 import { areaAccent } from "../../lib/accents";
 import { pick as pickLang, type Localized } from "../../context/I18nContext";
@@ -84,6 +86,7 @@ function Dashboard({ onSignOut }: { onSignOut: () => void }) {
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
   const [prompts, setPrompts] = useState<PromptAttempt[]>([]);
 
   const load = () => {
@@ -107,6 +110,39 @@ function Dashboard({ onSignOut }: { onSignOut: () => void }) {
         .filter(Boolean).some((v) => String(v).toLowerCase().includes(t));
     });
   }, [records, q]);
+
+  /**
+   * Check-in is self-service, so the organiser needs the last word on who
+   * actually attended — the e-certificate is issued off this flag.
+   */
+  async function toggleAttendance(r: ParticipantRecord) {
+    const id = r.participant.id;
+    const present = r.attendance.some((a) => a.session === SESSION);
+    if (present && !window.confirm(`Tandakan ${r.participant.fullName} sebagai TIDAK hadir? E-sijil mereka akan ditarik balik.`)) return;
+    setBusyId(id);
+    // Optimistic: the row flips immediately, then reloads from the store.
+    setRecords((prev) =>
+      prev.map((x) =>
+        x.participant.id !== id
+          ? x
+          : {
+              ...x,
+              attendance: present
+                ? x.attendance.filter((a) => a.session !== SESSION)
+                : [...x.attendance, { participantId: id, session: SESSION, markedAt: new Date().toISOString() }],
+            }
+      )
+    );
+    try {
+      if (present) await store.clearAttendance(id, SESSION);
+      else await store.markAttendance(id, SESSION);
+    } catch (e) {
+      console.error(e);
+      load();
+    } finally {
+      setBusyId(null);
+    }
+  }
 
   async function handleDelete(r: ParticipantRecord) {
     if (!window.confirm(`Padam ${r.participant.fullName} dan semua rekod berkaitan? Tindakan ini tidak boleh diundur.`)) return;
@@ -244,7 +280,9 @@ function Dashboard({ onSignOut }: { onSignOut: () => void }) {
                           </td>
                           <td className="px-2 py-2.5 text-navy-700">{p.coopName || p.companyName || "—"}</td>
                           <td className="px-2 py-2.5 text-navy-600">{p.role || "—"}</td>
-                          <td className="px-2 py-2.5">{r.attendance.length ? <span className="chip bg-emerald-100 text-emerald-700">Hadir</span> : <span className="chip bg-navy-50 text-navy-400">—</span>}</td>
+                          <td className="px-2 py-2.5">
+                            <AttendanceToggle record={r} busy={busyId === p.id} onToggle={() => toggleAttendance(r)} />
+                          </td>
                           <td className="px-2 py-2.5 font-bold text-navy-900">{p.readinessScore != null ? `${p.readinessScore}` : "—"}</td>
                           <td className="px-2 py-2.5 text-navy-600">{area ? bm(area.title) : "—"}</td>
                           <td className="px-2 py-2.5">
@@ -546,4 +584,38 @@ function exportPromptCsv(prompts: PromptAttempt[], records: ParticipantRecord[])
   a.download = `aktiviti-prompt-${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+
+/**
+ * Present / absent for one participant. A button rather than a badge: the
+ * organiser is the one who decides, and the e-certificate follows this.
+ */
+function AttendanceToggle({
+  record,
+  busy,
+  onToggle,
+}: {
+  record: ParticipantRecord;
+  busy: boolean;
+  onToggle: () => void;
+}) {
+  const present = record.attendance.some((a) => a.session === SESSION);
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      disabled={busy}
+      aria-pressed={present}
+      title={present ? "Klik untuk tandakan tidak hadir" : "Klik untuk tandakan hadir"}
+      className={`chip transition disabled:opacity-40 ${
+        present
+          ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
+          : "bg-navy-50 text-navy-400 hover:bg-navy-100 hover:text-navy-600"
+      }`}
+    >
+      <Icon name={present ? "checkCircle" : "clock"} className="h-3.5 w-3.5" />
+      {present ? "Hadir" : "Tandakan"}
+    </button>
+  );
 }
