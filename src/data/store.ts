@@ -338,6 +338,31 @@ class LocalAdapter implements Store {
 // ── Supabase adapter ─────────────────────────────────────────
 // Stores rich objects as jsonb `data` columns to keep mapping trivial
 // and reliable. See supabase/schema.sql.
+/**
+ * The flat, browsable columns on `participants`.
+ *
+ * The row carries the participant twice: `data` is the jsonb the app reads,
+ * and these columns are what a human sees when they open the table in
+ * Supabase. They are written on every insert and update — an earlier version
+ * only ever backfilled them by migration, so anyone registering afterwards
+ * landed as a row of blanks next to a populated jsonb.
+ */
+function participantColumns(p: Participant) {
+  return {
+    mobile: normalizeMobile(p.mobile),
+    ref: p.ref ?? null,
+    full_name: p.fullName ?? null,
+    email: p.email ?? null,
+    coop_name: p.coopName ?? p.companyName ?? null,
+    role: p.role ?? null,
+    readiness_score: p.readinessScore ?? null,
+    readiness_category: p.readinessCategory ?? null,
+    selected_work_area: p.selectedWorkArea ?? null,
+    checked_in_at: p.checkedInAt ?? null,
+    updated_at: now(),
+  };
+}
+
 class SupabaseAdapter implements Store {
   mode = "supabase" as const;
   private db = supabase!;
@@ -404,8 +429,8 @@ class SupabaseAdapter implements Store {
     await this.db.from("participants").insert({
       id: participant.id,
       event_slug: participant.eventSlug,
-      mobile: normalizeMobile(participant.mobile),
       data: participant,
+      ...participantColumns(participant),
     });
     return participant;
   }
@@ -437,7 +462,7 @@ class SupabaseAdapter implements Store {
     const updated: Participant = { ...(data[0].data as Participant), ...patch, updatedAt: now() };
     await this.db
       .from("participants")
-      .update({ mobile: normalizeMobile(updated.mobile), data: updated })
+      .update({ data: updated, ...participantColumns(updated) })
       .eq("id", id);
     return updated;
   }
