@@ -37,8 +37,20 @@ export default function Programme() {
                 <div className="mt-0.5 font-display text-[15px] font-bold leading-snug text-navy-950">
                   {pick(a.title)}
                 </div>
-                {a.speaker && (
-                  <div className="mt-1 text-[12.5px] font-semibold text-navy-700">{a.speaker}</div>
+                {a.speakers && (
+                  <div className="mt-1.5">
+                    {a.speakerLabel && (
+                      <div className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-slate2-dim">
+                        {pick(a.speakerLabel)}
+                      </div>
+                    )}
+                    {a.speakers.map((sp) => (
+                      <div key={sp.name} className="mt-0.5">
+                        <div className="text-[13px] font-bold text-navy-800">{sp.name}</div>
+                        {sp.org && <div className="text-[12px] text-slate2-mut">{sp.org}</div>}
+                      </div>
+                    ))}
+                  </div>
                 )}
                 {desc && <p className="mt-1 text-[13px] leading-relaxed text-slate2-mut">{desc}</p>}
               </li>

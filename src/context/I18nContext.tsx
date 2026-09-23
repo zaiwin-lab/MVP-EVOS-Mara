@@ -412,11 +412,13 @@ const DICT: Record<string, Localized> = {
   },
   ctaRegisterCheckIn: { en: "Register / Check-In", bm: "Daftar / Check-In", zh: "报名／签到", iban: "Daftar / Check-In" },
   ctaExplorePromptHub: { en: "Explore the Prompt Hub", bm: "Terokai Prompt Hub", zh: "探索提示中心", iban: "Uji Peda Prompt Hub" },
+  // The "not a compulsory KPI" clause belonged to the 90-day section, which is
+  // gone. Under a schedule it answered a question nobody was asking.
   pgScheduleNote: {
-    en: "Tentative schedule — session times may shift during the programme. A light guide, not a compulsory KPI.",
-    bm: "Jadual tentatif — masa sesi mungkin diubah sepanjang program. Panduan ringkas, bukan KPI wajib.",
-    zh: "暂定日程——各环节时间可能在课程期间调整。这是轻松的指引，不是硬性 KPI。",
-    iban: "Jadual tentatif — jam sesi engka diubah sepemanjai program. Panduan ti pandak, ukai KPI ti mesti.",
+    en: "Tentative schedule — session times may shift during the programme.",
+    bm: "Jadual tentatif — masa sesi mungkin diubah sepanjang program.",
+    zh: "暂定日程——各环节时间可能在课程期间调整。",
+    iban: "Jadual tentatif — jam sesi engka diubah sepemanjai program.",
   },
   metaParticipants: { en: "{n} Participants", bm: "{n} Peserta", zh: "{n} 位参与者", iban: "{n} Peserta" },
   metaLimitedPlaces: { en: "Limited places", bm: "Tempat Terhad", zh: "名额有限", iban: "Endur Mimit" },
@@ -813,6 +815,19 @@ const DICT: Record<string, Localized> = {
     bm: "Slide, template dan bahan rujukan program — semuanya dalam satu folder Google Drive.",
     zh: "课程的简报、模板与参考资料，全都放在同一个 Google 云端硬盘文件夹。",
     iban: "Slide, template enggau bahan rujukan program — semua dalam siti folder Google Drive.",
+  },
+
+  footerBuiltBy: {
+    en: "Designed & Built by KOBIS Berhad",
+    bm: "Direka & Dibina oleh KOBIS Berhad",
+    zh: "由 KOBIS Berhad 设计与开发",
+    iban: "Direka & Digaga KOBIS Berhad",
+  },
+  footerRights: {
+    en: "© 2026 ProgramOS Lite. All rights reserved.",
+    bm: "© 2026 ProgramOS Lite. Hak cipta terpelihara.",
+    zh: "© 2026 ProgramOS Lite. 版权所有。",
+    iban: "© 2026 ProgramOS Lite. Hak cipta ditagang.",
   },
 
   // ── Work area page ──

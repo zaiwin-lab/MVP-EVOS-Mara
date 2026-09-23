@@ -35,12 +35,8 @@ export function ProgramWordmark({ inverted = false }: { inverted?: boolean }) {
 /** Small text chips for the three partners (no invented logos). */
 export function PartnerStrip({ className = "" }: { className?: string }) {
   return (
-    <div className={`flex flex-wrap items-center gap-x-3 gap-y-1 ${className}`}>
-      {eventConfig.partners.map((p) => (
-        <span key={p.name} className="text-[11px] font-bold uppercase tracking-wide">
-          {p.name}
-        </span>
-      ))}
+    <div className={`text-[11px] font-bold uppercase tracking-wide ${className}`}>
+      {eventConfig.partners.map((p) => p.name).join(" · ")}
     </div>
   );
 }
@@ -324,20 +320,27 @@ export function SiteFooter() {
           />
         </div>
 
-        <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-[11.5px] text-white/50">{eventConfig.footerSecondary}</p>
-            <p className="text-[11.5px] text-white/40">{eventConfig.copyright}</p>
+            <p className="text-[11.5px] text-white/50">{t("footerBuiltBy")}</p>
+            <a
+              href="https://www.kobisberhad.com"
+              target="_blank"
+              rel="noreferrer"
+              className="text-[11.5px] font-semibold text-white/65 underline-offset-4 transition hover:text-gold-300 hover:underline"
+            >
+              www.kobisberhad.com
+            </a>
           </div>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            {eventConfig.hashtags.map((h) => (
-              <span key={h} className="text-[11px] font-semibold text-white/35">{h}</span>
-            ))}
-            {/* Organiser entry point. Kept quiet rather than hidden — the gate
-                is a convenience, not access control, so obscurity buys nothing. */}
+
+          <div className="sm:text-right">
+            <p className="text-[11.5px] text-white/50">{t("footerRights")}</p>
+            {/* Organiser entry point, kept quiet and subordinate to the
+                copyright rather than hidden — the gate is a convenience, not
+                access control, so obscurity buys nothing. */}
             <Link
               to="/admin"
-              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-white/40 underline-offset-4 hover:text-gold-300 hover:underline"
+              className="mt-1 inline-flex items-center gap-1.5 text-[11px] font-semibold text-white/35 underline-offset-4 hover:text-gold-300 hover:underline"
             >
               <Icon name="lock" className="h-3 w-3" />
               {t("admin")}

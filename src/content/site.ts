@@ -33,84 +33,85 @@ export const NAV: NavItem[] = [
   { label: "Galeri Foto", to: "/galeri", key: "navGallery" },
 ];
 
+export interface Speaker {
+  /** Always with the honorific, exactly as it should print. */
+  name: string;
+  /** Organisation or role, on the line beneath. */
+  org?: string;
+}
+
 export interface AgendaItem {
   time: string;
   title: Localized;
   desc: Localized;
-  /** Who delivers it. Plain text — names are not translated. */
-  speaker?: string;
+  /** In running order. Names are not translated. */
+  speakers?: Speaker[];
+  /** Precedes the names — "Tetamu Jemputan" for the closing guest. */
+  speakerLabel?: Localized;
 }
 
-// The official programme for 24 September 2026, 8:30am – 5:00pm at Hotel
-// Serapi, Kuching. Descriptions are kept to one line: this is a timeline read
-// on a phone between sessions, not a brochure.
+// The official programme for 24 September 2026 at Hotel Serapi, Kuching.
+//
+// There is no opening speech: after registration the day begins directly with
+// the first session. The Chairman of ANGKASA Sarawak attends the closing only,
+// as an invited guest rather than a speaker or trainer.
+//
+// Descriptions are one line. This is a timeline read on a phone between
+// sessions, not a brochure.
 export const AGENDA: AgendaItem[] = [
   {
     time: "08:30 – 09:00",
     title: {
-      bm: "Pendaftaran & Ketibaan Peserta",
-      en: "Registration & QR Check-In",
-      zh: "报到与 QR 签到",
-      iban: "Pendaftaran enggau QR Check-In",
+      bm: "Ketibaan & Pendaftaran",
+      en: "Registration & Check-In",
+      zh: "报到与签到",
+      iban: "Datai & Pendaftaran",
     },
     desc: {
-      bm: "Peserta tiba, mendaftar dan membuat QR Check-In.",
-      en: "Participants arrive, register and complete QR Check-In.",
-      zh: "参加者抵达、报到并完成 QR 签到。",
-      iban: "Peserta datai, daftar lalu ngaga QR Check-In.",
+      bm: "Peserta tiba dan mendaftar.",
+      en: "Participants arrive and register.",
+      zh: "参加者抵达并报到。",
+      iban: "Peserta datai lalu daftar.",
     },
   },
   {
-    time: "09:00 – 09:20",
+    time: "09:00 – 10:00",
     title: {
-      bm: "Ucapan Aluan",
-      en: "Opening Remarks",
-      zh: "开幕致辞",
-      iban: "Jaku Pemuka",
+      bm: "Koperasi Bersedia Menghadapi Masa Hadapan",
+      en: "Future-Ready Co-operatives",
+      zh: "面向未来的合作社",
+      iban: "Koperasi Sedia Ngadap Maya Ila",
     },
-    speaker: "Encik Wan Azizan bin Wan Zainal Abidin",
+    speakers: [{ name: "Encik Zaiwin Kasim", org: "KOBIS Berhad" }],
     desc: {
-      bm: "Pengerusi ANGKASA Negeri Sarawak.",
-      en: "Chairman, ANGKASA Sarawak.",
-      zh: "ANGKASA 砂拉越主席。",
-      iban: "Pengerusi ANGKASA Menua Sarawak.",
+      bm: "Pendigitalan, AI dan hala tuju koperasi menghadapi masa hadapan.",
+      en: "Digitalisation, AI and how co-operatives can begin preparing for the future.",
+      zh: "数字化、AI，以及合作社如何着手为未来做准备。",
+      iban: "Pendigitalan, AI enggau jalai koperasi ngadap maya ila.",
     },
   },
   {
-    time: "09:20 – 10:30",
-    title: {
-      bm: "Sesi 1 — Koperasi Bersedia Menghadapi Masa Hadapan",
-      en: "Session 1 — Future-Ready Co-operatives",
-      zh: "第一节 — 面向未来的合作社",
-      iban: "Sesi 1 — Koperasi Sedia Ngadap Maya Ila",
-    },
-    speaker: "Encik Ahmad Zaiwin bin Mohd Kassim",
-    desc: {
-      bm: "Pendigitalan, AI dan peluang dalam ekonomi digital Sarawak — dan mengapa transformasi boleh bermula dengan satu bahagian dahulu.",
-      en: "Digitalisation, AI and opportunities in Sarawak's digital economy — and why transformation can begin with one practical area first.",
-      zh: "数字化、AI 与砂拉越数字经济的机会——以及为何转型可以先从一个实际领域开始。",
-      iban: "Pendigitalan, AI enggau peluang ba ekonomi digital Sarawak — enggau kebuah transformasi ulih berengkah ari siti bagi dulu.",
-    },
-  },
-  {
-    time: "10:30 – 10:45",
+    time: "10:00 – 10:15",
     title: { bm: "Minum Pagi", en: "Morning Break", zh: "上午茶点", iban: "Ngirup Pagi" },
     desc: { bm: "", en: "", zh: "", iban: "" },
   },
   {
-    time: "10:45 – 12:15",
+    time: "10:15 – 12:15",
     title: {
-      bm: "Sesi 2 — Aplikasi AI Praktikal untuk Koperasi",
-      en: "Session 2 — Practical AI for Co-operatives",
-      zh: "第二节 — 合作社的实用 AI",
-      iban: "Sesi 2 — Aplikasi AI Praktikal ke Koperasi",
+      bm: "Perkongsian SDEC",
+      en: "SDEC Sharing Session",
+      zh: "SDEC 分享环节",
+      iban: "Perkongsi SDEC",
     },
-    speaker: "Encik Azizul Azni",
+    speakers: [
+      { name: "Encik Muhammad Arif bin Seli" },
+      { name: "Encik Abdul Khalik" },
+    ],
     desc: {
-      bm: "Automasi operasi, peralatan pemasaran digital dan aplikasi AI yang membantu menjana hasil — termasuk demonstrasi secara langsung.",
-      en: "Practical AI tools for operations, digital marketing and revenue opportunities, including live demonstrations.",
-      zh: "用于营运、数字营销与增收的实用 AI 工具，包含现场示范。",
-      iban: "Automasi pengawa, peralatan pemasaran digital enggau aplikasi AI ti nulung ngasilka untung — enggau demonstrasi tekala nya.",
+      bm: "Ekosistem Digital & AI untuk Koperasi.",
+      en: "The digital and AI ecosystem for co-operatives.",
+      zh: "面向合作社的数字与 AI 生态系统。",
+      iban: "Ekosistem Digital & AI ke Koperasi.",
     },
   },
   {
@@ -119,72 +120,77 @@ export const AGENDA: AgendaItem[] = [
     desc: { bm: "", en: "", zh: "", iban: "" },
   },
   {
-    time: "13:15 – 14:45",
+    time: "13:15 – 14:15",
     title: {
-      bm: "Bengkel A — Pemilihan Satu Bahagian untuk Transformasi Digital",
-      en: "Workshop A — Choose One Area for Digital Transformation",
-      zh: "工作坊 A — 选定一个数字转型领域",
-      iban: "Bengkel A — Milih Siti Bagi ke Transformasi Digital",
+      bm: "AI Praktikal untuk Koperasi",
+      en: "Practical AI for Co-operatives",
+      zh: "合作社的实用 AI",
+      iban: "AI Praktikal ke Koperasi",
     },
-    speaker: "Encik Ahmad Zaiwin bin Mohd Kassim & Encik Azizul Azni",
+    speakers: [{ name: "Encik Mohd Rosyairi" }],
     desc: {
-      bm: "Pemetaan proses kerja, mengenal pasti permasalahan utama dan memadankan peralatan AI dengan fungsi sebenar koperasi — keahlian, operasi, pemasaran, kewangan dan perniagaan.",
-      en: "Process mapping, identifying key problems and matching suitable AI and digital tools to real co-operative work.",
-      zh: "流程梳理、找出核心问题，并把合适的 AI 与数字工具对接到合作社的实际工作。",
-      iban: "Memetaka proses pengawa, ngelala penanggul ti besai lalu nyamaka peralatan AI enggau pengawa koperasi ti amat.",
+      bm: "Aplikasi AI praktikal untuk kegunaan koperasi.",
+      en: "Practical AI applications for everyday co-operative work.",
+      zh: "可用于合作社日常工作的实用 AI 应用。",
+      iban: "Aplikasi AI praktikal ke pengawa koperasi.",
     },
   },
   {
-    time: "14:45 – 15:00",
+    time: "14:15 – 15:15",
+    title: {
+      bm: "Bengkel Transformasi",
+      en: "Transformation Workshop",
+      zh: "转型工作坊",
+      iban: "Bengkel Transformasi",
+    },
+    desc: {
+      bm: "Kenal pasti cabaran & bina penyelesaian bersama.",
+      en: "Identify the challenges and build solutions together.",
+      zh: "找出挑战，共同构建解决方案。",
+      iban: "Ngelala penanggul lalu ngaga penyelesai enggau pangan diri.",
+    },
+  },
+  {
+    time: "15:15 – 15:30",
     title: { bm: "Minum Petang", en: "Afternoon Break", zh: "下午茶点", iban: "Ngirup Lemai" },
     desc: { bm: "", en: "", zh: "", iban: "" },
   },
   {
-    time: "15:00 – 16:20",
+    time: "15:30 – 16:30",
     title: {
-      bm: "Bengkel B — Klinik Pelan Tindakan AI & Portal",
-      en: "Workshop B — AI Action Plan Clinic & Portal",
-      zh: "工作坊 B — AI 行动方案诊所与门户",
-      iban: "Bengkel B — Klinik Pelan Pengawa AI & Portal",
+      bm: "Bina Pelan Tindakan",
+      en: "Build an Action Plan",
+      zh: "制定行动方案",
+      iban: "Ngaga Pelan Pengawa",
     },
-    speaker: "Encik Azizul Azni",
     desc: {
-      bm: "Peserta meneroka Prompt Hub, memilih prompt yang berkaitan dengan tugas masing-masing dan menggunakan portal sebagai toolkit praktikal.",
-      en: "Participants explore the Prompt Hub, pick prompts relevant to their own work and use the portal as a practical toolkit.",
-      zh: "参加者探索提示中心，挑选与自己工作相关的提示，把门户当作实用工具箱。",
-      iban: "Peserta nguji Prompt Hub, milih prompt ti ngena enggau pengawa sida lalu ngena portal nya nyadi toolkit praktikal.",
+      bm: "Langkah seterusnya untuk koperasi anda.",
+      en: "The next steps for your co-operative.",
+      zh: "贵合作社接下来的步骤。",
+      iban: "Langkah ti datai ke koperasi nuan.",
     },
   },
   {
-    time: "16:20 – 16:45",
+    time: "16:30 – 17:00",
     title: {
-      bm: "Taklimat Hala Tuju Selepas Program",
-      en: "Next-Step Briefing",
-      zh: "后续方向简报",
-      iban: "Taklimat Jalai Udah Program",
+      bm: "Penyampaian Sijil & Majlis Penutupan",
+      en: "Certificate Presentation & Closing Ceremony",
+      zh: "颁发证书与闭幕仪式",
+      iban: "Nyerahka Sijil & Majlis Nutup",
     },
-    speaker: "Encik Ahmad Zaiwin bin Mohd Kassim",
-    desc: {
-      bm: "Panduan ringkas untuk terus menggunakan prompt, modul dan sumber AI selepas program, mengikut keperluan koperasi masing-masing.",
-      en: "A short guide to carrying on with the prompts, modules and AI resources after the programme, as each co-operative needs.",
-      zh: "课程之后如何依合作社需要继续使用提示、模块与 AI 资源的简短指引。",
-      iban: "Panduan ti pandak kena terus ngena prompt, modul enggau bahan AI udah program, nitihka pengingin koperasi.",
+    speakerLabel: {
+      bm: "Tetamu Jemputan",
+      en: "Invited Guest",
+      zh: "受邀嘉宾",
+      iban: "Pengabang Dikangau",
     },
-  },
-  {
-    time: "16:45 – 17:00",
-    title: {
-      bm: "Penyampaian Sijil & Penutup",
-      en: "Certificate Presentation & Closing",
-      zh: "颁发证书与闭幕",
-      iban: "Nyerahka Sijil & Nutup",
-    },
-    desc: {
-      bm: "Penyampaian sijil penyertaan dan penutup program.",
-      en: "Presentation of participation certificates and closing.",
-      zh: "颁发出席证书并为课程闭幕。",
-      iban: "Nyerahka sijil penyerta lalu nutup program.",
-    },
+    speakers: [
+      {
+        name: "Encik Wan Azizan bin Wan Zainal Abidin",
+        org: "Pengerusi ANGKASA Negeri Sarawak",
+      },
+    ],
+    desc: { bm: "", en: "", zh: "", iban: "" },
   },
 ];
 
