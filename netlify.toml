@@ -7,6 +7,32 @@
 [build.environment]
   NODE_VERSION = "22"
 
+# The SPA fallback below answers ANY unmatched path with index.html and a 200,
+# which the edge is free to cache. Once it has stored that for an asset path
+# (/sijil.jpg, /qr/*.png), the entry survives later deploys that ship the real
+# file. Keeping index.html itself revalidated stops one stale HTML body from
+# standing in for an image indefinitely.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Real files under these paths are immutable per deploy and safe to cache hard.
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/qr/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/logos/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
 # SPA fallback — all routes render index.html so deep links
 # (e.g. /check-in from the QR code) work on refresh.
 [[redirects]]

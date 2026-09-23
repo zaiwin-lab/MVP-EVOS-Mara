@@ -67,6 +67,21 @@ export interface RoleOption {
  * resting on the artwork's ruled line instead of drifting above it as the
  * type size changes.
  */
+/**
+ * Cache-buster for files served out of `public/`.
+ *
+ * Netlify's SPA fallback answers a missing path with index.html and a 200,
+ * and a 200 is cacheable. Any asset requested before it existed therefore
+ * leaves an HTML entry in the edge cache under its own path, and that entry
+ * outlives every later deploy that ships the real file — the deploy permalink
+ * serves the image while the site's own hostname keeps serving the HTML.
+ *
+ * The query string is part of the cache key, so bumping it asks the edge for
+ * a path it has never answered. Bump when an asset comes back as HTML.
+ */
+const ASSET_V = "2";
+const asset = (path: string) => `${path}?v=${ASSET_V}`;
+
 export interface CertificateField {
   /** Bottom of the line, as a percentage of the height. */
   bottomPct: number;
@@ -216,15 +231,15 @@ export const eventConfig: EventConfig = {
   hashtags: ["#AIuntukKoperasi", "#ProgramOSLite", "#BersamaKoperasi", "#MasaDepanBersama"],
   partners: [
     {
-      name: "ANGKASA", url: "https://www.angkasa.coop", logo: "/logos/angkasa.png", logoScale: 2.45,
+      name: "ANGKASA", url: "https://www.angkasa.coop", logo: asset("/logos/angkasa.png"), logoScale: 2.45,
       role: { bm: "Penganjur", en: "Organiser", zh: "主办单位", iban: "Penganjur" },
     },
     {
-      name: "KOBIS Berhad", url: "https://www.kobisberhad.com", logo: "/logos/kobis.png", logoScale: 1.4,
+      name: "KOBIS Berhad", url: "https://www.kobisberhad.com", logo: asset("/logos/kobis.png"), logoScale: 1.4,
       role: { bm: "Kolaborator Strategik", en: "Strategic Collaborator", zh: "战略协作伙伴", iban: "Kolaborator Strategik" },
     },
     {
-      name: "SDEC", url: "https://sdec.com.my", logo: "/logos/sdec.png", logoScale: 1.7,
+      name: "SDEC", url: "https://sdec.com.my", logo: asset("/logos/sdec.png"), logoScale: 1.7,
       role: { bm: "Rakan Pendigitalan", en: "Digitalisation Partner", zh: "数码化伙伴", iban: "Rakan Pendigitalan" },
     },
   ],
@@ -293,7 +308,7 @@ export const eventConfig: EventConfig = {
     // The organiser's artwork. Measured off the supplied file: the upper gold
     // rule sits at 44.45% of the height, the lower one at 52.65%, and both
     // run from 21.9% to 78.1% across. The two fields below rest on those.
-    artworkUrl: "/sijil.jpg",
+    artworkUrl: asset("/sijil.jpg"),
     fieldInsetPct: 22,
     // Both lines share one ink and one weight so they read as a pair. The
     // colour is the artwork's own: sampling the core of the strokes in "This
