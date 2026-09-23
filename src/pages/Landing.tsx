@@ -1,26 +1,32 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { eventConfig } from "../config/eventConfig";
-import { FEATURES, QUICK_LINKS } from "../content/site";
-import { WORK_AREAS, PROMPT_COUNT } from "../content/promptLibrary";
-import { READINESS_AREAS } from "../content/readiness";
-import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
+import { AGENDA, FAQS } from "../content/site";
+import { WORK_AREAS } from "../content/promptLibrary";
+import { SiteLayout, SITE_WRAP, SectionHead } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { areaAccent } from "../lib/accents";
 import { useI18n } from "../context/I18nContext";
 
-/** Hero meta strip. Labels with a key are resolved at render time. */
-const META = [
-  { icon: "calendar", label: eventConfig.dates, sub: eventConfig.weekday },
-  { icon: "location", label: eventConfig.venue, sub: eventConfig.venueCity },
-  { icon: "users", labelKey: "metaParticipants", labelN: eventConfig.expectedParticipants, subKey: "metaLimitedPlaces" },
-  { icon: "team", labelKey: "metaReps", labelN: eventConfig.maxPerCoop, subKey: "metaPerCoop" },
-] as const;
+/**
+ * The home page answers four questions and stops:
+ * where do I check in, what is happening today, which prompts are for me,
+ * and where are the modules.
+ *
+ * It used to answer them several times over — a feature grid, a quick-access
+ * grid and a work-area grid all led to the same places. Six ways into the same
+ * content is not six times the help; it is a decision the reader has to make
+ * before they can start.
+ */
+
+const HOME_FAQS = FAQS.filter((f) => f.home);
 
 export default function Landing() {
   const { t, pick } = useI18n();
+
   return (
     <SiteLayout>
-      {/* ── Hero ─────────────────────────────────────────────── */}
+      {/* ── 1 · Hero ─────────────────────────────────────────── */}
       <section className="hero-glow relative overflow-hidden bg-navy-950 text-white">
         <div className="hero-grid pointer-events-none absolute inset-0" />
 
@@ -40,138 +46,182 @@ export default function Landing() {
             {pick(eventConfig.heroSubline)}
           </p>
 
-          {/* Event meta */}
-          {/* CTAs */}
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          {/* Two CTAs, not five. The first is what someone does on arrival,
+              the second is what they do for the rest of the day. */}
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link to="/check-in" className="btn-gold px-7 py-3.5 text-base">
-              {t("ldStartJourney")}
-              <Icon name="arrowRight" className="h-5 w-5" />
+              <Icon name="qr" className="h-5 w-5" /> {t("ldCheckInCta")}
             </Link>
-            <Link to="/sumber" className="btn-on-dark">
-              <Icon name="book" className="h-4 w-4" /> {t("ldAccessModules")}
-            </Link>
-            <Link to="/galeri" className="btn-on-dark">
-              <Icon name="slides" className="h-4 w-4" /> {t("ldPhotoGallery")}
+            <Link to="/prompt-hub" className="btn-on-dark px-6 py-3.5">
+              <Icon name="spark" className="h-4 w-4" /> {t("ldOpenHub")}
             </Link>
           </div>
 
-          {/* Facts, under a hairline — the Sales Portal stat-row device. */}
-          <div className="mt-10 border-t border-white/10 pt-6">
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-5 sm:flex sm:flex-wrap sm:gap-x-12">
-              {META.map((m) => {
-                const label = "labelKey" in m ? t(m.labelKey).replace("{n}", String(m.labelN)) : m.label;
-                const sub = "subKey" in m ? t(m.subKey) : m.sub;
-                return (
-                  <div key={m.icon}>
-                    <dt className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
-                      <Icon name={m.icon} className="h-3.5 w-3.5 text-gold-400" />
-                      {sub}
-                    </dt>
-                    <dd className="mt-1.5 text-[15px] font-bold leading-tight text-white">{label}</dd>
-                  </div>
-                );
-              })}
-            </dl>
+          {/* Where and when, on one line rather than as a four-column stat rack. */}
+          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-white/10 pt-6 text-[13.5px] font-semibold text-white/70">
+            <span className="inline-flex items-center gap-2">
+              <Icon name="calendar" className="h-4 w-4 shrink-0 text-gold-400" />
+              {eventConfig.dates}
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <Icon name="location" className="h-4 w-4 shrink-0 text-gold-400" />
+              {eventConfig.venue}, {eventConfig.venueCity}
+            </span>
+            <span className="inline-flex items-center gap-2 text-white/45">
+              {eventConfig.partners.map((p) => p.name).join(" × ")}
+            </span>
           </div>
         </div>
       </section>
 
-      {/* ── Feature cards ────────────────────────────────────── */}
-      <section className={`${SITE_WRAP} py-14 lg:py-20`}>
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="section-eyebrow">{t("ldFeatEyebrow")}</span>
-          <h2 className="h-section mt-4">{t("ldFeatTitle")}</h2>
-          <p className="lede mx-auto mt-3 max-w-xl">{t("ldFeatDesc")}</p>
-        </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map((f) => (
-            <Link key={f.to + pick(f.title)} to={f.to} className="card-hover group flex flex-col gap-3 p-6">
-              <span className="icon-tile h-11 w-11 bg-gold-400/12 text-gold-600 ring-1 ring-inset ring-gold-400/20">
-                <Icon name={f.icon} className="h-5 w-5" />
-              </span>
-              <div className="font-display text-[17px] font-extrabold tracking-[-0.01em] text-navy-950">{pick(f.title)}</div>
-              <p className="text-sm leading-relaxed text-slate2-mut">{pick(f.desc)}</p>
-              <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[13px] font-bold text-navy-700 transition group-hover:gap-2 group-hover:text-gold-600">
-                {t("ldExplore")} <Icon name="arrowRight" className="h-4 w-4" />
-              </span>
-            </Link>
+      {/* ── 2 · Today's programme ────────────────────────────── */}
+      <section id="program" className={`${SITE_WRAP} scroll-mt-20 py-12 lg:py-16`}>
+        <SectionHead
+          eyebrow={t("ldTodayEyebrow")}
+          title={t("ldTodayTitle")}
+          lede={`${eventConfig.time} · ${eventConfig.venue}`}
+        />
+
+        {/* A timeline rather than a page of its own: the whole day is eight
+            rows, which is less than the link it used to sit behind. */}
+        <ol className="mx-auto mt-9 max-w-2xl border-l-2 border-slate2-line pl-5 sm:pl-6">
+          {AGENDA.map((a, i) => (
+            <li key={i} className="relative py-3.5 first:pt-0 last:pb-0">
+              <span
+                className="absolute -left-[26px] top-4 h-2.5 w-2.5 rounded-full bg-gold-400 ring-4 ring-[--page] first:top-1 sm:-left-[30px]"
+                aria-hidden="true"
+              />
+              <div className="font-display text-[12px] font-extrabold tabular-nums tracking-[0.02em] text-gold-700">
+                {a.time}
+              </div>
+              <div className="mt-0.5 font-display text-[15px] font-bold leading-snug text-navy-950">
+                {pick(a.title)}
+              </div>
+              <p className="mt-0.5 text-[13px] leading-relaxed text-slate2-mut">{pick(a.desc)}</p>
+            </li>
           ))}
+        </ol>
+
+        <p className="mx-auto mt-5 max-w-3xl text-center text-xs text-slate2-dim">{t("pgScheduleNote")}</p>
+      </section>
+
+      {/* ── 3 · The six work areas — the centrepiece ──────────── */}
+      <section className="border-y border-slate2-line bg-white py-12 lg:py-16">
+        <div className={SITE_WRAP}>
+          <SectionHead
+            eyebrow={t("ldToolkitEyebrow")}
+            title={t("ldToolkitTitle")}
+            lede={t("ldToolkitDesc")}
+          />
+
+          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {WORK_AREAS.map((a) => {
+              const ac = areaAccent(a.accent);
+              return (
+                <Link key={a.id} to={`/prompt-hub/${a.id}`} className="card-hover group flex flex-col gap-3 p-5">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className={`icon-tile h-11 w-11 ${ac.badge}`}>
+                      <Icon name={a.icon} className="h-5 w-5" />
+                    </span>
+                    <span className="ordinal">{a.code}</span>
+                  </div>
+                  <div className="font-display text-[15.5px] font-extrabold tracking-[-0.01em] text-navy-950">
+                    {pick(a.title)}
+                  </div>
+                  <p className="text-[13px] leading-relaxed text-slate2-mut">{pick(a.blurb)}</p>
+                  <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[12.5px] font-bold text-navy-700 transition group-hover:gap-2 group-hover:text-gold-600">
+                    {t("ldMissionsChip")} <Icon name="arrowRight" className="h-4 w-4" />
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* ── 4 · Not sure where to start? ──────────────────── */}
+          <div className="mx-auto mt-10 flex max-w-3xl flex-col items-start gap-4 rounded-2xl border border-slate2-line bg-sand-50 p-6 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+            <div className="flex items-start gap-3">
+              <span className="icon-tile h-10 w-10 shrink-0 bg-gold-100 text-gold-700 ring-1 ring-inset ring-gold-200">
+                <Icon name="spark" className="h-5 w-5" />
+              </span>
+              <div>
+                <h3 className="font-display text-[15.5px] font-extrabold text-navy-950">{t("phUnsure")}</h3>
+                <p className="mt-0.5 text-[13px] leading-relaxed text-slate2-mut">{t("rdShortIntro")}</p>
+              </div>
+            </div>
+            <Link to="/readiness" className="btn-outline shrink-0 text-sm">
+              {t("rdUnsureCta")} <Icon name="arrowRight" className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* ── Quick access ─────────────────────────────────────── */}
-      <section className="border-y border-slate2-line bg-white py-14 lg:py-20">
+      {/* ── 5 · Take it home ─────────────────────────────────── */}
+      <section className={`${SITE_WRAP} py-12 lg:py-16`}>
+        <SectionHead eyebrow={t("ldTakeEyebrow")} title={t("ldTakeTitle")} />
+
+        <div className="mx-auto mt-10 grid max-w-3xl gap-4 sm:grid-cols-2">
+          <Link to="/sumber" className="card-hover group flex flex-col gap-3 p-6">
+            <span className="icon-tile h-11 w-11 bg-navy-900 text-gold-300">
+              <Icon name="book" className="h-5 w-5" />
+            </span>
+            <div className="font-display text-[17px] font-extrabold tracking-[-0.01em] text-navy-950">
+              {t("navModules")}
+            </div>
+            <p className="text-sm leading-relaxed text-slate2-mut">{t("ldModulesCardDesc")}</p>
+            <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[13px] font-bold text-navy-700 transition group-hover:gap-2 group-hover:text-gold-600">
+              {t("ldExplore")} <Icon name="arrowRight" className="h-4 w-4" />
+            </span>
+          </Link>
+
+          <Link to="/galeri" className="card-hover group flex flex-col gap-3 p-6">
+            <span className="icon-tile h-11 w-11 bg-navy-900 text-gold-300">
+              <Icon name="slides" className="h-5 w-5" />
+            </span>
+            <div className="font-display text-[17px] font-extrabold tracking-[-0.01em] text-navy-950">
+              {t("navGallery")}
+            </div>
+            <p className="text-sm leading-relaxed text-slate2-mut">{t("ldGalleryCardDesc")}</p>
+            <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[13px] font-bold text-navy-700 transition group-hover:gap-2 group-hover:text-gold-600">
+              {t("ldExplore")} <Icon name="arrowRight" className="h-4 w-4" />
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      {/* ── 6 · Three questions, no FAQ page ─────────────────── */}
+      <section id="faq" className="scroll-mt-20 border-t border-slate2-line bg-white py-12 lg:py-16">
         <div className={SITE_WRAP}>
-          <div className="mx-auto max-w-2xl text-center">
-            <span className="section-eyebrow">{t("ldQuickEyebrow")}</span>
-            <h2 className="h-section mt-4">{t("ldQuickTitle")}</h2>
-            <p className="lede mx-auto mt-3 max-w-lg">{t("ldQuickDesc")}</p>
-          </div>
-          <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
-            {QUICK_LINKS.map((q) => (
-              <Link
-                key={q.to + pick(q.title)}
-                to={q.to}
-                className="group flex flex-col gap-2.5 rounded-2xl border border-slate2-line bg-sand-50 p-4 transition hover:-translate-y-0.5 hover:border-gold-200 hover:bg-white hover:shadow-lift"
-              >
-                <span className="icon-tile h-10 w-10 bg-white text-navy-700 ring-1 ring-inset ring-slate2-line transition group-hover:bg-navy-950 group-hover:text-gold-300 group-hover:ring-navy-950">
-                  <Icon name={q.icon} className="h-5 w-5" />
-                </span>
-                <div className="text-[13.5px] font-bold leading-tight text-navy-950">{pick(q.title)}</div>
-                <div className="text-[11px] leading-snug text-slate2-dim">{pick(q.desc)}</div>
-              </Link>
+          <SectionHead eyebrow={t("ldFaqEyebrow")} title={t("faqTitle")} />
+          <div className="mx-auto mt-9 max-w-2xl space-y-2.5">
+            {HOME_FAQS.map((f, i) => (
+              <FaqRow key={i} q={pick(f.q)} a={pick(f.a)} defaultOpen={i === 0} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── 6 Work areas teaser ──────────────────────────────── */}
-      <section className={`${SITE_WRAP} py-14 lg:py-20`}>
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="section-eyebrow">{t("ldAreasEyebrow")}</span>
-          <h2 className="h-section mt-4">{t("ldAreasTitle").replace("{n}", String(PROMPT_COUNT))}</h2>
-          <p className="lede mx-auto mt-3 max-w-xl">{t("ldAreasDesc")}</p>
-        </div>
-
-        {/* Numbered grid — the ordinals are real: the areas run A to F and the
-            prompts inside them are numbered from those letters. */}
-        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {WORK_AREAS.map((a) => {
-            const ac = areaAccent(a.accent);
-            return (
-              <Link key={a.id} to={`/prompt-hub/${a.id}`} className="card-hover group flex flex-col gap-3 p-5">
-                <div className="flex items-center justify-between gap-3">
-                  <span className={`icon-tile h-10 w-10 ${ac.badge}`}>
-                    <Icon name={a.icon} className="h-5 w-5" />
-                  </span>
-                  <span className="ordinal">{a.code}0{a.missions.length === 10 ? "" : a.missions.length}</span>
-                </div>
-                <div className="font-display text-[15.5px] font-extrabold tracking-[-0.01em] text-navy-950">{pick(a.title)}</div>
-                <p className="text-[13px] leading-relaxed text-slate2-mut">{pick(a.blurb)}</p>
-                <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[12.5px] font-bold text-navy-700 transition group-hover:gap-2 group-hover:text-gold-600">
-                  {t("ldMissionsChip")} <Icon name="arrowRight" className="h-4 w-4" />
-                </span>
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Closing panel — a navy block inside the light section. */}
-        <div className="panel-dark hero-glow mt-10 p-7 sm:p-10">
-          <div className="hero-grid pointer-events-none absolute inset-0" />
-          <div className="relative grid items-center gap-6 sm:grid-cols-[1fr_auto]">
-            <div>
-              <h3 className="h-display text-[23px] sm:text-[30px]">{t("ldUnsureTitle")}</h3>
-              <p className="mt-3 max-w-xl text-[14.5px] leading-relaxed text-white/60">
-                {t("ldUnsureDesc").replace("{n}", String(READINESS_AREAS.length))}
-              </p>
-            </div>
-            <Link to="/readiness" className="btn-gold shrink-0 px-6 py-3.5">
-              {t("phStartAssessment")} <Icon name="arrowRight" className="h-5 w-5" />
-            </Link>
-          </div>
-        </div>
-      </section>
     </SiteLayout>
+  );
+}
+
+/** One collapsible question. Three of these replace a page. */
+function FaqRow({ q, a, defaultOpen }: { q: string; a: string; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(Boolean(defaultOpen));
+  return (
+    <div className="card overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left"
+      >
+        <span className="font-display text-[14.5px] font-bold text-navy-950">{q}</span>
+        <Icon
+          name="arrowRight"
+          className={`h-4 w-4 shrink-0 text-slate2-dim transition-transform ${open ? "rotate-90" : ""}`}
+        />
+      </button>
+      {open && <p className="px-5 pb-5 text-[13.5px] leading-relaxed text-slate2-mut">{a}</p>}
+    </div>
   );
 }

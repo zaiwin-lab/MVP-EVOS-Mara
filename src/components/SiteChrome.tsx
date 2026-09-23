@@ -21,7 +21,7 @@ export function ProgramWordmark({ inverted = false }: { inverted?: boolean }) {
           ProgramOS <span className="text-gold-400">Lite</span>
         </span>
         <span
-          className={`mt-1 hidden text-[9.5px] font-bold uppercase tracking-[0.14em] sm:block ${
+          className={`mt-1 hidden text-[10px] font-bold uppercase tracking-[0.14em] sm:block ${
             inverted ? "text-white/45" : "text-slate2-dim"
           }`}
         >
@@ -95,7 +95,7 @@ export function AccountMenu() {
         style={{ backgroundImage: "var(--grad-btn)" }}
       >
         <Icon name="qr" className="h-4 w-4 shrink-0" />
-        <span className="hidden 2xl:inline">{t("headerCta")}</span>
+        <span className="hidden 2xl:inline">{t("ldCheckInCta")}</span>
         <span className="2xl:hidden">{t("headerCtaShort")}</span>
       </Link>
     );
@@ -138,11 +138,8 @@ export function AccountMenu() {
               </span>
             )}
           </div>
-          <Link to="/my" role="menuitem" className="block px-4 py-2.5 text-sm font-semibold text-navy-800 hover:bg-navy-50">
-            {t("myProfile")}
-          </Link>
-          <Link to="/my#prompts" role="menuitem" className="block px-4 py-2.5 text-sm font-semibold text-navy-800 hover:bg-navy-50">
-            {t("myPrompts")}
+          <Link to="/sijil" role="menuitem" className="block px-4 py-2.5 text-sm font-semibold text-navy-800 hover:bg-navy-50">
+            {t("myCertificate")}
           </Link>
           <button
             type="button"
@@ -185,7 +182,7 @@ export function SiteHeader() {
       <div className={`${WRAP} flex items-center gap-3 py-2.5`}>
         <ProgramWordmark inverted />
 
-        <nav className="ml-3 hidden min-w-0 items-center gap-0.5 xl:flex">
+        <nav className="ml-3 hidden min-w-0 items-center gap-0.5 lg:flex">
           {NAV.map((n) => (
             <NavLink key={n.label} to={n.to} end={n.to === "/"} className={linkClass}>
               {t(n.key) || n.label}
@@ -198,7 +195,7 @@ export function SiteHeader() {
             so below `sm` it moves into the mobile menu instead. */}
         {/* The nav ends flush against the language pills without this; the
             hairline gives the two clusters somewhere to separate. */}
-        <div className="ml-auto flex shrink-0 items-center gap-2 xl:border-l xl:border-white/10 xl:pl-4">
+        <div className="ml-auto flex shrink-0 items-center gap-2 lg:border-l lg:border-white/10 lg:pl-4">
           <div className="hidden sm:block">
             <LangToggle tone="dark" />
           </div>
@@ -206,7 +203,7 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="flex h-9 w-9 items-center justify-center rounded-full text-white/80 hover:bg-white/10 hover:text-white xl:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-white/80 hover:bg-white/10 hover:text-white lg:hidden"
             aria-label="Menu"
             aria-expanded={open}
           >
@@ -219,7 +216,7 @@ export function SiteHeader() {
 
       {/* Mobile menu */}
       {open && (
-        <nav className="border-t border-white/10 bg-navy-950 xl:hidden">
+        <nav className="border-t border-white/10 bg-navy-950 lg:hidden">
           {/* Language first — it changes everything below it. */}
           <div className={`${WRAP} flex items-center justify-between gap-3 border-b border-white/10 py-3 sm:hidden`}>
             <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/45">{t("language")}</span>
@@ -256,11 +253,11 @@ function MobileAccountLinks({ onNavigate }: { onNavigate: () => void }) {
   return (
     <div className={`${WRAP} grid grid-cols-2 gap-1 border-t border-navy-100 pb-3`}>
       <Link
-        to="/my"
+        to="/sijil"
         onClick={onNavigate}
         className="mt-3 rounded-xl bg-gold-400 px-3 py-2.5 text-center text-sm font-bold text-navy-900"
       >
-        {t("myProfile")}
+        {t("myCertificate")}
       </Link>
       <button
         type="button"
@@ -313,18 +310,18 @@ export function SiteFooter() {
             <PartnerStrip className="mt-4 text-white/40" />
           </div>
 
-          <FooterColumn title={t("navProgramme")} links={NAV.slice(0, 3).map((n) => ({ to: n.to, label: t(n.key) || n.label }))} />
-          <FooterColumn title={t("resources")} links={NAV.slice(3).map((n) => ({ to: n.to, label: t(n.key) || n.label }))} />
+          <FooterColumn title={t("navProgramme")} links={NAV.slice(0, 2).map((n) => ({ to: n.to, label: t(n.key) || n.label }))} />
+          <FooterColumn title={t("resources")} links={NAV.slice(2).map((n) => ({ to: n.to, label: t(n.key) || n.label }))} />
         </div>
 
         <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-[11px] text-white/45">{eventConfig.footerSecondary}</p>
-            <p className="text-[11px] text-white/30">{eventConfig.copyright}</p>
+            <p className="text-[11.5px] text-white/50">{eventConfig.footerSecondary}</p>
+            <p className="text-[11.5px] text-white/40">{eventConfig.copyright}</p>
           </div>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             {eventConfig.hashtags.map((h) => (
-              <span key={h} className="text-[10px] font-semibold text-white/30">{h}</span>
+              <span key={h} className="text-[11px] font-semibold text-white/35">{h}</span>
             ))}
             {/* Organiser entry point. Kept quiet rather than hidden — the gate
                 is a convenience, not access control, so obscurity buys nothing. */}
@@ -345,7 +342,7 @@ export function SiteFooter() {
 function FooterColumn({ title, links }: { title: string; links: { to: string; label: string }[] }) {
   return (
     <div>
-      <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/35">{title}</div>
+      <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/40">{title}</div>
       <ul className="mt-3 space-y-2">
         {links.map((l) => (
           <li key={l.to}>
@@ -388,7 +385,7 @@ export function PageHero({
       <div className={`relative ${WRAP} ${size === "sm" ? "py-7 sm:py-10" : "py-10 sm:py-14"}`}>
         {above}
         {eyebrow && (
-          <span className="inline-flex items-center rounded-full border border-gold-400/25 bg-gold-400/10 px-3 py-1 text-[10.5px] font-extrabold uppercase tracking-[0.15em] text-gold-300">
+          <span className="inline-flex items-center rounded-full border border-gold-400/25 bg-gold-400/10 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.15em] text-gold-300">
             {eyebrow}
           </span>
         )}

@@ -8,8 +8,6 @@ import {
 import { getWorkArea } from "../content/promptLibrary";
 import { SiteLayout, SITE_WRAP, PageHero } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
-import { ScoreRing } from "../components/ScoreRing";
-import { RadarChart } from "../components/RadarChart";
 import { areaAccent } from "../lib/accents";
 import { useParticipant } from "../context/ParticipantContext";
 import { useI18n, pick as pickLang } from "../context/I18nContext";
@@ -20,6 +18,16 @@ import type { AssessmentResult } from "../data/types";
  *  no matter which language the participant took the assessment in. */
 const bm = (v: Parameters<typeof pickLang>[0]) => pickLang(v, "bm");
 
+/**
+ * Five questions that end in one suggestion: a work area to start with.
+ *
+ * The scoring engine is unchanged and still saved, because the organiser's
+ * export reads it. What changed is what the participant is shown. A score out
+ * of 100, a readiness band and a radar chart made five questions look like an
+ * audit of the co-operative, which is not what they are and not a claim this
+ * programme should make in one day. They now see the recommendation, and an
+ * invitation to ignore it.
+ */
 export default function Readiness() {
   const { participantId, refresh } = useParticipant();
   const { t, pick } = useI18n();
@@ -67,7 +75,7 @@ export default function Readiness() {
 
   return (
     <SiteLayout>
-      <PageHero size="sm" eyebrow={t("rdEyebrow")} title={t("rdTitle")} lede={t("rdIntro").replace("{n}", String(total))}>
+      <PageHero size="sm" eyebrow={t("rdShortEyebrow")} title={t("rdShortTitle")} lede={t("rdShortIntro")}>
         <div className="mt-7 flex items-center gap-1.5">
           {READINESS_AREAS.map((a, i) => (
             <div key={a.id} className="flex flex-1 flex-col items-center gap-1.5">
@@ -88,7 +96,7 @@ export default function Readiness() {
             onBack={step > 0 ? () => setStep(step - 1) : undefined}
           />
         ) : outcome ? (
-          <Result outcome={outcome} loggedIn={Boolean(participantId)} />
+          <Result outcome={outcome} />
         ) : null}
       </section>
     </SiteLayout>
@@ -162,62 +170,45 @@ function QuestionCard({
   );
 }
 
-function Result({ outcome, loggedIn }: { outcome: ReadinessOutcome; loggedIn: boolean }) {
+function Result({ outcome }: { outcome: ReadinessOutcome }) {
   const { t, pick } = useI18n();
   const recArea = getWorkArea(outcome.recommendWorkArea);
   const ac = recArea ? areaAccent(recArea.accent) : areaAccent("blue");
-  const bandLabel = pick(outcome.band.label);
 
   return (
-    <div className="mx-auto max-w-3xl">
-      <div className="card p-6 text-center sm:p-8">
-        <div className="flex flex-col items-center">
-          <ScoreRing score={outcome.score} label={bandLabel} size={168} />
-          <h2 className="mt-4 font-display text-xl font-extrabold text-navy-900 sm:text-2xl">
-            {t("rdLevelLabel").replace("{band}", bandLabel)}
-          </h2>
-          <p className="mt-2 max-w-lg text-sm text-navy-500">{pick(outcome.band.message)}</p>
-        </div>
-
-        <div className="mt-6">
-          <div className="text-xs font-bold uppercase tracking-wide text-navy-400">{t("rdRadarTitle")}</div>
-          <RadarChart
-            axes={READINESS_AREAS.map((a) => ({ label: pick(a.radarLabel), value: outcome.perArea[a.id] ?? 0, max: 20 }))}
-            size={260}
-          />
-        </div>
+    <div className="mx-auto max-w-2xl">
+      <div className="text-center">
+        <span className="icon-tile mx-auto h-12 w-12 bg-gold-100 text-gold-700 ring-1 ring-inset ring-gold-200">
+          <Icon name="spark" className="h-6 w-6" />
+        </span>
+        <h2 className="h-section mt-5 text-[22px] sm:text-[27px]">{t("rdSuggestTitle")}</h2>
       </div>
 
-      {/* Recommended work area */}
       {recArea && (
-        <div className={`mt-6 rounded-3xl border p-6 ${ac.card}`}>
-          <div className="text-xs font-bold uppercase tracking-wide text-navy-400">{t("rdRecommendTitle")}</div>
-          <div className="mt-3 flex items-start gap-4">
-            <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${ac.badge}`}>
-              <Icon name={recArea.icon} className="h-6 w-6" />
+        <div className={`mt-7 rounded-3xl border p-6 sm:p-7 ${ac.card}`}>
+          <div className="flex items-start gap-4">
+            <span className={`icon-tile h-14 w-14 shrink-0 rounded-2xl ${ac.badge}`}>
+              <Icon name={recArea.icon} className="h-7 w-7" />
             </span>
-            <div>
-              <div className="font-display text-lg font-bold text-navy-900">{pick(recArea.title)}</div>
-              <p className="text-sm text-navy-500">{pick(recArea.blurb)}</p>
+            <div className="min-w-0">
+              <div className="font-display text-[20px] font-extrabold tracking-[-0.02em] text-navy-950 sm:text-[24px]">
+                {pick(recArea.title)}
+              </div>
+              <p className="mt-1.5 text-[14px] leading-relaxed text-slate2-mut">{pick(recArea.blurb)}</p>
             </div>
           </div>
-          <Link to={`/prompt-hub/${recArea.id}`} className="btn-gold mt-4 w-full sm:w-auto">
+          <Link to={`/prompt-hub/${recArea.id}`} className="btn-gold mt-6 w-full py-3.5">
             {t("rdStartThisArea")} <Icon name="arrowRight" className="h-5 w-5" />
           </Link>
         </div>
       )}
 
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-        <Link to="/prompt-hub" className="btn-outline flex-1 justify-center">{t("rdSeeAllAreas")}</Link>
-        {loggedIn ? (
-          <Link to="/my" className="btn-ghost flex-1 justify-center">{t("rdToMySpace")}</Link>
-        ) : (
-          <Link to="/check-in" className="btn-ghost flex-1 justify-center">{t("rdRegisterToSave")}</Link>
-        )}
+      <p className="mt-6 text-center text-[14px] text-slate2-mut">{t("rdAlsoExplore")}</p>
+      <div className="mt-4">
+        <Link to="/prompt-hub" className="btn-outline w-full justify-center">{t("rdSeeAllAreas")}</Link>
       </div>
-      {!loggedIn && (
-        <p className="mt-3 text-center text-xs text-navy-400">{t("rdSaveNote")}</p>
-      )}
+
+      <p className="mt-6 text-center text-xs text-slate2-dim">{t("rdGuideNote")}</p>
     </div>
   );
 }

@@ -3,52 +3,44 @@ import { SiteLayout, SITE_WRAP, PageHero } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { useI18n } from "../context/I18nContext";
 
+/**
+ * Photographs.
+ *
+ * The official gallery lives wherever the organiser puts it — Drive, Photos,
+ * whatever they use on the day. This page is the doorway, not a second copy of
+ * the album: maintaining an in-site gallery would mean someone uploading every
+ * picture twice.
+ */
 export default function Gallery() {
   const { t } = useI18n();
-  const { galleryUrl, galleryImages } = eventConfig;
-  const hasImages = galleryImages.length > 0;
+  const { galleryUrl } = eventConfig;
 
   return (
     <SiteLayout>
       <PageHero eyebrow={t("glEyebrow")} title={t("glTitle")} lede={t("glIntro")} />
 
-      <section className={`${SITE_WRAP} py-12`}>
-        {hasImages ? (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {galleryImages.map((src, i) => (
-              <div key={i} className="overflow-hidden rounded-2xl border border-navy-100 bg-sand-100">
-                <img src={src} alt={`Galeri ${i + 1}`} loading="lazy" className="h-40 w-full object-cover" />
-              </div>
-            ))}
-          </div>
-        ) : galleryUrl ? (
-          <div className="mx-auto max-w-xl text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-navy-50 text-navy-700">
-              <Icon name="slides" className="h-7 w-7" />
-            </div>
-            <h2 className="mt-4 font-display text-xl font-bold text-navy-900">{t("glFullTitle")}</h2>
-            <p className="mt-2 text-sm text-navy-500">{t("glFullDesc")}</p>
-            <a href={galleryUrl} target="_blank" rel="noreferrer" className="btn-gold mt-5 inline-flex">
-              {t("glOpen")} <Icon name="arrowRight" className="h-5 w-5" />
-            </a>
-          </div>
-        ) : (
-          <ComingSoon />
-        )}
+      <section className={`${SITE_WRAP} py-14`}>
+        <div className="mx-auto max-w-lg text-center">
+          <span className="icon-tile mx-auto h-14 w-14 bg-gold-100 text-gold-700 ring-1 ring-inset ring-gold-200">
+            <Icon name="slides" className="h-7 w-7" />
+          </span>
+
+          {galleryUrl ? (
+            <>
+              <h2 className="h-section mt-5 text-[22px] sm:text-[26px]">{t("glFullTitle")}</h2>
+              <p className="lede mt-3">{t("glFullDesc")}</p>
+              <a href={galleryUrl} target="_blank" rel="noreferrer" className="btn-gold mt-7 px-6 py-3.5">
+                {t("glOpen")} <Icon name="arrowRight" className="h-5 w-5" />
+              </a>
+            </>
+          ) : (
+            <>
+              <h2 className="h-section mt-5 text-[22px] sm:text-[26px]">{t("glNoneTitle")}</h2>
+              <p className="lede mt-3">{t("glSoonDesc")}</p>
+            </>
+          )}
+        </div>
       </section>
     </SiteLayout>
-  );
-}
-
-function ComingSoon() {
-  const { t } = useI18n();
-  return (
-    <div className="mx-auto max-w-xl rounded-3xl border border-dashed border-navy-200 bg-sand-50 p-10 text-center">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-navy-400 shadow-sm">
-        <Icon name="slides" className="h-7 w-7" />
-      </div>
-      <h2 className="mt-4 font-display text-xl font-bold text-navy-900">{t("sbComingSoon")}</h2>
-      <p className="mt-2 text-sm text-navy-500">{t("glSoonDesc")}</p>
-    </div>
   );
 }

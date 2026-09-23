@@ -156,8 +156,8 @@ export default function Attend() {
                 {t("atDoneBody").replace("{name}", record?.participant.fullName.split(" ")[0] ?? "")}
               </p>
               <div className="mt-6 grid gap-2 sm:grid-cols-2">
-                <Link to="/readiness" className="btn-gold">{t("msStartAssessment")}</Link>
-                <Link to="/my" className="btn-outline">{t("rdToMySpace")}</Link>
+                <Link to="/prompt-hub" className="btn-gold">{t("ldOpenHub")}</Link>
+                <Link to="/sijil" className="btn-outline">{t("myCertificate")}</Link>
               </div>
             </div>
           )}

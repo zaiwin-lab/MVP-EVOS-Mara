@@ -23,213 +23,16 @@ export interface NavItem {
   key: string;
 }
 
-// Main navigation (spec §4).
+// Main navigation.
+//
+// Four destinations, and the check-in CTA beside them in the header. The
+// programme agenda and the FAQ moved onto the home page, and "Sumber" and the
+// Google-folder card were the same idea twice, so they are now one item.
 export const NAV: NavItem[] = [
   { label: "Utama", to: "/", key: "home" },
-  { label: "Program", to: "/program", key: "navProgramme" },
   { label: "Prompt Hub", to: "/prompt-hub", key: "navPromptHub" },
-  { label: "Sumber", to: "/sumber", key: "resources" },
+  { label: "Modul & Sumber", to: "/sumber", key: "navModules" },
   { label: "Galeri Foto", to: "/galeri", key: "navGallery" },
-  { label: "FAQ", to: "/faq", key: "navFaq" },
-];
-
-export interface FeatureCard {
-  icon: string;
-  title: Localized;
-  desc: Localized;
-  to: string;
-}
-
-// Six premium feature cards on the landing page.
-export const FEATURES: FeatureCard[] = [
-  {
-    icon: "spark",
-    to: "/program",
-    title: {
-      bm: "Pembelajaran Praktikal",
-      en: "Practical Learning",
-      zh: "实用学习",
-      iban: "Pelajar Praktikal",
-    },
-    desc: {
-      bm: "Workshop hands-on dengan contoh sebenar untuk koperasi.",
-      en: "Hands-on workshops using real cooperative examples.",
-      zh: "以合作社真实案例进行的实作工作坊。",
-      iban: "Workshop ti dikereja ngena chunto amat ari koperasi.",
-    },
-  },
-  {
-    icon: "target",
-    to: "/prompt-hub",
-    title: {
-      bm: "AI Prompt Hub",
-      en: "AI Prompt Hub",
-      zh: "AI 提示中心",
-      iban: "AI Prompt Hub",
-    },
-    desc: {
-      bm: "60 prompt siap guna untuk operasi, pemasaran & analisis.",
-      en: "60 ready-to-use prompts for operations, marketing and analysis.",
-      zh: "60 个可直接使用的提示，涵盖营运、营销与分析。",
-      iban: "60 prompt ti udah sedia kena operasi, pemasaran enggau analisis.",
-    },
-  },
-  {
-    icon: "chart",
-    to: "/readiness",
-    title: {
-      bm: "Penilaian AI Ringkas",
-      en: "Quick AI Assessment",
-      zh: "快速 AI 评估",
-      iban: "Penilaian AI Mudah",
-    },
-    desc: {
-      bm: "Ukur tahap kesiapsiagaan AI koperasi anda dalam 2 minit.",
-      en: "Measure your cooperative's AI readiness in 2 minutes.",
-      zh: "两分钟了解贵合作社的 AI 准备程度。",
-      iban: "Ukur tinggi kesediaan AI koperasi nuan dalam 2 minit.",
-    },
-  },
-  {
-    icon: "calendar",
-    to: "/journey",
-    title: {
-      bm: "Pelan 90 Hari",
-      en: "90-Day Plan",
-      zh: "90 天计划",
-      iban: "Pelan 90 Hari",
-    },
-    desc: {
-      bm: "Rangka perjalanan ringkas selepas program untuk hasil sebenar.",
-      en: "Map a simple path after the programme, for real results.",
-      zh: "规划课程结束后的简单路径，做出真实成果。",
-      iban: "Ngaga jalai ti mudah udah program kena ulih hasil amat.",
-    },
-  },
-  {
-    icon: "book",
-    to: "/sumber",
-    title: {
-      bm: "Modul & Toolkit",
-      en: "Modules & Toolkit",
-      zh: "模组与工具包",
-      iban: "Modul enggau Toolkit",
-    },
-    desc: {
-      bm: "Nota, template, video dan sumber rujukan di Google Folder.",
-      en: "Notes, templates, videos and references in a Google Folder.",
-      zh: "笔记、模板、视频与参考资料，存放于 Google 资料夹。",
-      iban: "Nota, template, video enggau bahan rujukan ba Google Folder.",
-    },
-  },
-  {
-    icon: "qr",
-    to: "/check-in",
-    title: {
-      bm: "Jejak Kehadiran QR",
-      en: "QR Attendance Tracking",
-      zh: "QR 出席记录",
-      iban: "Jejak Kehadiran QR",
-    },
-    desc: {
-      bm: "Daftar masuk mudah, rekod penyertaan, e-sijil selepas program.",
-      en: "Easy check-in, attendance records, and an e-certificate afterwards.",
-      zh: "轻松签到、记录出席，课程后发出电子证书。",
-      iban: "Daftar masuk mudah, rekod peserta, e-sijil udah program.",
-    },
-  },
-];
-
-export interface QuickLink {
-  icon: string;
-  title: Localized;
-  desc: Localized;
-  to: string;
-}
-
-// Quick-access strip (Pintu Pantas / Akses Utama Program).
-export const QUICK_LINKS: QuickLink[] = [
-  {
-    icon: "qr",
-    to: "/check-in",
-    title: { bm: "QR Check-In", en: "QR Check-In", zh: "QR 签到", iban: "QR Check-In" },
-    desc: {
-      bm: "Daftar masuk peserta",
-      en: "Participant check-in",
-      zh: "参加者签到",
-      iban: "Daftar masuk peserta",
-    },
-  },
-  {
-    icon: "chart",
-    to: "/readiness",
-    title: {
-      bm: "Readiness Snapshot",
-      en: "Readiness Snapshot",
-      zh: "准备度快照",
-      iban: "Readiness Snapshot",
-    },
-    desc: {
-      bm: "Nilai kesiapsiagaan AI",
-      en: "Rate your AI readiness",
-      zh: "评估 AI 准备程度",
-      iban: "Nilai kesediaan AI",
-    },
-  },
-  {
-    icon: "target",
-    to: "/prompt-hub",
-    title: {
-      bm: "6 Bidang Utama",
-      en: "6 Key Areas",
-      zh: "六大领域",
-      iban: "6 Bidang Utama",
-    },
-    desc: {
-      bm: "Teroka fokus program",
-      en: "Explore the programme focus",
-      zh: "探索课程重点",
-      iban: "Peda fokus program",
-    },
-  },
-  {
-    icon: "spark",
-    to: "/prompt-hub",
-    title: {
-      bm: "10 Prompt Missions",
-      en: "10 Prompt Missions",
-      zh: "10 项提示任务",
-      iban: "10 Prompt Missions",
-    },
-    desc: {
-      bm: "Cabaran praktikal",
-      en: "Practical challenges",
-      zh: "实用挑战",
-      iban: "Chabar praktikal",
-    },
-  },
-  {
-    icon: "book",
-    to: "/sumber",
-    title: { bm: "Sumber", en: "Resources", zh: "资源", iban: "Bahan Program" },
-    desc: {
-      bm: "Modul, template & rujukan",
-      en: "Modules, templates and references",
-      zh: "模组、模板与参考资料",
-      iban: "Modul, template enggau rujukan",
-    },
-  },
-  {
-    icon: "slides",
-    to: "/galeri",
-    title: { bm: "Galeri Foto", en: "Photo Gallery", zh: "照片库", iban: "Galeri Gambar" },
-    desc: {
-      bm: "Momen program & aktiviti",
-      en: "Programme moments and activities",
-      zh: "课程精彩时刻与活动",
-      iban: "Chukup program enggau pengawa",
-    },
-  },
 ];
 
 export interface AgendaItem {
@@ -279,10 +82,10 @@ export const AGENDA: AgendaItem[] = [
       iban: "Penilaian Kesediaan AI",
     },
     desc: {
-      bm: "Peserta lengkapkan AI Readiness Snapshot dan fahami kedudukan koperasi.",
-      en: "Participants complete the AI Readiness Snapshot and see where their cooperative stands.",
-      zh: "参加者完成 AI 准备度快照，了解合作社的现况。",
-      iban: "Peserta ngaga AI Readiness Snapshot lalu meda penatai koperasi sida.",
+      bm: "Jawab 5 soalan ringkas dan dapat cadangan bidang untuk bermula.",
+      en: "Answer five quick questions and get a suggested area to start with.",
+      zh: "回答五个简短问题，获得建议的起步领域。",
+      iban: "Saut lima tanya ti pandak lalu bulih cadangan bidang kena berengkah.",
     },
   },
   {
@@ -365,9 +168,27 @@ export const AGENDA: AgendaItem[] = [
 export interface Faq {
   q: Localized;
   a: Localized;
+  /** Shown in the short FAQ on the home page. There is no FAQ page any more,
+   *  so anything without this flag is kept for reference but not displayed. */
+  home?: boolean;
 }
 
 export const FAQS: Faq[] = [
+  {
+    home: true,
+    q: {
+      bm: "Di mana saya boleh dapat modul?",
+      en: "Where do I get the modules?",
+      zh: "我在哪里取得课程模块？",
+      iban: "Dini aku ulih ngambi modul?",
+    },
+    a: {
+      bm: "Semua slide, template dan bahan rujukan ada di halaman Modul & Sumber. Anda boleh buka dan muat turun bila-bila masa, termasuk selepas program.",
+      en: "All the slides, templates and reference material are on the Modules & Resources page. You can open and download them any time, including after the programme.",
+      zh: "所有简报、模板与参考资料都在「模块与资源」页面，随时可以开启与下载，课程结束后也一样。",
+      iban: "Semua slide, template enggau bahan rujukan bisi ba laman Modul & Sumber. Nuan ulih muka enggau ngundoh iya kemaya-maya, termasuk udah program.",
+    },
+  },
   {
     q: {
       bm: "Apakah itu ProgramOS Lite?",
@@ -397,6 +218,7 @@ export const FAQS: Faq[] = [
     },
   },
   {
+    home: true,
     q: {
       bm: "Adakah saya perlu mahir teknologi?",
       en: "Do I need to be tech-savvy?",
@@ -467,6 +289,7 @@ export const FAQS: Faq[] = [
     },
   },
   {
+    home: true,
     q: {
       bm: "Apa yang berlaku selepas program?",
       en: "What happens after the programme?",
@@ -529,6 +352,58 @@ export const PILLARS: Pillar[] = [
       en: "Cooperatives driving progress together.",
       zh: "合作社共同推动进步。",
       iban: "Koperasi mai pemansang enggau pangan diri.",
+    },
+  },
+];
+
+
+export interface AfterMonth {
+  n: number;
+  /** Which of the area's ten prompts this month suggests. */
+  range: string;
+  title: Localized;
+  focus: Localized;
+}
+
+/**
+ * "Teruskan Selepas Program" — shown at the bottom of every work area.
+ *
+ * This is what remains of the 90-day journey page. The useful part was always
+ * the pacing suggestion, not the tracking around it: no KPI, no monitoring, no
+ * evidence to upload, nothing to complete.
+ */
+export const AFTER_MONTHS: AfterMonth[] = [
+  {
+    n: 1,
+    range: "Prompt 1–3",
+    title: { bm: "Bulan 1 — Explore", en: "Month 1 — Explore", zh: "第 1 个月 — 探索", iban: "Bulan 1 — Explore" },
+    focus: {
+      bm: "Kenali AI dan cuba yang asas.",
+      en: "Get to know AI and try the basics.",
+      zh: "认识 AI，先试试基础功能。",
+      iban: "Nemu pasal AI lalu nguji utai ti asas.",
+    },
+  },
+  {
+    n: 2,
+    range: "Prompt 4–7",
+    title: { bm: "Bulan 2 — Apply", en: "Month 2 — Apply", zh: "第 2 个月 — 应用", iban: "Bulan 2 — Apply" },
+    focus: {
+      bm: "Cuba dalam tugasan harian.",
+      en: "Put it to work in everyday tasks.",
+      zh: "把它用在日常工作里。",
+      iban: "Kena iya ba pengawa tiap hari.",
+    },
+  },
+  {
+    n: 3,
+    range: "Prompt 8–10",
+    title: { bm: "Bulan 3 — Improve", en: "Month 3 — Improve", zh: "第 3 个月 — 精进", iban: "Bulan 3 — Improve" },
+    focus: {
+      bm: "Kukuhkan kemahiran dan teroka lebih jauh.",
+      en: "Strengthen your skills and go further.",
+      zh: "巩固技能，走得更远。",
+      iban: "Ngeringka pengelandik lalu nguji utai ti jauh agi.",
     },
   },
 ];

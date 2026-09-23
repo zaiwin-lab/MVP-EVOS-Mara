@@ -135,7 +135,7 @@ export default function CheckIn() {
       <section className={`${SITE_WRAP} py-10`}>
         <div className="mx-auto max-w-xl">
           {done ? (
-            <Success ref_={done.ref} returning={done.returning} next={next} onContinue={() => navigate(next ?? "/my")} />
+            <Success ref_={done.ref} returning={done.returning} next={next} onContinue={() => navigate(next ?? "/prompt-hub")} />
           ) : (
             <div className="card p-6 sm:p-7">
               <div className="flex items-center gap-2">
@@ -166,9 +166,6 @@ export default function CheckIn() {
                 {submitting ? pick(c.ctaBusy) : pick(c.cta)}
                 {!submitting && <Icon name="arrowRight" className="h-5 w-5" />}
               </button>
-              <p className="mt-3 text-center text-xs text-navy-400">
-                {t("alreadyRegistered")} <Link to="/login" className="font-bold text-navy-800 underline">{t("logIn")}</Link>
-              </p>
             </div>
           )}
         </div>
@@ -208,10 +205,10 @@ function Success({ ref_, returning, next, onContinue }: { ref_: string; returnin
       </div>
       <div className="mt-6 grid gap-2 sm:grid-cols-2">
         <button onClick={onContinue} className="btn-gold">
-          {next ? t("atMarkCta") : t("rdToMySpace")} <Icon name="arrowRight" className="h-5 w-5" />
+          {next ? t("atMarkCta") : t("ldOpenHub")} <Icon name="arrowRight" className="h-5 w-5" />
         </button>
-        <Link to={next ? "/my" : "/readiness"} className="btn-outline">
-          {next ? t("rdToMySpace") : t("msStartAssessment")}
+        <Link to={next ? "/prompt-hub" : "/readiness"} className="btn-outline">
+          {next ? t("ldOpenHub") : t("rdUnsureCta")}
         </Link>
       </div>
     </div>

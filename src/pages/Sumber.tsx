@@ -1,68 +1,74 @@
-import { Link } from "react-router-dom";
 import { eventConfig } from "../config/eventConfig";
 import { SiteLayout, SITE_WRAP, PageHero } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { useI18n } from "../context/I18nContext";
 
+/**
+ * Modules and resources.
+ *
+ * Only what actually exists is shown. The page used to render all six
+ * categories whether or not anything sat behind them, so a participant met six
+ * cards that each said "coming soon" — which looks like a full shelf until you
+ * reach for something. An empty shelf, honestly labelled, is more useful.
+ */
 export default function Sumber() {
   const { t, pick } = useI18n();
   const { resources, moduleFolderUrl } = eventConfig;
 
+  const linked = resources.filter((r) => r.url);
+  const hasAnything = Boolean(moduleFolderUrl) || linked.length > 0;
+
   return (
     <SiteLayout>
-      <PageHero eyebrow={t("sbEyebrow")} title={t("sbTitle")} lede={t("sbIntro")}>
-        <div className="mt-6">
-          <FolderButton url={moduleFolderUrl} label={t("sbOpenAll")} primary />
-        </div>
+      <PageHero eyebrow={t("navModules")} title={t("sbTitle")} lede={t("sbIntro")}>
+        {moduleFolderUrl && (
+          <div className="mt-6">
+            <a href={moduleFolderUrl} target="_blank" rel="noreferrer" className="btn-gold px-6 py-3.5">
+              <Icon name="book" className="h-5 w-5" /> {t("sbOpenAll")}
+            </a>
+          </div>
+        )}
       </PageHero>
 
       <section className={`${SITE_WRAP} py-12`}>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {resources.map((r) => (
-            <div key={r.id} className="card flex flex-col gap-3 p-5">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy-50 text-navy-700">
-                <Icon name={r.icon} className="h-5 w-5" />
-              </span>
-              <div className="font-display text-base font-bold text-navy-900">{pick(r.title)}</div>
-              <p className="text-sm text-navy-500">{pick(r.desc)}</p>
-              <div className="mt-auto pt-1">
-                <FolderButton url={r.url} label={t("sbOpenFolder")} />
+        {hasAnything ? (
+          <>
+            {linked.length > 0 && (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {linked.map((r) => (
+                  <a
+                    key={r.id}
+                    href={r.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="card-hover group flex flex-col gap-3 p-5"
+                  >
+                    <span className="icon-tile h-11 w-11 bg-navy-900 text-gold-300">
+                      <Icon name={r.icon} className="h-5 w-5" />
+                    </span>
+                    <div className="font-display text-[16px] font-extrabold tracking-[-0.01em] text-navy-950">
+                      {pick(r.title)}
+                    </div>
+                    <p className="text-[13.5px] leading-relaxed text-slate2-mut">{pick(r.desc)}</p>
+                    <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[13px] font-bold text-navy-700 transition group-hover:gap-2 group-hover:text-gold-600">
+                      {t("sbOpenFolder")} <Icon name="arrowRight" className="h-4 w-4" />
+                    </span>
+                  </a>
+                ))}
               </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-8 rounded-2xl bg-sand-100 px-5 py-4 text-xs text-navy-500">{t("sbNote")}</div>
-
-        <div className="mt-8 flex flex-col items-start gap-3 rounded-3xl bg-navy-950 p-6 text-white sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h3 className="font-display text-lg font-bold">{t("sbGalleryTitle")}</h3>
-            <p className="text-sm text-navy-200">{t("sbGalleryDesc")}</p>
+            )}
+            <p className="mt-8 rounded-2xl bg-sand-100 px-5 py-4 text-xs text-slate2-mut">{t("sbNote")}</p>
+          </>
+        ) : (
+          <div className="mx-auto max-w-lg text-center">
+            <span className="icon-tile mx-auto h-14 w-14 bg-gold-100 text-gold-700 ring-1 ring-inset ring-gold-200">
+              <Icon name="book" className="h-7 w-7" />
+            </span>
+            <h2 className="h-section mt-5 text-[22px] sm:text-[26px]">{t("sbNoneTitle")}</h2>
+            <p className="lede mt-3">{t("sbNoneDesc")}</p>
           </div>
-          <Link to="/galeri" className="btn-gold shrink-0">{t("sbViewGallery")} <Icon name="arrowRight" className="h-5 w-5" /></Link>
-        </div>
+        )}
       </section>
     </SiteLayout>
-  );
-}
-
-function FolderButton({ url, label, primary = false }: { url: string; label: string; primary?: boolean }) {
-  const { t } = useI18n();
-  if (!url) {
-    return (
-      <span className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-navy-200 bg-white/60 px-4 py-2.5 text-sm font-semibold text-navy-400">
-        <Icon name="clock" className="h-4 w-4" /> {t("sbComingSoon")}
-      </span>
-    );
-  }
-  return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noreferrer"
-      className={primary ? "btn-gold shrink-0" : "btn-ghost w-full text-sm"}
-    >
-      <Icon name="arrowRight" className="h-4 w-4" /> {label}
-    </a>
   );
 }

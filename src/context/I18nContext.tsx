@@ -692,6 +692,90 @@ const DICT: Record<string, Localized> = {
   },
   phStartAssessment: { en: "Start the assessment", bm: "Mula Penilaian", zh: "开始评估", iban: "Berengkah Penilaian" },
 
+  // ── Simplified journey (nav, home sections, after-programme, result) ──
+  navModules: { en: "Modules & Resources", bm: "Modul & Sumber", zh: "模块与资源", iban: "Modul & Bahan" },
+  ldCheckInCta: { en: "Check In", bm: "Daftar Kehadiran", zh: "签到", iban: "Daftar Kehadiran" },
+  ldOpenHub: { en: "Open the Prompt Hub", bm: "Buka Prompt Hub", zh: "打开提示中心", iban: "Muka Prompt Hub" },
+  ldTodayEyebrow: { en: "Today", bm: "Hari Ini", zh: "今天", iban: "Sehari Tu" },
+  ldTodayTitle: { en: "Today's Programme", bm: "Program Hari Ini", zh: "今日课程", iban: "Program Sehari Tu" },
+  ldToolkitEyebrow: { en: "Your AI toolkit", bm: "AI Toolkit Anda", zh: "您的 AI 工具包", iban: "AI Toolkit Nuan" },
+  ldToolkitTitle: {
+    en: "Choose the area closest to your work",
+    bm: "Pilih Bidang Yang Berkaitan Dengan Kerja Anda",
+    zh: "选择与您工作最相关的领域",
+    iban: "Pilih Bidang Ti Ngena Enggau Pengawa Nuan",
+  },
+  ldToolkitDesc: {
+    en: "Ten ready-made prompts in each area. Open one, fill in a few details, copy it.",
+    bm: "Sepuluh prompt siap sedia dalam setiap bidang. Buka satu, isi beberapa butiran, salin.",
+    zh: "每个领域备有十个现成提示。打开一个、填几项资料、复制即可。",
+    iban: "Sepuluh prompt ti udah sedia ba tiap bidang. Muka siti, isi sekeda butir, salin.",
+  },
+  ldTakeEyebrow: { en: "After today", bm: "Selepas Hari Ini", zh: "课程之后", iban: "Udah Sehari Tu" },
+  ldTakeTitle: { en: "Take it home with you", bm: "Bawa Balik Selepas Program", zh: "把成果带回去", iban: "Bai Pulai Udah Program" },
+  ldModulesCardDesc: {
+    en: "Slides, templates and references — open them any time.",
+    bm: "Slide, template dan rujukan — buka bila-bila masa.",
+    zh: "简报、模板与参考资料，随时取用。",
+    iban: "Slide, template enggau rujukan — muka kemaya-maya.",
+  },
+  ldGalleryCardDesc: {
+    en: "Official photographs from the programme day.",
+    bm: "Gambar rasmi daripada hari program.",
+    zh: "课程当天的官方照片。",
+    iban: "Gambar resmi ari hari program.",
+  },
+  ldFaqEyebrow: { en: "Quick answers", bm: "Jawapan Ringkas", zh: "简短解答", iban: "Saut Pandak" },
+
+  // ── After the programme (foot of each work area) ──
+  waAfterTitle: { en: "Carry on after the programme", bm: "Teruskan Selepas Program", zh: "课程之后继续", iban: "Teruska Udah Program" },
+  waAfterNote: {
+    en: "Use it as your co-operative needs and at your own pace.",
+    bm: "Gunakan mengikut keperluan dan rentak koperasi anda.",
+    zh: "按合作社的需要与节奏使用即可。",
+    iban: "Kena iya nitihka pengingin enggau rentak koperasi nuan.",
+  },
+
+  // ── 5 questions — a suggestion, not an audit ──
+  rdShortTitle: { en: "5 Quick Questions", bm: "5 Soalan Ringkas", zh: "5 个简短问题", iban: "5 Tanya Pandak" },
+  rdShortEyebrow: { en: "Where to start", bm: "Tempat Untuk Bermula", zh: "从哪里开始", iban: "Endur Berengkah" },
+  rdShortIntro: {
+    en: "Answer five quick questions and we will suggest one area to start with.",
+    bm: "Jawab lima soalan ringkas dan kami cadangkan satu bidang untuk anda mulakan.",
+    zh: "回答五个简短问题，我们会建议一个起步领域。",
+    iban: "Saut lima tanya ti pandak lalu kami deka madah siti bidang kena berengkah.",
+  },
+  rdSuggestTitle: {
+    en: "An area for you to start with",
+    bm: "Cadangan Bidang Untuk Anda Mulakan",
+    zh: "建议您从这个领域开始",
+    iban: "Cadangan Bidang Ke Nuan Berengkah",
+  },
+  rdAlsoExplore: {
+    en: "You are welcome to explore any of the other areas too.",
+    bm: "Anda juga boleh meneroka mana-mana bidang lain.",
+    zh: "您也可以自由探索其他任何领域。",
+    iban: "Nuan mega ulih nguji bidang bukai.",
+  },
+  rdGuideNote: {
+    en: "A short guide, not an audit or a certification.",
+    bm: "Panduan ringkas, bukan audit atau pensijilan.",
+    zh: "这是简短指引，不是审核或认证。",
+    iban: "Panduan ti pandak, ukai audit tauka pensijilan.",
+  },
+  rdUnsureCta: { en: "Start the 5 questions", bm: "Mulakan 5 Soalan", zh: "开始 5 个问题", iban: "Berengkah 5 Tanya" },
+
+  // ── Modules & resources, when nothing has been linked yet ──
+  sbNoneTitle: { en: "Modules are on their way", bm: "Modul Akan Dikongsi", zh: "模块即将提供", iban: "Modul Deka Dikunsika" },
+  sbNoneDesc: {
+    en: "The slides and templates will be shared here on the programme day. This page is the one place to come back to.",
+    bm: "Slide dan template akan dikongsi di sini pada hari program. Halaman ini tempat untuk anda kembali.",
+    zh: "简报与模板将于课程当天在此提供，日后回到这个页面即可。",
+    iban: "Slide enggau template deka dikunsika ditu ba hari program. Laman tu endur nuan pulai baru.",
+  },
+  glNoneTitle: { en: "Photographs after the programme", bm: "Gambar Selepas Program", zh: "课程后的照片", iban: "Gambar Udah Program" },
+  myCertificate: { en: "My e-certificate", bm: "E-Sijil Saya", zh: "我的电子证书", iban: "E-Sijil Aku" },
+
   // ── Work area page ──
   waAllAreas: { en: "All areas", bm: "Semua Bidang", zh: "全部领域", iban: "Semua Bidang" },
   waMissions: { en: "{n} Prompt Missions", bm: "{n} Prompt Missions", zh: "{n} 个提示任务", iban: "{n} Prompt Missions" },

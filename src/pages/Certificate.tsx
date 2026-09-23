@@ -128,8 +128,8 @@ export default function Certificate() {
             </span>
             <h1 className="h-section mt-5">{t("certLockedTitle")}</h1>
             <p className="lede mt-3">{t("certLockedBody")}</p>
-            <Link to="/my" className="btn-outline mt-6">
-              <Icon name="arrowLeft" className="h-4 w-4" /> {t("rdToMySpace")}
+            <Link to="/hadir" className="btn-gold mt-6">
+              <Icon name="qr" className="h-4 w-4" /> {t("atMarkCta")}
             </Link>
           </div>
         </section>
@@ -169,7 +169,7 @@ export default function Certificate() {
             <button type="button" onClick={() => window.print()} className="btn-gold">
               <Icon name="download" className="h-5 w-5" /> {t("certPrint")}
             </button>
-            <Link to="/my" className="btn-outline">{t("rdToMySpace")}</Link>
+            <Link to="/prompt-hub" className="btn-outline">{t("ldOpenHub")}</Link>
           </div>
         </div>
       </section>

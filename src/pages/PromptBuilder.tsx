@@ -1,7 +1,6 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { buildPrompt, getMission } from "../content/promptLibrary";
-import type { SavedPrompt } from "../data/types";
 import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { areaAccent } from "../lib/accents";
@@ -9,6 +8,15 @@ import { useParticipant } from "../context/ParticipantContext";
 import { useI18n, pick as pickLang } from "../context/I18nContext";
 import { store } from "../data/store";
 
+/**
+ * Fill in a few details, generate the prompt, copy it. That is the whole page.
+ *
+ * It used to require an account before it would generate anything, so that the
+ * result could be filed in a personal list. The list is gone and so is the
+ * gate: someone standing in a workshop wanting to try a prompt should not meet
+ * a registration form. Usage is still recorded when we happen to know who they
+ * are, quietly, for the organiser's count — it never blocks or interrupts.
+ */
 export default function PromptBuilder() {
   const { areaId, missionId } = useParams();
   const found = areaId && missionId ? getMission(areaId, missionId) : undefined;
@@ -18,13 +26,6 @@ export default function PromptBuilder() {
   const [values, setValues] = useState<Record<string, string>>({});
   const [output, setOutput] = useState<string>("");
   const [copied, setCopied] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [needsAccount, setNeedsAccount] = useState(false);
-
-  const alreadySaved = useMemo(
-    () => Boolean(record?.participant.savedPrompts?.some((s) => s.id === missionId)),
-    [record, missionId]
-  );
 
   if (!found) return <Navigate to="/prompt-hub" replace />;
   const { area, mission } = found;
@@ -33,21 +34,14 @@ export default function PromptBuilder() {
   const set = (id: string, v: string) => setValues((prev) => ({ ...prev, [id]: v }));
 
   async function generate() {
-    // Browsing the library is open to everyone, but using a prompt is tied to
-    // an account so it lands in "Senarai Prompt Saya".
-    if (!participantId) {
-      setNeedsAccount(true);
-      return;
-    }
-    setNeedsAccount(false);
-
     const text = buildPrompt(area, mission, values);
     setOutput(text);
     setCopied(false);
-    setSaved(false);
 
-    // Durable record, one row per participant per prompt — including the
-    // finished text and their answers, so they can read it back later.
+    // Recorded only when there is already a session. Failure is swallowed:
+    // the participant has their prompt either way, and a logging error is not
+    // their problem to see.
+    if (!participantId) return;
     try {
       await store.recordPromptAttempt({
         participantId,
@@ -57,17 +51,14 @@ export default function PromptBuilder() {
         promptText: text,
         inputs: values,
       });
+      const prev = record?.participant.triedPromptIds ?? [];
+      if (!prev.includes(mission.id)) {
+        await store.updateParticipant(participantId, { triedPromptIds: [...prev, mission.id] });
+      }
+      await refresh();
     } catch (err) {
-      // Never let tracking block the participant from using their prompt.
       console.warn("Could not record prompt attempt", err);
     }
-
-    // Keep the legacy summary field in step for the admin dashboard.
-    const prev = record?.participant.triedPromptIds ?? [];
-    if (!prev.includes(mission.id)) {
-      await store.updateParticipant(participantId, { triedPromptIds: [...prev, mission.id] });
-    }
-    await refresh();
   }
 
   async function copy() {
@@ -78,31 +69,6 @@ export default function PromptBuilder() {
     } catch {
       /* clipboard unavailable — user can select manually */
     }
-  }
-
-  function downloadTxt() {
-    const blob = new Blob([output], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `prompt-${mission.id}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  async function saveToList() {
-    if (!participantId || alreadySaved) return;
-    const entry: SavedPrompt = {
-      id: mission.id,
-      areaId: area.id,
-      title: pickLang(mission.title, "bm"),
-      text: output,
-      savedAt: new Date().toISOString(),
-    };
-    const prev = record?.participant.savedPrompts ?? [];
-    await store.updateParticipant(participantId, { savedPrompts: [...prev.filter((s) => s.id !== mission.id), entry] });
-    await refresh();
-    setSaved(true);
   }
 
   return (
@@ -176,25 +142,6 @@ export default function PromptBuilder() {
               <Icon name="spark" className="h-5 w-5" /> {t("pbGenerate")}
             </button>
 
-            {needsAccount && (
-              <div className="mt-4 rounded-2xl border border-gold-300 bg-gold-50 p-4">
-                <p className="text-sm font-bold text-navy-900">{t("pbLoginTitle")}</p>
-                <p className="mt-1 text-xs leading-relaxed text-navy-600">
-                  {t("pbLoginBodyA")} <b>{t("myPrompts")}</b> {t("pbLoginBodyB")}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Link to="/check-in" className="btn-gold px-4 py-2 text-sm">
-                    {t("pbLoginCta")}
-                  </Link>
-                  <Link
-                    to={`/prompt-hub/${area.id}`}
-                    className="rounded-full border border-navy-200 px-4 py-2 text-sm font-semibold text-navy-600 hover:bg-navy-50"
-                  >
-                    {t("pbBackToList")}
-                  </Link>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Result */}
@@ -214,23 +161,10 @@ export default function PromptBuilder() {
                 <pre className="mt-4 flex-1 whitespace-pre-wrap rounded-xl border border-navy-100 bg-sand-50 p-4 text-[13px] leading-relaxed text-navy-800">
                   {output}
                 </pre>
-                <div className="mt-4 grid gap-2 sm:grid-cols-3">
-                  <button onClick={copy} className="btn-primary text-sm">
-                    <Icon name={copied ? "check" : "clipboard"} className="h-4 w-4" /> {copied ? t("pbCopied") : t("pbCopy")}
-                  </button>
-                  <button onClick={downloadTxt} className="btn-outline text-sm">
-                    <Icon name="download" className="h-4 w-4" /> {t("pbDownload")}
-                  </button>
-                  {participantId ? (
-                    <button onClick={saveToList} disabled={alreadySaved || saved} className="btn-ghost text-sm disabled:opacity-60">
-                      <Icon name="book" className="h-4 w-4" /> {alreadySaved || saved ? t("pbSavedState") : t("pbSaveToList")}
-                    </button>
-                  ) : (
-                    <Link to="/check-in" className="btn-ghost text-sm">
-                      <Icon name="book" className="h-4 w-4" /> {t("pbRegisterToSave")}
-                    </Link>
-                  )}
-                </div>
+                <button onClick={copy} className="btn-gold mt-4 w-full">
+                  <Icon name={copied ? "check" : "clipboard"} className="h-5 w-5" />
+                  {copied ? t("pbCopied") : t("pbCopy")}
+                </button>
                 <div className="mt-4 rounded-xl bg-sand-100 px-4 py-3 text-xs text-navy-600">
                   <Icon name="spark" className="mr-1 inline h-3.5 w-3.5 text-gold-600" />
                   {t("pbPasteHint")}

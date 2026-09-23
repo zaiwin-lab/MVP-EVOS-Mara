@@ -3,7 +3,6 @@ import { WORK_AREAS, PROMPT_COUNT } from "../content/promptLibrary";
 import { SiteLayout, SITE_WRAP, PageHero } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { areaAccent } from "../lib/accents";
-import { useParticipant } from "../context/ParticipantContext";
 import { useI18n, pick as pickLang } from "../context/I18nContext";
 
 const STEPS = [
@@ -13,9 +12,7 @@ const STEPS = [
 ] as const;
 
 export default function PromptHub() {
-  const { record } = useParticipant();
   const { t, pick, lang } = useI18n();
-  const selected = record?.participant.selectedWorkArea;
 
   return (
     <SiteLayout>
@@ -41,14 +38,8 @@ export default function PromptHub() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {WORK_AREAS.map((a) => {
             const ac = areaAccent(a.accent);
-            const isSel = selected === a.id;
             return (
               <Link key={a.id} to={`/prompt-hub/${a.id}`} className={`group relative flex flex-col gap-3 rounded-2xl border p-5 transition hover:shadow-lift ${ac.card}`}>
-                {isSel && (
-                  <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-navy-900 px-2.5 py-1 text-[11px] font-bold text-white">
-                    <Icon name="check" className="h-3 w-3" /> {t("phSelected")}
-                  </span>
-                )}
                 <span className={`flex h-12 w-12 items-center justify-center rounded-xl ${ac.badge}`}>
                   <Icon name={a.icon} className="h-6 w-6" />
                 </span>
@@ -74,10 +65,10 @@ export default function PromptHub() {
             </span>
             <div>
               <h3 className="font-display text-base font-bold text-navy-900">{t("phUnsure")}</h3>
-              <p className="text-sm text-navy-500">{t("phUnsureDesc")}</p>
+              <p className="text-sm text-navy-500">{t("rdShortIntro")}</p>
             </div>
           </div>
-          <Link to="/readiness" className="btn-gold shrink-0">{t("phStartAssessment")} <Icon name="arrowRight" className="h-5 w-5" /></Link>
+          <Link to="/readiness" className="btn-gold shrink-0">{t("rdUnsureCta")} <Icon name="arrowRight" className="h-5 w-5" /></Link>
         </div>
       </section>
     </SiteLayout>

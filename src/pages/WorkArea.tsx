@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { getWorkArea } from "../content/promptLibrary";
+import { AFTER_MONTHS } from "../content/site";
 import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { areaAccent } from "../lib/accents";
@@ -25,8 +26,6 @@ export default function WorkArea() {
   if (!area) return <Navigate to="/prompt-hub" replace />;
 
   const ac = areaAccent(area.accent);
-  const tried = new Set(record?.participant.triedPromptIds ?? []);
-  const triedInArea = area.missions.filter((m) => tried.has(m.id)).length;
 
   return (
     <SiteLayout>
@@ -49,42 +48,65 @@ export default function WorkArea() {
             </div>
           </div>
 
-          <div className="mt-5 flex flex-wrap items-center gap-3">
+          <div className="mt-5">
             <span className="chip bg-white/10 text-white">{t("waMissions").replace("{n}", String(area.missions.length))}</span>
-            {participantId && (
-              <span className="chip bg-gold-400/20 text-gold-200">{t("waTried").replace("{a}", String(triedInArea)).replace("{b}", String(area.missions.length))}</span>
-            )}
           </div>
         </div>
       </section>
 
       <section className={`${SITE_WRAP} py-10`}>
         <div className="space-y-3">
-          {area.missions.map((m) => {
-            const done = tried.has(m.id);
-            return (
-              <Link
-                key={m.id}
-                to={`/prompt-hub/${area.id}/${m.id}`}
-                className="card group flex items-center gap-4 p-4 transition hover:shadow-lift sm:p-5"
-              >
-                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-extrabold ${done ? "bg-navy-900 text-gold-300" : ac.soft}`}>
-                  {done ? <Icon name="check" className="h-5 w-5" /> : m.n}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <div className="font-display text-sm font-bold text-navy-900 sm:text-base">{pick(m.title)}</div>
-                  <div className="truncate text-xs text-navy-400">{pick(m.desc)}</div>
-                </div>
-                <span className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-navy-700 group-hover:text-gold-600">
-                  <span className="hidden sm:inline">{t("waViewPrompt")}</span>
-                  <Icon name="arrowRight" className="h-4 w-4" />
-                </span>
-              </Link>
-            );
-          })}
+          {area.missions.map((m) => (
+            <Link
+              key={m.id}
+              to={`/prompt-hub/${area.id}/${m.id}`}
+              className="card group flex items-center gap-4 p-4 transition hover:shadow-lift sm:p-5"
+            >
+              <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-extrabold ${ac.soft}`}>
+                {m.n}
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="font-display text-sm font-bold text-navy-900 sm:text-base">{pick(m.title)}</div>
+                <div className="truncate text-xs text-navy-400">{pick(m.desc)}</div>
+              </div>
+              <span className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-navy-700 group-hover:text-gold-600">
+                <span className="hidden sm:inline">{t("waViewPrompt")}</span>
+                <Icon name="arrowRight" className="h-4 w-4" />
+              </span>
+            </Link>
+          ))}
         </div>
 
         <p className="mt-6 rounded-xl bg-sand-100 px-4 py-3 text-xs text-navy-500">{t("waTip")}</p>
+
+        {/* ── Carry on after the programme ── */}
+        <div className="mt-10 rounded-3xl border border-slate2-line bg-white p-6 shadow-card sm:p-7">
+          <div className="flex items-start gap-3">
+            <span className="icon-tile h-10 w-10 shrink-0 bg-gold-100 text-gold-700 ring-1 ring-inset ring-gold-200">
+              <Icon name="calendar" className="h-5 w-5" />
+            </span>
+            <div>
+              <h2 className="font-display text-[17px] font-extrabold tracking-[-0.01em] text-navy-950">
+                {t("waAfterTitle")}
+              </h2>
+              <p className="mt-0.5 text-[13px] text-slate2-mut">{t("waAfterNote")}</p>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            {AFTER_MONTHS.map((m) => (
+              <div key={m.n} className="rounded-2xl border border-slate2-line bg-sand-50 p-4">
+                <div className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-gold-700">
+                  {m.range}
+                </div>
+                <div className="mt-1.5 font-display text-[14.5px] font-extrabold text-navy-950">
+                  {pick(m.title)}
+                </div>
+                <p className="mt-1 text-[12.5px] leading-relaxed text-slate2-mut">{pick(m.focus)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
     </SiteLayout>
   );
