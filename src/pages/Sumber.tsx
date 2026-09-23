@@ -21,7 +21,10 @@ export default function Sumber() {
   return (
     <SiteLayout>
       <PageHero eyebrow={t("navModules")} title={t("sbTitle")} lede={t("sbIntro")}>
-        {moduleFolderUrl && (
+        {/* Only when there are sub-categories below. With a single folder the
+            panel underneath carries the same action with context, and two
+            identical buttons on one sparse page is one too many. */}
+        {moduleFolderUrl && linked.length > 0 && (
           <div className="mt-6">
             <a href={moduleFolderUrl} target="_blank" rel="noreferrer" className="btn-gold px-6 py-3.5">
               <Icon name="book" className="h-5 w-5" /> {t("sbOpenAll")}
@@ -31,7 +34,21 @@ export default function Sumber() {
       </PageHero>
 
       <section className={`${SITE_WRAP} py-12`}>
-        {hasAnything ? (
+        {/* One master folder and no sub-categories yet: the page says what is in
+            it and opens it, rather than leaving a note under an empty body. */}
+        {moduleFolderUrl && linked.length === 0 ? (
+          <div className="mx-auto max-w-lg text-center">
+            <span className="icon-tile mx-auto h-14 w-14 bg-navy-900 text-gold-300">
+              <Icon name="book" className="h-7 w-7" />
+            </span>
+            <h2 className="h-section mt-5 text-[22px] sm:text-[26px]">{t("sbFolderTitle")}</h2>
+            <p className="lede mt-3">{t("sbFolderDesc")}</p>
+            <a href={moduleFolderUrl} target="_blank" rel="noreferrer" className="btn-gold mt-7 px-6 py-3.5">
+              <Icon name="arrowRight" className="h-5 w-5" /> {t("sbOpenFolder")}
+            </a>
+            <p className="mt-8 text-xs text-slate2-dim">{t("sbNote")}</p>
+          </div>
+        ) : hasAnything ? (
           <>
             {linked.length > 0 && (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

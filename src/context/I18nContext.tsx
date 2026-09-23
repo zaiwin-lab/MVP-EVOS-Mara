@@ -807,6 +807,14 @@ const DICT: Record<string, Localized> = {
   },
   trFocusAreas: { en: "Focus areas", bm: "Bidang Tumpuan", zh: "专长领域", iban: "Bidang Tumpu" },
 
+  sbFolderTitle: { en: "Programme modules", bm: "Modul Program", zh: "课程模块", iban: "Modul Program" },
+  sbFolderDesc: {
+    en: "Slides, templates and reference material for the programme, together in one Google Drive folder.",
+    bm: "Slide, template dan bahan rujukan program — semuanya dalam satu folder Google Drive.",
+    zh: "课程的简报、模板与参考资料，全都放在同一个 Google 云端硬盘文件夹。",
+    iban: "Slide, template enggau bahan rujukan program — semua dalam siti folder Google Drive.",
+  },
+
   // ── Work area page ──
   waAllAreas: { en: "All areas", bm: "Semua Bidang", zh: "全部领域", iban: "Semua Bidang" },
   waMissions: { en: "{n} Prompt Missions", bm: "{n} Prompt Missions", zh: "{n} 个提示任务", iban: "{n} Prompt Missions" },
@@ -955,11 +963,14 @@ const DICT: Record<string, Localized> = {
   sbOpenAll: { en: "Open everything in Google Folder", bm: "Buka Semua di Google Folder", zh: "在 Google 文件夹中打开全部", iban: "Buka Semua ba Google Folder" },
   sbOpenFolder: { en: "Open in Google Folder", bm: "Buka di Google Folder", zh: "在 Google 文件夹中打开", iban: "Buka ba Google Folder" },
   sbComingSoon: { en: "Coming soon", bm: "Akan Dikemaskini", zh: "即将更新", iban: "Deka Dikemas Kini" },
+  // The folder is live, so this no longer promises that links will switch on
+  // later. It tells people the one thing they need: it opens in Google Drive,
+  // and it stays available after the programme.
   sbNote: {
-    en: "Resources are shared through the official ProgramOS Lite Google Folder. Links marked “Coming soon” switch on as soon as the folder URL is ready.",
-    bm: "Sumber disediakan melalui Google Folder rasmi ProgramOS Lite. Pautan bertanda “Akan Dikemaskini” akan diaktifkan sebaik URL folder disediakan.",
-    zh: "资源通过 ProgramOS Lite 的官方 Google 文件夹分享。标记为「即将更新」的链接会在文件夹网址就绪后启用。",
-    iban: "Bahan dikunsi ngena Google Folder resmi ProgramOS Lite. Pautan ti betanda “Deka Dikemas Kini” deka diidupka lebuh URL folder udah sedia.",
+    en: "The folder opens in Google Drive and stays available after the programme.",
+    bm: "Folder ini dibuka dalam Google Drive dan kekal boleh diakses selepas program.",
+    zh: "此文件夹将在 Google 云端硬盘中开启，课程结束后仍可继续取用。",
+    iban: "Folder tu dibuka dalam Google Drive lalu agi ulih diambi udah program.",
   },
   sbGalleryTitle: { en: "Programme photo gallery", bm: "Galeri Foto Program", zh: "课程照片库", iban: "Galeri Gambar Program" },
   sbGalleryDesc: {

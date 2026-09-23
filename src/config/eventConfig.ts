@@ -269,8 +269,12 @@ export const eventConfig: EventConfig = {
       desc: { bm: "SOP, nota, rujukan dan dokumen tambahan.", en: "SOPs, notes, references and supporting documents.", zh: "标准作业程序、笔记、参考与补充文件。", iban: "SOP, nota, rujukan enggau dokumen tambah." },
     },
   ],
-  moduleFolderUrl: "",
-  galleryUrl: "",
+  // Supplied by the organiser. "MODULE - BENGKEL AI" and "ALBUM - BENGKEL AI"
+  // — identified by the folder names themselves rather than by the order the
+  // two links arrived in, since swapping them would send participants looking
+  // for slides into the photo album.
+  moduleFolderUrl: "https://drive.google.com/drive/folders/1VPQAezBT7KWqm8BkBfz3z4TZMIFpUaev?usp=share_link",
+  galleryUrl: "https://drive.google.com/drive/folders/1dKhNq16Dte5dnjNcRknnTcp9JUAiFeSc?usp=share_link",
   galleryImages: [],
   resourcesDriveUrl: "",
   enableDigitalOfficer: false,
