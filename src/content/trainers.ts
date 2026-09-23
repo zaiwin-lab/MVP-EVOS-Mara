@@ -56,8 +56,8 @@ export const TRAINERS: Trainer[] = [
     initials: "AZ",
   },
   {
-    id: "rosyairi",
-    name: "Mohd Rosyairi bin Haji Abu Bakar",
+    id: "rusyairi",
+    name: "Mohd Rusyairi bin Haji Abu Bakar",
     role: {
       bm: "Jurulatih · AI untuk Pemasaran & Penjenamaan Digital",
       en: "Trainer · AI Marketing & Digital Branding",

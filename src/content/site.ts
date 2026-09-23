@@ -46,7 +46,7 @@ export interface AgendaItem {
   desc: Localized;
   /** In running order. Names are not translated. */
   speakers?: Speaker[];
-  /** Precedes the names — "Tetamu Jemputan" for the closing guest. */
+  /** Optional heading above the names. No slot uses one at present. */
   speakerLabel?: Localized;
 }
 
@@ -104,7 +104,7 @@ export const AGENDA: AgendaItem[] = [
       iban: "Perkongsi SDEC",
     },
     speakers: [
-      { name: "Encik Muhammad Arif bin Seli" },
+      { name: "Encik Muhammad Arif" },
       { name: "Encik Abdul Khalik" },
     ],
     desc: {
@@ -127,7 +127,7 @@ export const AGENDA: AgendaItem[] = [
       zh: "合作社的实用 AI",
       iban: "AI Praktikal ke Koperasi",
     },
-    speakers: [{ name: "Encik Mohd Rosyairi" }],
+    speakers: [{ name: "Encik Mohd Rusyairi" }],
     desc: {
       bm: "Aplikasi AI praktikal untuk kegunaan koperasi.",
       en: "Practical AI applications for everyday co-operative work.",
@@ -177,12 +177,6 @@ export const AGENDA: AgendaItem[] = [
       en: "Certificate Presentation & Closing Ceremony",
       zh: "颁发证书与闭幕仪式",
       iban: "Nyerahka Sijil & Majlis Nutup",
-    },
-    speakerLabel: {
-      bm: "Tetamu Jemputan",
-      en: "Invited Guest",
-      zh: "受邀嘉宾",
-      iban: "Pengabang Dikangau",
     },
     speakers: [
       {
