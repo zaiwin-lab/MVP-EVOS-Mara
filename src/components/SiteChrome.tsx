@@ -5,28 +5,36 @@ import { NAV, PILLARS } from "../content/site";
 import { useI18n } from "../context/I18nContext";
 import { useParticipant } from "../context/ParticipantContext";
 import { LangToggle } from "./LangToggle";
-import { LogoMark } from "./Brand";
 import { Icon } from "./Icon";
 
 const WRAP = "mx-auto w-full max-w-6xl px-5 sm:px-8";
 
-/** ProgramOS Lite wordmark (text — we never redraw official partner logos). */
+/**
+ * The brand, set in type rather than drawn.
+ *
+ * There is no mark: a wordmark that has to carry a logo beside it is two
+ * things competing for the same glance. "Digital & AI" leads in the display
+ * face with AI in gold — the one accent the system spends on itself — and the
+ * rest of the name sits under it in small caps, spaced wide enough to read as
+ * a lockup rather than a second sentence.
+ */
 export function ProgramWordmark({ inverted = false }: { inverted?: boolean }) {
   const { t } = useI18n();
   return (
-    <Link to="/" className="flex shrink-0 items-center gap-2.5" aria-label={t("homeAria")}>
-      <LogoMark className="h-8 w-8 shrink-0 sm:h-9 sm:w-9" />
-      <span className="leading-none">
-        <span className={`block font-display text-[15px] font-extrabold tracking-[-0.01em] sm:text-[16px] ${inverted ? "text-white" : "text-navy-950"}`}>
-          ProgramOS <span className="text-gold-400">Lite</span>
-        </span>
-        <span
-          className={`mt-1 hidden text-[10px] font-bold uppercase tracking-[0.14em] sm:block ${
-            inverted ? "text-white/45" : "text-slate2-dim"
-          }`}
-        >
-          {t("wordmarkSub")}
-        </span>
+    <Link to="/" className="group flex shrink-0 flex-col leading-none" aria-label={t("homeAria")}>
+      <span
+        className={`font-display text-[17px] font-extrabold tracking-[-0.025em] sm:text-[19px] ${
+          inverted ? "text-white" : "text-navy-950"
+        }`}
+      >
+        Digital <span className="text-gold-400">&amp; AI</span>
+      </span>
+      <span
+        className={`mt-[3px] text-[10.5px] font-bold uppercase tracking-[0.22em] sm:text-[11px] ${
+          inverted ? "text-white/45" : "text-slate2-dim"
+        }`}
+      >
+        {t("wordmarkSub")}
       </span>
     </Link>
   );

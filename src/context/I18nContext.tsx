@@ -570,7 +570,7 @@ const DICT: Record<string, Localized> = {
   // ── Site chrome ──
   headerCta: { en: "Register / Sign In", bm: "Daftar / Log Masuk", zh: "注册／登录", iban: "Daftar / Login" },
   headerCtaShort: { en: "Register", bm: "Daftar", zh: "注册", iban: "Daftar" },
-  wordmarkSub: { en: "AI for Co-operatives", bm: "AI untuk Koperasi", zh: "合作社的 AI", iban: "AI ke Koperasi" },
+  wordmarkSub: { en: "For Co-operatives", bm: "Untuk Koperasi", zh: "为合作社而设", iban: "Ke Koperasi" },
   footerTagline: {
     en: "AI Does Not Replace People — It Empowers Co-operatives.",
     bm: "AI Bukan Menggantikan Manusia, Tetapi Memperkasa Koperasi.",
