@@ -297,10 +297,32 @@ second one.
 ### Replacing the artwork
 
 1. Export the new design as an image, A4 landscape (297×210mm). At 300dpi that
-   is 3508×2480px. The current file is 1491×1055, which is what was supplied.
-2. Put it in `public/` and point `certificate.artworkUrl` at it.
-3. Measure the new rule positions and update `name.bottomPct`,
+   is 3508×2480px.
+2. Run it through `scripts/prepare-certificate-artwork.py`, which writes
+   `public/sijil.jpg`. A design exported at 300dpi needs no upscaling — set
+   `SCALE = 1.0` in that script when that day comes.
+3. Point `certificate.artworkUrl` at it if the filename changed.
+4. Measure the new rule positions and update `name.bottomPct`,
    `organisation.bottomPct` and `fieldInsetPct`.
+
+### Why the artwork is resampled
+
+The file supplied was 1491×1055 — about 127 DPI on an A4 sheet. The name and
+organisation are live text drawn at the device's own resolution, so without
+this step the typed lines are sharp and the artwork behind them is visibly
+soft, which is what gives a certificate away as a composite.
+
+`scripts/prepare-certificate-artwork.py` resamples it to 2× (2982×2110, 255
+DPI) in linear light and restores the edge definition the WebP compression
+softened. It adds no detail that was not in the file — only a re-export from
+the original design at 300 DPI can do that, and that remains the right fix if
+the source file can be found. It does remove the browser's own naive upscaling,
+which is most of the visible difference.
+
+The ink for both filled lines is `#151751`, sampled from the core of the
+strokes in the artwork's own "This is to certify that" and "of". If the artwork
+is redrawn in a different blue, re-sample and update both `color` values
+together — they are meant to match each other and the print.
 
 Set `artworkUrl` to `""` to fall back to the layout the site draws itself,
 which is still in `Certificate.tsx` and needs no artwork.

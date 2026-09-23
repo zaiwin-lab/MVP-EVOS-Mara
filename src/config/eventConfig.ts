@@ -291,8 +291,12 @@ export const eventConfig: EventConfig = {
     // run from 21.9% to 78.1% across. The two fields below rest on those.
     artworkUrl: "/sijil.jpg",
     fieldInsetPct: 22,
-    name: { bottomPct: 43.4, sizePct: 3.6, color: "#0e1a6e", weight: 700 },
-    organisation: { bottomPct: 51.9, sizePct: 2.4, color: "#12206e", weight: 600 },
+    // Both lines share one ink and one weight so they read as a pair. The
+    // colour is the artwork's own: sampling the core of the strokes in "This
+    // is to certify that" and "of" — the printed lines these two sit between
+    // — gives #151751.
+    name: { bottomPct: 43.4, sizePct: 3.6, color: "#151751", weight: 700 },
+    organisation: { bottomPct: 51.9, sizePct: 2.4, color: "#151751", weight: 700 },
     // The artwork already carries the date, the venue and the signature, and
     // leaves no clear margin for a serial without sitting on the border.
     showSerial: false,
