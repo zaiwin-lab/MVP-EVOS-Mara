@@ -1,5 +1,6 @@
+import { useLayoutEffect, useRef } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { eventConfig } from "../config/eventConfig";
+import { eventConfig, type CertificateField } from "../config/eventConfig";
 import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
 import { LogoMark } from "../components/Brand";
@@ -19,6 +20,83 @@ const CERT_PARTNER_ORDER = ["KOBIS Berhad", "ANGKASA", "SDEC"];
 export function certificateSerial(ref: string): string {
   const year = eventConfig.dates.match(/\d{4}/)?.[0] ?? "";
   return `${eventConfig.refPrefix}/${year}/${ref.replace(/^.*?-/, "")}`;
+}
+
+/**
+ * One filled-in line on the organiser's artwork.
+ *
+ * The line is anchored by its bottom edge so it rests on the printed rule
+ * rather than drifting above it, and it shrinks to fit rather than wrapping
+ * or truncating. Co-operative names here run long — "Koperasi Pekerja-Pekerja
+ * Kerajaan Negeri Sarawak Berhad" is an ordinary one — and on a certificate a
+ * slightly smaller line is fine where a second line or an ellipsis is not.
+ *
+ * Sizes are in `cqw`, so the sheet is one object: the phone preview, the
+ * desktop preview and the A4 print are the same document at different scales.
+ */
+function CertLine({
+  field,
+  inset,
+  value,
+}: {
+  field: CertificateField;
+  inset: number;
+  value: string;
+}) {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useLayoutEffect(() => {
+    const box = boxRef.current;
+    const text = textRef.current;
+    if (!box || !text) return;
+
+    const floor = field.sizePct * 0.5;
+    const step = field.sizePct * 0.03;
+
+    const fit = () => {
+      let size = field.sizePct;
+      text.style.fontSize = `${size}cqw`;
+      while (text.scrollWidth > box.clientWidth && size > floor) {
+        size -= step;
+        text.style.fontSize = `${size}cqw`;
+      }
+    };
+
+    fit();
+    // A webfont that arrives after the first measurement changes the width,
+    // so measure again once it has.
+    void document.fonts?.ready.then(fit);
+
+    const observer = new ResizeObserver(fit);
+    observer.observe(box);
+    return () => observer.disconnect();
+  }, [field.sizePct, value]);
+
+  return (
+    <div
+      ref={boxRef}
+      className="absolute text-center"
+      style={{
+        left: `${inset}%`,
+        right: `${inset}%`,
+        top: `${field.bottomPct}%`,
+        transform: "translateY(-100%)",
+      }}
+    >
+      <p
+        ref={textRef}
+        className="whitespace-nowrap font-serif leading-none"
+        style={{
+          fontSize: `${field.sizePct}cqw`,
+          color: field.color,
+          fontWeight: field.weight,
+        }}
+      >
+        {value}
+      </p>
+    </div>
+  );
 }
 
 export default function Certificate() {
@@ -105,11 +183,20 @@ export default function Certificate() {
         <div className="mx-auto w-full max-w-[1000px] overflow-x-auto print:overflow-visible">
           <div
             id="sijil"
-            className="relative mx-auto aspect-[297/210] w-full min-w-[720px] overflow-hidden rounded-2xl border border-slate2-line bg-white shadow-pop [container-type:inline-size] print:min-w-0 print:rounded-none print:border-0 print:shadow-none"
+            /* The artwork is one image with two lines set over it, and every
+               size on it is in `cqw`, so it can shrink to a phone and stay
+               the same document. The layout the site draws itself cannot —
+               its text would become unreadable — so that one keeps a floor
+               and scrolls sideways instead. */
+            className={`relative mx-auto aspect-[297/210] w-full overflow-hidden rounded-2xl border border-slate2-line bg-white shadow-pop [container-type:inline-size] print:min-w-0 print:rounded-none print:border-0 print:shadow-none ${
+              art.artworkUrl ? "" : "min-w-[720px]"
+            }`}
           >
             {art.artworkUrl ? (
-              /* The organiser's own design. The site fills in only the parts
-                 that change from one participant to the next. */
+              /* The organiser's own design. The artwork already carries the
+                 heading, the programme name, the date, the venue and the
+                 signature, so the site fills in only the two ruled lines:
+                 the participant's name, and the organisation under "of". */
               <>
                 <img
                   src={art.artworkUrl}
@@ -117,26 +204,22 @@ export default function Certificate() {
                   aria-hidden="true"
                   className="absolute inset-0 h-full w-full object-cover"
                 />
-                <div
-                  className="absolute inset-x-[8%] text-center"
-                  style={{ top: `${art.namePositionPct}%`, transform: "translateY(-50%)" }}
-                >
-                  <p
-                    className="font-display text-[38px] font-extrabold leading-tight tracking-[-0.02em]"
-                    style={{ color: art.nameColor }}
-                  >
-                    {p.fullName}
-                  </p>
-                  {coop && (
-                    <p className="mt-1 text-[16px] font-semibold" style={{ color: art.metaColor }}>
-                      {coop}
-                    </p>
-                  )}
-                </div>
+                <CertLine
+                  field={art.name}
+                  inset={art.fieldInsetPct}
+                  value={p.fullName}
+                />
+                {coop && (
+                  <CertLine
+                    field={art.organisation}
+                    inset={art.fieldInsetPct}
+                    value={coop}
+                  />
+                )}
                 {art.showSerial && (
                   <div
-                    className="absolute inset-x-[6%] bottom-[4%] flex items-center justify-between text-[10px]"
-                    style={{ color: art.metaColor }}
+                    className="absolute inset-x-[6%] bottom-[4%] flex items-center justify-between text-[0.9cqw]"
+                    style={{ color: art.organisation.color }}
                   >
                     <span className="font-mono font-semibold">{serial}</span>
                     <span>{issuedLabel}</span>

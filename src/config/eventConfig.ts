@@ -57,13 +57,39 @@ export interface RoleOption {
  * at 300dpi prints cleanly) and that image becomes the certificate: the site
  * then overlays only the parts it has to fill in.
  */
+/**
+ * One line the site fills in on the printed artwork.
+ *
+ * Both measurements are percentages of the certificate itself rather than
+ * pixels, so the same numbers hold on a phone preview, a desktop preview and
+ * an A4 sheet. `bottomPct` is where the bottom of the line sits, measured
+ * down from the top edge — anchoring to the bottom is what keeps the text
+ * resting on the artwork's ruled line instead of drifting above it as the
+ * type size changes.
+ */
+export interface CertificateField {
+  /** Bottom of the line, as a percentage of the height. */
+  bottomPct: number;
+  /** Type size, as a percentage of the width (CSS `cqw`). */
+  sizePct: number;
+  color: string;
+  weight: number;
+}
+
 export interface CertificateConfig {
+  /**
+   * The organiser's own artwork. When this is set the site prints nothing of
+   * its own except the participant's name and organisation; everything else,
+   * including the signature, is part of the image. Empty falls back to the
+   * layout the site draws itself.
+   */
   artworkUrl: string;
-  /** How far down the sheet the participant's name sits, as a percentage. */
-  namePositionPct: number;
-  /** Ink for the overlaid text, so it can be tuned to the artwork. */
-  nameColor: string;
-  metaColor: string;
+  /** Left and right edge of the ruled fields, as a percentage of the width. */
+  fieldInsetPct: number;
+  /** The participant's name, on the upper rule. */
+  name: CertificateField;
+  /** Their co-operative or organisation, on the rule below "of". */
+  organisation: CertificateField;
   /** Print the serial and issue date along the bottom edge. */
   showSerial: boolean;
   /**
@@ -260,12 +286,16 @@ export const eventConfig: EventConfig = {
     { id: "main", label: "Sesi Program", date: "24 September 2026", weekday: "Khamis / Thursday" },
   ],
   certificate: {
-    // Drop your own design at public/sijil.png and set this to "/sijil.png".
-    artworkUrl: "",
-    namePositionPct: 52,
-    nameColor: "#0a1428",
-    metaColor: "#55648A",
-    showSerial: true,
+    // The organiser's artwork. Measured off the supplied file: the upper gold
+    // rule sits at 44.45% of the height, the lower one at 52.65%, and both
+    // run from 21.9% to 78.1% across. The two fields below rest on those.
+    artworkUrl: "/sijil.jpg",
+    fieldInsetPct: 22,
+    name: { bottomPct: 43.4, sizePct: 3.6, color: "#0e1a6e", weight: 700 },
+    organisation: { bottomPct: 51.9, sizePct: 2.4, color: "#12206e", weight: 600 },
+    // The artwork already carries the date, the venue and the signature, and
+    // leaves no clear margin for a serial without sitting on the border.
+    showSerial: false,
     issuedDate: "programme",
   },
 };

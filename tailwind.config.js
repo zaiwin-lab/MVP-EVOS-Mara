@@ -53,6 +53,10 @@ export default {
       fontFamily: {
         sans: ['"Plus Jakarta Sans"', '"Inter"', "system-ui", "sans-serif"],
         display: ['"Plus Jakarta Sans"', '"Manrope"', "system-ui", "sans-serif"],
+        // Only the certificate uses this. The artwork's own lines are set in a
+        // serif, and a downloaded document should not change face depending on
+        // whether it was opened on a Mac, a Windows PC or an Android phone.
+        serif: ['"Source Serif 4"', "Georgia", '"Times New Roman"', "serif"],
       },
       boxShadow: {
         card: "0 1px 2px rgba(11,18,36,0.05), 0 6px 18px rgba(11,18,36,0.06)",

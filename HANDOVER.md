@@ -265,31 +265,48 @@ order is `CERT_PARTNER_ORDER` at the top of `src/pages/Certificate.tsx`.
 The attendance timestamp is recorded either way; this only changes what the
 sheet prints.
 
-### Adding signatures
+### The certificate artwork
 
-The layout has no signature lines yet. When the signed images are available:
-export each signature as a PNG with a **transparent** background (a white box
-will show as a white box on the sheet), drop them in `public/logos/` beside the
-partner logos, and they can sit above the partner names with a ruled line and
-the signatory's name and title beneath. Expect the partner row to need
-rebalancing once signatures are added above it.
+The certificate is the organiser's own artwork, `public/sijil.jpg`. Everything
+printed on it — the heading, the programme name, the date, the venue, the three
+partner logos and the Chairman's signature — is part of that image. The site
+adds exactly two things: the participant's name on the upper gold rule, and
+their co-operative on the rule below "of".
 
-### Using your own certificate design
+Both are positioned in `src/config/eventConfig.ts` under `certificate`:
 
-The site draws a certificate by default. To use your own instead:
+- `fieldInsetPct` — how far in from each edge the fields start, matching the
+  width of the printed rules (22%).
+- `name` and `organisation` — each has `bottomPct` (where the bottom of the
+  line sits, as a percentage of the height, so the text rests on the rule),
+  `sizePct` (type size as a percentage of the width), `color` and `weight`.
+- `showSerial` — off, because the artwork leaves no clear margin for one. The
+  reference is still shown on screen under the certificate.
+- `issuedDate` — only read when `showSerial` is on.
 
-1. Export your design as an image, A4 landscape (297×210mm). At 300dpi that is
-   3508×2480px, which prints cleanly.
-2. Put it in `public/` — for example `public/sijil.png`.
-3. In `src/config/eventConfig.ts`, set `certificate.artworkUrl` to `"/sijil.png"`.
+The numbers came from measuring the supplied file: the upper rule sits at
+44.45% of the height, the lower one at 52.65%, and both run from 21.9% to
+78.1% across. If the artwork is ever redrawn, re-measure and update those.
 
-Your image then becomes the certificate, and the site overlays only what changes
-per participant: their name, their co-operative, and (if `showSerial` is on) the
-serial and issue date along the bottom. Leave space for those in your design.
+Long names are handled by shrinking the line, not by wrapping or truncating —
+`CertLine` in `src/pages/Certificate.tsx` measures after the webfont loads and
+steps the size down until the line fits, to a floor of half the configured
+size. Co-operative names here run long, and a smaller line is better than a
+second one.
 
-The other knobs in `certificate`:
+### Replacing the artwork
 
-- `namePositionPct` — how far down the sheet the name sits, as a percentage.
-- `nameColor` / `metaColor` — ink for the overlaid text, so it can be tuned to
-  your artwork.
-- `showSerial` — set to `false` if your design carries its own reference.
+1. Export the new design as an image, A4 landscape (297×210mm). At 300dpi that
+   is 3508×2480px. The current file is 1491×1055, which is what was supplied.
+2. Put it in `public/` and point `certificate.artworkUrl` at it.
+3. Measure the new rule positions and update `name.bottomPct`,
+   `organisation.bottomPct` and `fieldInsetPct`.
+
+Set `artworkUrl` to `""` to fall back to the layout the site draws itself,
+which is still in `Certificate.tsx` and needs no artwork.
+
+### Changing the signature
+
+The signature on the sheet is part of the artwork, so a new one means a new
+image — there is nothing to change in the code unless the rules move.
+
