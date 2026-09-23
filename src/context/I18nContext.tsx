@@ -776,6 +776,37 @@ const DICT: Record<string, Localized> = {
   glNoneTitle: { en: "Photographs after the programme", bm: "Gambar Selepas Program", zh: "课程后的照片", iban: "Gambar Udah Program" },
   myCertificate: { en: "My e-certificate", bm: "E-Sijil Saya", zh: "我的电子证书", iban: "E-Sijil Aku" },
 
+  // ── Programme access buttons + trainers ──
+  ldStartJourneyCta: { en: "Start My Journey", bm: "Mulakan Perjalanan Saya", zh: "开始我的旅程", iban: "Berengkahka Pejalai Aku" },
+  ldStartJourneyDesc: {
+    en: "Register and check in for the programme.",
+    bm: "Daftar dan buat check-in untuk program.",
+    zh: "报名并完成课程签到。",
+    iban: "Daftar lalu ngaga check-in ke program.",
+  },
+  ldProgrammeDesc: {
+    en: "The full running order for the day.",
+    bm: "Aliran penuh program sepanjang hari.",
+    zh: "当天的完整流程。",
+    iban: "Aliran penuh program sehari nya.",
+  },
+  ldTrainersDesc: {
+    en: "Who is delivering the sessions.",
+    bm: "Barisan penceramah program.",
+    zh: "本课程的讲师阵容。",
+    iban: "Barisan penceramah program.",
+  },
+  navTrainers: { en: "Trainers", bm: "Penceramah", zh: "讲师", iban: "Penceramah" },
+  trEyebrow: { en: "Programme faculty", bm: "Barisan Penceramah", zh: "讲师阵容", iban: "Barisan Penceramah" },
+  trTitle: { en: "Meet the Trainers", bm: "Kenali Barisan Penceramah", zh: "认识我们的讲师", iban: "Ngelala Barisan Penceramah" },
+  trIntro: {
+    en: "The two trainers leading the sessions and workshops on the day.",
+    bm: "Dua penceramah yang mengendalikan sesi dan bengkel pada hari program.",
+    zh: "当天负责各节课与工作坊的两位讲师。",
+    iban: "Dua iku penceramah ti mai sesi enggau bengkel ba hari program.",
+  },
+  trFocusAreas: { en: "Focus areas", bm: "Bidang Tumpuan", zh: "专长领域", iban: "Bidang Tumpu" },
+
   // ── Work area page ──
   waAllAreas: { en: "All areas", bm: "Semua Bidang", zh: "全部领域", iban: "Semua Bidang" },
   waMissions: { en: "{n} Prompt Missions", bm: "{n} Prompt Missions", zh: "{n} 个提示任务", iban: "{n} Prompt Missions" },

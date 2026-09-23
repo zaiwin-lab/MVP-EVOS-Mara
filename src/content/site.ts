@@ -29,9 +29,7 @@ export interface NavItem {
 // programme agenda and the FAQ moved onto the home page, and "Sumber" and the
 // Google-folder card were the same idea twice, so they are now one item.
 export const NAV: NavItem[] = [
-  { label: "Utama", to: "/", key: "home" },
   { label: "Prompt Hub", to: "/prompt-hub", key: "navPromptHub" },
-  { label: "Modul & Sumber", to: "/sumber", key: "navModules" },
   { label: "Galeri Foto", to: "/galeri", key: "navGallery" },
 ];
 
@@ -39,128 +37,153 @@ export interface AgendaItem {
   time: string;
   title: Localized;
   desc: Localized;
+  /** Who delivers it. Plain text — names are not translated. */
+  speaker?: string;
 }
 
-// Single-day agenda (tentative). Keep it light — this is ProgramOS Lite.
+// The official programme for 24 September 2026, 8:30am – 5:00pm at Hotel
+// Serapi, Kuching. Descriptions are kept to one line: this is a timeline read
+// on a phone between sessions, not a brochure.
 export const AGENDA: AgendaItem[] = [
   {
-    time: "8:30 – 9:00",
+    time: "08:30 – 09:00",
     title: {
-      bm: "Pendaftaran & QR Check-In",
+      bm: "Pendaftaran & Ketibaan Peserta",
       en: "Registration & QR Check-In",
       zh: "报到与 QR 签到",
       iban: "Pendaftaran enggau QR Check-In",
     },
     desc: {
-      bm: "Daftar masuk peserta menggunakan kod QR.",
-      en: "Participants check in using the QR code.",
-      zh: "参加者使用 QR 码签到。",
-      iban: "Peserta daftar masuk ngena kod QR.",
+      bm: "Peserta tiba, mendaftar dan membuat QR Check-In.",
+      en: "Participants arrive, register and complete QR Check-In.",
+      zh: "参加者抵达、报到并完成 QR 签到。",
+      iban: "Peserta datai, daftar lalu ngaga QR Check-In.",
     },
   },
   {
-    time: "9:00 – 9:30",
+    time: "09:00 – 09:20",
     title: {
-      bm: "Pembukaan & Hala Tuju",
-      en: "Opening & Direction",
-      zh: "开幕与方向",
-      iban: "Pemuka enggau Tuju",
+      bm: "Ucapan Aluan",
+      en: "Opening Remarks",
+      zh: "开幕致辞",
+      iban: "Jaku Pemuka",
     },
+    speaker: "Encik Wan Azizan bin Wan Zainal Abidin",
     desc: {
-      bm: "Ucapan ANGKASA, KOBIS & SDEC — mengapa AI untuk koperasi.",
-      en: "Addresses from ANGKASA, KOBIS and SDEC — why AI for cooperatives.",
-      zh: "ANGKASA、KOBIS 与 SDEC 致辞——合作社为何需要 AI。",
-      iban: "Jaku ari ANGKASA, KOBIS enggau SDEC — nama kebuah AI kena koperasi.",
+      bm: "Pengerusi ANGKASA Negeri Sarawak.",
+      en: "Chairman, ANGKASA Sarawak.",
+      zh: "ANGKASA 砂拉越主席。",
+      iban: "Pengerusi ANGKASA Menua Sarawak.",
     },
   },
   {
-    time: "9:30 – 10:30",
+    time: "09:20 – 10:30",
     title: {
-      bm: "Penilaian Kesiapsiagaan AI",
-      en: "AI Readiness Assessment",
-      zh: "AI 准备度评估",
-      iban: "Penilaian Kesediaan AI",
+      bm: "Sesi 1 — Koperasi Bersedia Menghadapi Masa Hadapan",
+      en: "Session 1 — Future-Ready Co-operatives",
+      zh: "第一节 — 面向未来的合作社",
+      iban: "Sesi 1 — Koperasi Sedia Ngadap Maya Ila",
     },
+    speaker: "Encik Ahmad Zaiwin bin Mohd Kassim",
     desc: {
-      bm: "Jawab 5 soalan ringkas dan dapat cadangan bidang untuk bermula.",
-      en: "Answer five quick questions and get a suggested area to start with.",
-      zh: "回答五个简短问题，获得建议的起步领域。",
-      iban: "Saut lima tanya ti pandak lalu bulih cadangan bidang kena berengkah.",
+      bm: "Pendigitalan, AI dan peluang dalam ekonomi digital Sarawak — dan mengapa transformasi boleh bermula dengan satu bahagian dahulu.",
+      en: "Digitalisation, AI and opportunities in Sarawak's digital economy — and why transformation can begin with one practical area first.",
+      zh: "数字化、AI 与砂拉越数字经济的机会——以及为何转型可以先从一个实际领域开始。",
+      iban: "Pendigitalan, AI enggau peluang ba ekonomi digital Sarawak — enggau kebuah transformasi ulih berengkah ari siti bagi dulu.",
     },
   },
   {
-    time: "10:30 – 12:30",
+    time: "10:30 – 10:45",
+    title: { bm: "Minum Pagi", en: "Morning Break", zh: "上午茶点", iban: "Ngirup Pagi" },
+    desc: { bm: "", en: "", zh: "", iban: "" },
+  },
+  {
+    time: "10:45 – 12:15",
     title: {
-      bm: "6 Bidang Utama Koperasi",
-      en: "6 Key Cooperative Areas",
-      zh: "合作社六大领域",
-      iban: "6 Bidang Utama Koperasi",
+      bm: "Sesi 2 — Aplikasi AI Praktikal untuk Koperasi",
+      en: "Session 2 — Practical AI for Co-operatives",
+      zh: "第二节 — 合作社的实用 AI",
+      iban: "Sesi 2 — Aplikasi AI Praktikal ke Koperasi",
     },
+    speaker: "Encik Azizul Azni",
     desc: {
-      bm: "Terokai bagaimana AI membantu setiap bidang operasi koperasi.",
-      en: "Explore how AI helps each area of cooperative operations.",
-      zh: "探索 AI 如何协助合作社各个营运领域。",
-      iban: "Peda baka ni AI nulung tiap bidang pengawa koperasi.",
+      bm: "Automasi operasi, peralatan pemasaran digital dan aplikasi AI yang membantu menjana hasil — termasuk demonstrasi secara langsung.",
+      en: "Practical AI tools for operations, digital marketing and revenue opportunities, including live demonstrations.",
+      zh: "用于营运、数字营销与增收的实用 AI 工具，包含现场示范。",
+      iban: "Automasi pengawa, peralatan pemasaran digital enggau aplikasi AI ti nulung ngasilka untung — enggau demonstrasi tekala nya.",
     },
   },
   {
-    time: "12:30 – 2:00",
+    time: "12:15 – 13:15",
+    title: { bm: "Makan Tengah Hari", en: "Lunch Break", zh: "午餐", iban: "Makai Tengah Hari" },
+    desc: { bm: "", en: "", zh: "", iban: "" },
+  },
+  {
+    time: "13:15 – 14:45",
     title: {
-      bm: "Rehat & Makan Tengah Hari",
-      en: "Break & Lunch",
-      zh: "休息与午餐",
-      iban: "Belelak enggau Makai Tengah Hari",
+      bm: "Bengkel A — Pemilihan Satu Bahagian untuk Transformasi Digital",
+      en: "Workshop A — Choose One Area for Digital Transformation",
+      zh: "工作坊 A — 选定一个数字转型领域",
+      iban: "Bengkel A — Milih Siti Bagi ke Transformasi Digital",
     },
+    speaker: "Encik Ahmad Zaiwin bin Mohd Kassim & Encik Azizul Azni",
     desc: {
-      bm: "Networking sesama peserta koperasi.",
-      en: "Networking among cooperative participants.",
-      zh: "合作社参加者之间的交流。",
-      iban: "Betemu enggau peserta koperasi bukai.",
+      bm: "Pemetaan proses kerja, mengenal pasti permasalahan utama dan memadankan peralatan AI dengan fungsi sebenar koperasi — keahlian, operasi, pemasaran, kewangan dan perniagaan.",
+      en: "Process mapping, identifying key problems and matching suitable AI and digital tools to real co-operative work.",
+      zh: "流程梳理、找出核心问题，并把合适的 AI 与数字工具对接到合作社的实际工作。",
+      iban: "Memetaka proses pengawa, ngelala penanggul ti besai lalu nyamaka peralatan AI enggau pengawa koperasi ti amat.",
     },
   },
   {
-    time: "2:00 – 3:30",
+    time: "14:45 – 15:00",
+    title: { bm: "Minum Petang", en: "Afternoon Break", zh: "下午茶点", iban: "Ngirup Lemai" },
+    desc: { bm: "", en: "", zh: "", iban: "" },
+  },
+  {
+    time: "15:00 – 16:20",
     title: {
-      bm: "AI Prompt Hub — Hands-on",
-      en: "AI Prompt Hub — Hands-on",
-      zh: "AI 提示中心——实作",
-      iban: "AI Prompt Hub — Dikereja Empu",
+      bm: "Bengkel B — Klinik Pelan Tindakan AI & Portal",
+      en: "Workshop B — AI Action Plan Clinic & Portal",
+      zh: "工作坊 B — AI 行动方案诊所与门户",
+      iban: "Bengkel B — Klinik Pelan Pengawa AI & Portal",
     },
+    speaker: "Encik Azizul Azni",
     desc: {
-      bm: "Bina prompt sebenar menggunakan Prompt Builder dan cuba dalam AI pilihan anda.",
-      en: "Build real prompts with the Prompt Builder and try them in the AI of your choice.",
-      zh: "使用 Prompt Builder 建立真实提示，并在您选用的 AI 中试用。",
-      iban: "Ngaga prompt amat ngena Prompt Builder lalu nguji ba AI pilih nuan.",
+      bm: "Peserta meneroka Prompt Hub, memilih prompt yang berkaitan dengan tugas masing-masing dan menggunakan portal sebagai toolkit praktikal.",
+      en: "Participants explore the Prompt Hub, pick prompts relevant to their own work and use the portal as a practical toolkit.",
+      zh: "参加者探索提示中心，挑选与自己工作相关的提示，把门户当作实用工具箱。",
+      iban: "Peserta nguji Prompt Hub, milih prompt ti ngena enggau pengawa sida lalu ngena portal nya nyadi toolkit praktikal.",
     },
   },
   {
-    time: "3:30 – 4:30",
+    time: "16:20 – 16:45",
     title: {
-      bm: "Perjalanan 90 Hari",
-      en: "The 90-Day Journey",
-      zh: "90 天旅程",
-      iban: "Perjalai 90 Hari",
+      bm: "Taklimat Hala Tuju Selepas Program",
+      en: "Next-Step Briefing",
+      zh: "后续方向简报",
+      iban: "Taklimat Jalai Udah Program",
     },
+    speaker: "Encik Ahmad Zaiwin bin Mohd Kassim",
     desc: {
-      bm: "Rangka langkah kecil untuk terus menggunakan AI selepas program.",
-      en: "Map small steps to keep using AI after the programme.",
-      zh: "规划小步骤，让您在课程后持续使用 AI。",
-      iban: "Ngaga langkah mit kena terus ngena AI udah program.",
+      bm: "Panduan ringkas untuk terus menggunakan prompt, modul dan sumber AI selepas program, mengikut keperluan koperasi masing-masing.",
+      en: "A short guide to carrying on with the prompts, modules and AI resources after the programme, as each co-operative needs.",
+      zh: "课程之后如何依合作社需要继续使用提示、模块与 AI 资源的简短指引。",
+      iban: "Panduan ti pandak kena terus ngena prompt, modul enggau bahan AI udah program, nitihka pengingin koperasi.",
     },
   },
   {
-    time: "4:30 – 5:00",
+    time: "16:45 – 17:00",
     title: {
-      bm: "Refleksi & Penutup",
-      en: "Reflection & Closing",
-      zh: "反思与闭幕",
-      iban: "Refleksi enggau Penutup",
+      bm: "Penyampaian Sijil & Penutup",
+      en: "Certificate Presentation & Closing",
+      zh: "颁发证书与闭幕",
+      iban: "Nyerahka Sijil & Nutup",
     },
     desc: {
-      bm: "Kongsi pembelajaran dan langkah seterusnya.",
-      en: "Share what you learned and what comes next.",
-      zh: "分享学习心得与下一步。",
-      iban: "Berandau pasal utai ti dipelajar enggau langkah ti datai.",
+      bm: "Penyampaian sijil penyertaan dan penutup program.",
+      en: "Presentation of participation certificates and closing.",
+      zh: "颁发出席证书并为课程闭幕。",
+      iban: "Nyerahka sijil penyerta lalu nutup program.",
     },
   },
 ];

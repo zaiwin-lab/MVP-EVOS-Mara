@@ -1,6 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { eventConfig } from "./config/eventConfig";
 import Landing from "./pages/Landing";
+import Programme from "./pages/Programme";
+import Trainers from "./pages/Trainers";
 import PromptHub from "./pages/PromptHub";
 import WorkArea from "./pages/WorkArea";
 import PromptBuilder from "./pages/PromptBuilder";
@@ -32,6 +34,10 @@ export default function App() {
       <Route path="/" element={<Landing />} />
       <Route path={`/event/${slug}`} element={<Landing />} />
 
+      {/* The day, and who delivers it */}
+      <Route path="/program" element={<Programme />} />
+      <Route path="/trainers" element={<Trainers />} />
+
       {/* Prompt Hub — 6 work areas → 10 prompts → builder */}
       <Route path="/prompt-hub" element={<PromptHub />} />
       <Route path="/prompt-hub/:areaId" element={<WorkArea />} />
@@ -59,10 +65,9 @@ export default function App() {
       <Route path="/sijil" element={<Certificate />} />
       <Route path="/certificate" element={<Certificate />} />
 
-      {/* Retired pages. The agenda and the FAQ are on the home page now; the
-          90-day pacing moved to the foot of each work area; the personal
-          dashboard and the separate sign-in page are gone. */}
-      <Route path="/program" element={<Navigate to="/#program" replace />} />
+      {/* Retired pages. The FAQ is on the home page; the 90-day pacing moved
+          to the foot of each work area; the personal dashboard and the
+          separate sign-in page are gone. */}
       <Route path="/faq" element={<Navigate to="/#faq" replace />} />
       <Route path="/journey" element={<Navigate to="/prompt-hub" replace />} />
       <Route path="/my" element={<Navigate to="/prompt-hub" replace />} />

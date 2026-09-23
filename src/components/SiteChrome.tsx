@@ -310,8 +310,22 @@ export function SiteFooter() {
             <PartnerStrip className="mt-4 text-white/40" />
           </div>
 
-          <FooterColumn title={t("navProgramme")} links={NAV.slice(0, 2).map((n) => ({ to: n.to, label: t(n.key) || n.label }))} />
-          <FooterColumn title={t("resources")} links={NAV.slice(2).map((n) => ({ to: n.to, label: t(n.key) || n.label }))} />
+          <FooterColumn
+            title={t("navProgramme")}
+            links={[
+              { to: "/program", label: t("navProgramme") },
+              { to: "/trainers", label: t("navTrainers") },
+              { to: "/register", label: t("ldStartJourneyCta") },
+            ]}
+          />
+          <FooterColumn
+            title={t("resources")}
+            links={[
+              { to: "/prompt-hub", label: t("navPromptHub") },
+              { to: "/sumber", label: t("navModules") },
+              { to: "/galeri", label: t("navGallery") },
+            ]}
+          />
         </div>
 
         <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
