@@ -296,12 +296,8 @@ export function SiteFooter() {
       </div>
 
       <div className={`${WRAP} py-9`}>
-        <div className="rounded-2xl border border-gold-400/20 bg-gold-400/[0.08] px-5 py-4 text-center">
-          <p className="font-display text-sm font-bold text-gold-200">{t("footerTagline")}</p>
-        </div>
-
         {/* Brand block beside link columns — the Sales Portal footer shape. */}
-        <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr]">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr]">
           <div>
             <ProgramWordmark inverted />
             <p className="mt-3 max-w-sm text-[13px] leading-relaxed text-white/55">

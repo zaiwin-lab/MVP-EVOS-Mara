@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { eventConfig } from "../config/eventConfig";
-import { FAQS } from "../content/site";
 import { WORK_AREAS } from "../content/promptLibrary";
 import { SiteLayout, SITE_WRAP, SectionHead } from "../components/SiteChrome";
 import { Icon } from "../components/Icon";
@@ -18,8 +16,6 @@ import { useI18n } from "../context/I18nContext";
  * content is not six times the help; it is a decision the reader has to make
  * before they can start.
  */
-
-const HOME_FAQS = FAQS.filter((f) => f.home);
 
 export default function Landing() {
   const { t, pick } = useI18n();
@@ -64,10 +60,7 @@ export default function Landing() {
             </span>
             <span className="inline-flex items-center gap-2">
               <Icon name="location" className="h-4 w-4 shrink-0 text-gold-400" />
-              {eventConfig.venue}, {eventConfig.venueCity}
-            </span>
-            <span className="inline-flex items-center gap-2 text-white/45">
-              {eventConfig.partners.map((p) => p.name).join(" × ")}
+              {eventConfig.venue}
             </span>
           </div>
         </div>
@@ -123,51 +116,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── 5 · Take it home ─────────────────────────────────── */}
-      <section className={`${SITE_WRAP} py-12 lg:py-16`}>
-        <SectionHead eyebrow={t("ldTakeEyebrow")} title={t("ldTakeTitle")} />
-
-        <div className="mx-auto mt-10 grid max-w-3xl gap-4 sm:grid-cols-2">
-          <Link to="/sumber" className="card-hover group flex flex-col gap-3 p-6">
-            <span className="icon-tile h-11 w-11 bg-navy-900 text-gold-300">
-              <Icon name="book" className="h-5 w-5" />
-            </span>
-            <div className="font-display text-[17px] font-extrabold tracking-[-0.01em] text-navy-950">
-              {t("navModules")}
-            </div>
-            <p className="text-sm leading-relaxed text-slate2-mut">{t("ldModulesCardDesc")}</p>
-            <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[13px] font-bold text-navy-700 transition group-hover:gap-2 group-hover:text-gold-600">
-              {t("ldExplore")} <Icon name="arrowRight" className="h-4 w-4" />
-            </span>
-          </Link>
-
-          <Link to="/galeri" className="card-hover group flex flex-col gap-3 p-6">
-            <span className="icon-tile h-11 w-11 bg-navy-900 text-gold-300">
-              <Icon name="slides" className="h-5 w-5" />
-            </span>
-            <div className="font-display text-[17px] font-extrabold tracking-[-0.01em] text-navy-950">
-              {t("navGallery")}
-            </div>
-            <p className="text-sm leading-relaxed text-slate2-mut">{t("ldGalleryCardDesc")}</p>
-            <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[13px] font-bold text-navy-700 transition group-hover:gap-2 group-hover:text-gold-600">
-              {t("ldExplore")} <Icon name="arrowRight" className="h-4 w-4" />
-            </span>
-          </Link>
-        </div>
-      </section>
-
-      {/* ── 6 · Three questions, no FAQ page ─────────────────── */}
-      <section id="faq" className="scroll-mt-20 border-t border-slate2-line bg-white py-12 lg:py-16">
-        <div className={SITE_WRAP}>
-          <SectionHead eyebrow={t("ldFaqEyebrow")} title={t("faqTitle")} />
-          <div className="mx-auto mt-9 max-w-2xl space-y-2.5">
-            {HOME_FAQS.map((f, i) => (
-              <FaqRow key={i} q={pick(f.q)} a={pick(f.a)} defaultOpen={i === 0} />
-            ))}
-          </div>
-        </div>
-      </section>
-
     </SiteLayout>
   );
 }
@@ -200,27 +148,5 @@ function AccessTile({
         {desc}
       </span>
     </Link>
-  );
-}
-
-/** One collapsible question. Three of these replace a page. */
-function FaqRow({ q, a, defaultOpen }: { q: string; a: string; defaultOpen?: boolean }) {
-  const [open, setOpen] = useState(Boolean(defaultOpen));
-  return (
-    <div className="card overflow-hidden">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left"
-      >
-        <span className="font-display text-[14.5px] font-bold text-navy-950">{q}</span>
-        <Icon
-          name="arrowRight"
-          className={`h-4 w-4 shrink-0 text-slate2-dim transition-transform ${open ? "rotate-90" : ""}`}
-        />
-      </button>
-      {open && <p className="px-5 pb-5 text-[13.5px] leading-relaxed text-slate2-mut">{a}</p>}
-    </div>
   );
 }

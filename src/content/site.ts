@@ -191,10 +191,13 @@ export const AGENDA: AgendaItem[] = [
 export interface Faq {
   q: Localized;
   a: Localized;
-  /** Shown in the short FAQ on the home page. There is no FAQ page any more,
-   *  so anything without this flag is kept for reference but not displayed. */
+  /** Was used to pick the three shown on the home page. */
   home?: boolean;
 }
+
+// NOT CURRENTLY DISPLAYED. The FAQ page was folded into the home page, and the
+// home page's short FAQ was then removed too. The answers are kept because
+// they are worth keeping — put them back by rendering FAQS somewhere.
 
 export const FAQS: Faq[] = [
   {

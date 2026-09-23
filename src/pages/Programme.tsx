@@ -19,7 +19,7 @@ export default function Programme() {
         <SectionHead
           eyebrow={t("ldTodayEyebrow")}
           title={t("ldTodayTitle")}
-          lede={`${eventConfig.time} · ${eventConfig.venue}, ${eventConfig.venueCity}`}
+          lede={`${eventConfig.time} · ${eventConfig.venue}`}
         />
 
         <ol className="mx-auto mt-9 max-w-2xl border-l-2 border-slate2-line pl-5 sm:pl-6">
