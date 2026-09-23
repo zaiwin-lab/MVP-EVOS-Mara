@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { eventConfig } from "../config/eventConfig";
 import { store } from "../data/store";
+import { toProperName } from "../lib/names";
 import { useParticipant } from "../context/ParticipantContext";
 import { useI18n, type Localized } from "../context/I18nContext";
 import { SiteLayout, SITE_WRAP } from "../components/SiteChrome";
@@ -144,8 +145,8 @@ export default function CheckIn() {
               <p className="mt-1 text-xs text-navy-400">{pick(c.cardNote)}</p>
 
               <div className="mt-5 space-y-4">
-                <Field label={t("fullName")} value={fullName} onChange={setFullName} placeholder="cth. Ahmad Firdaus bin Rahman" autoComplete="name" />
-                <Field label={t("ciCoopName")} value={coopName} onChange={setCoopName} placeholder="cth. Koperasi Serba Guna Kuching Berhad" autoComplete="organization" />
+                <Field label={t("fullName")} value={fullName} onChange={setFullName} placeholder="cth. Ahmad Firdaus bin Rahman" autoComplete="name" tidy />
+                <Field label={t("ciCoopName")} value={coopName} onChange={setCoopName} placeholder="cth. Koperasi Serba Guna Kuching Berhad" autoComplete="organization" tidy />
                 <Field label={t("mobileNumber")} value={mobile} onChange={setMobile} placeholder="cth. 012-345 6789" inputMode="tel" autoComplete="tel" />
                 <Field label={t("emailLabel")} value={email} onChange={setEmail} placeholder="anda@koperasi.com" type="email" inputMode="email" autoComplete="email" />
                 <div>
@@ -218,15 +219,30 @@ function Success({ ref_, returning, next, onContinue }: { ref_: string; returnin
 }
 
 function Field({
-  label, value, onChange, placeholder, type = "text", inputMode, autoComplete,
+  label, value, onChange, placeholder, type = "text", inputMode, autoComplete, tidy,
 }: {
   label: string; value: string; onChange: (v: string) => void;
   placeholder?: string; type?: string; inputMode?: "text" | "numeric" | "tel" | "email"; autoComplete?: string;
+  /** Capitalise the value when the field loses focus. */
+  tidy?: boolean;
 }) {
   return (
     <div>
       <label className="field-label">{label}</label>
-      <input className="field-input" value={value} type={type} inputMode={inputMode} autoComplete={autoComplete} placeholder={placeholder} onChange={(e) => onChange(e.target.value)} />
+      <input
+        className="field-input"
+        value={value}
+        type={type}
+        inputMode={inputMode}
+        autoComplete={autoComplete}
+        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+        // Tidied on blur rather than on every keystroke: capitalising mid-word
+        // fights the person typing, and it means they see what will be printed
+        // while they can still correct it, instead of meeting it on the
+        // certificate. The store applies the same rule on save regardless.
+        onBlur={tidy ? (e) => onChange(toProperName(e.target.value)) : undefined}
+      />
     </div>
   );
 }

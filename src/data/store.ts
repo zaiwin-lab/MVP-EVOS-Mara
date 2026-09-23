@@ -6,6 +6,7 @@
 // The UI never talks to a backend directly; it calls `store`.
 // ─────────────────────────────────────────────────────────────
 
+import { toProperName } from "../lib/names";
 import { eventConfig } from "../config/eventConfig";
 import { supabase, supabaseEnabled } from "./supabaseClient";
 import type {
@@ -82,12 +83,16 @@ function makeRef(): string {
 
 /** Build a fresh Participant from a registration input (shared by adapters). */
 function buildParticipant(input: RegistrationInput): Participant {
-  const coop = input.coopName?.trim() || input.companyName?.trim() || "";
+  // Capitalised on the way in, not on the way out: the name is printed on a
+  // certificate, listed in the admin console and exported to CSV, and all
+  // three should agree. See src/lib/names.ts for what the rule does and does
+  // not touch.
+  const coop = toProperName(input.coopName ?? input.companyName);
   return {
     id: makeId(),
     ref: makeRef(),
     eventSlug: eventConfig.slug,
-    fullName: input.fullName.trim(),
+    fullName: toProperName(input.fullName),
     mobile: input.mobile.trim(),
     email: input.email.trim(),
     companyName: coop,
