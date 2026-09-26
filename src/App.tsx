@@ -3,6 +3,7 @@ import { eventConfig } from "./config/eventConfig";
 import Landing from "./pages/Landing";
 import Programme from "./pages/Programme";
 import Trainers from "./pages/Trainers";
+import Maklumat from "./pages/Maklumat";
 import PromptHub from "./pages/PromptHub";
 import WorkArea from "./pages/WorkArea";
 import PromptBuilder from "./pages/PromptBuilder";
@@ -37,6 +38,7 @@ export default function App() {
       {/* The day, and who delivers it */}
       <Route path="/program" element={<Programme />} />
       <Route path="/trainers" element={<Trainers />} />
+      <Route path="/maklumat" element={<Maklumat />} />
 
       {/* Prompt Hub — 6 work areas → 10 prompts → builder */}
       <Route path="/prompt-hub" element={<PromptHub />} />

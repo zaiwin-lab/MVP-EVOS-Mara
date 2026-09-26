@@ -320,6 +320,7 @@ export function SiteFooter() {
             links={[
               { to: "/program", label: t("navProgramme") },
               { to: "/trainers", label: t("navTrainers") },
+              { to: "/maklumat", label: t("mkTitle") },
               { to: "/register", label: t("ldStartJourneyCta") },
             ]}
           />

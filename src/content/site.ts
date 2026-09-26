@@ -29,8 +29,9 @@ export interface NavItem {
 // programme agenda and the FAQ moved onto the home page, and "Sumber" and the
 // Google-folder card were the same idea twice, so they are now one item.
 export const NAV: NavItem[] = [
-  { label: "Prompt Hub", to: "/prompt-hub", key: "navPromptHub" },
-  { label: "Galeri Foto", to: "/galeri", key: "navGallery" },
+  { label: "Atur Cara", to: "/program", key: "navProgramme" },
+  { label: "AI Toolkit", to: "/prompt-hub", key: "navPromptHub" },
+  { label: "Maklumat", to: "/maklumat", key: "navMaklumat" },
 ];
 
 export interface Speaker {

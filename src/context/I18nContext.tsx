@@ -822,6 +822,13 @@ const DICT: Record<string, Localized> = {
   pgDay1Date: { bm: "28 September 2026 · Isnin", en: "28 September 2026 · Monday" },
   pgDay2Date: { bm: "29 September 2026 · Selasa", en: "29 September 2026 · Tuesday" },
 
+  navMaklumat: { bm: "Maklumat", en: "Info" },
+  mkEyebrow: { bm: "Sebelum Anda Hadir", en: "Before You Arrive" },
+  mkTitle: { bm: "Maklumat Peserta", en: "Participant Information" },
+  mkBring: { bm: "Bawa Bersama Anda", en: "Bring With You" },
+  mkReminders: { bm: "Peringatan", en: "Reminders" },
+  mkDress: { bm: "Etika Pakaian", en: "Dress Code" },
+
   footerBuiltBy: {
     en: "Designed & Built by KOBIS Berhad",
     bm: "Direka & Dibina oleh KOBIS Berhad",
