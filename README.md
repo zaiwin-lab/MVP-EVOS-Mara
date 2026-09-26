@@ -1,177 +1,105 @@
-# Attendify EventOS™
+# CEOnita Strategik — Women’s Leadership Programme Portal
 
-> **Portfolio maturity:** Pilot Ready · Digital Participant Journey & Programme Operations Platform
+> **Maturity: active pre-event programme build · recovery candidate on a non-default branch**
 
-[Open live demonstration](https://kbtmaravdp.uk)
+CEOnita Strategik is a bilingual-first digital programme portal for a two-day women’s leadership and business-development experience. The application combines programme information, participant registration, attendance, an AI-readiness snapshot, a reusable prompt toolkit, resources, an administrative view and attendance-gated e-certificates.
 
-**One Scan. One Journey. From Attendance to Action.**
+## Source-capture status
 
-A mobile-first platform that unifies attendance, participant profiling, readiness assessment, learning resources, action planning and programme reporting for training, entrepreneurship and community initiatives.
+This source is currently preserved on the `claude/ceonita-strategik` branch of the unrelated `MVP-EVOS-Mara` repository.
 
-## Business Value
+- The branch is **46 commits ahead** of the repository’s Attendify default branch.
+- Its latest inspected commit is [`1fefffaa`](https://github.com/zaiwin-lab/MVP-EVOS-Mara/commit/1fefffaa655eefc875a9d69913b3a9690c468de3).
+- The default branch still presents Attendify EventOS, not CEOnita.
+- No dedicated CEOnita repository or verified public live URL was found during the 27 September 2026 review.
+- This README documents the branch truthfully; it does not make the branch the canonical release.
 
-- replaces fragmented forms, links and spreadsheets with one participant journey;
-- gives programme teams clearer evidence of attendance, readiness and completion;
-- supports personalised results and 90-day participant action plans;
-- provides supervisors with searchable records, summary insights and CSV export;
-- can be configured for different programmes without rebuilding the entire platform.
+Do **not** merge this branch into Attendify or deploy it over another programme. The safest recovery is a dedicated CEOnita repository created from an audited source snapshot using the actual recovery date.
 
-> Attendify™ is an independent event-platform prototype by **KOBIS Berhad**.
-> Event configurations are illustrative and do not imply platform ownership,
-> commissioning or endorsement by any external organisation.
+## Programme identity represented in the source
 
----
+The inspected configuration identifies:
 
-## What it does
+- **Product:** CEOnita
+- **Module:** Strategik
+- **Theme:** Transformasi Kepimpinan Wanita Dalam Ekosistem Ekonomi MADANI
+- **Dates:** 28–29 September 2026
+- **Venue:** Mines Beach Resort, Seri Kembangan, Selangor
+- **Expected capacity:** 30 participants
+- **Delivery collaborator named in the configuration:** KOBIS Berhad
 
-Turns a three-day training programme into a simple digital journey:
+These are source-recorded programme details, not independent proof of attendance, organiser approval, outcomes, accreditation, sponsorship or public launch.
 
-```
-Scan QR → Confirm Attendance → Contractor Profile → Readiness Assessment
-        → Personalised Results → Resources → 90-Day Action Plan → Reflections
-```
+## Business problem
 
-Plus a password-protected **admin dashboard** for the event supervisor:
-live attendance, completion stats, group readiness averages, per-participant
-results, search/filter, and CSV export.
+Leadership programmes often scatter the agenda, participant records, learning tools, attendance, resources and certificates across separate forms and files. CEOnita explores one mobile-friendly journey that keeps those touchpoints together while giving the delivery team an operational view.
 
----
+## Intended users
 
-## Tech stack
+- women entrepreneurs and business owners
+- CEOs, managing directors, board members and senior managers
+- programme facilitators and administrators
+- KOBIS delivery personnel supporting the programme
 
-- **React 18 + TypeScript + Vite** — fast, reliable, no SSR complexity
-- **Tailwind CSS** — navy/gold design system (see `tailwind.config.js`)
-- **Storage abstraction** (`src/data/store.ts`):
-  - **localStorage** by default — works instantly, zero setup, great for a
-    single kiosk device or a demo.
-  - **Supabase** when env vars are present — a shared backend so the admin
-    dashboard sees every participant's phone in real time.
-- **qrcode** — in-app + scripted QR PNG generation
-- Deploys to **Netlify** (config included) or any static host.
+These are intended users described by the source, not evidence of adoption.
 
-No backend is required to run or demo the app.
+## Capabilities evidenced in this branch
 
----
+- Bahasa Malaysia and English programme experience, with additional Mandarin and Iban interface foundations
+- programme agenda, participant information and trainer pages
+- participant registration with programme-specific reference generation
+- separate QR-based attendance rather than treating registration as attendance
+- optional phone-camera QR scanning with a browser fallback
+- five-question AI-readiness guidance
+- a 60-prompt library across six business work areas
+- generated prompts for use in external tools such as ChatGPT, Claude or Gemini
+- resource and gallery links
+- an administrative dashboard for registration, attendance and prompt activity
+- attendance-gated e-certificate generation
+- browser-local storage by default and an optional Supabase storage adapter
+- event-specific data separation through the `ceonita-strategik-2026` slug
 
-## Quick start
+The prompt builder is deterministic template assembly. It does not call a paid AI API or operate as an autonomous AI system.
 
-```bash
-npm install
-npm run dev        # http://localhost:5173
-```
+## Technology
 
-Build for production:
+- React 18, TypeScript and Vite
+- React Router
+- Tailwind CSS
+- Supabase client integration when configured
+- localStorage fallback
+- QRCode and jsQR
+- Netlify static-site configuration
 
-```bash
-npm run build      # outputs to dist/
-npm run preview    # serve the production build locally
-```
+## Delivery role
 
----
+Product direction, programme workflow and supervised AI-assisted delivery are led by **Ts. Zaiwin Kassim** with the **KOBIS AI Prodigy Team**. AI-assisted implementation does not transfer responsibility for programme facts, participant data, testing or release approval away from human owners.
 
-## Configuration (all optional)
+## Responsible use and known limitations
 
-Copy `.env.example` → `.env`:
+- **Repository placement is wrong.** CEOnita is mixed into an Attendify repository and should be recovered into its own governed project.
+- **Documentation drift remains.** `package.json`, `HANDOVER.md` and several internal labels still contain ProgramOS Lite, ANGKASA, cooperative or Attendify wording. They must be reconciled before calling this a clean CEOnita release.
+- **No live deployment was verified.** Repository code and configuration do not prove that the current branch is deployed.
+- **Client-side admin access is not production authentication.** A `VITE_ADMIN_PASSWORD` is delivered to the browser bundle. Real participant administration requires server-side authentication and role-based authorization.
+- **Participant sign-in is lightweight.** Mobile number and email matching is not identity verification.
+- **Self-service attendance needs supervision.** Anyone with the attendance link may attempt to mark attendance; the administrator remains responsible for the final record.
+- **Supabase mode needs policy verification.** A configured client and event slug do not by themselves prove correct RLS, isolation, backup, retention or deletion controls.
+- **Personal data requires consent and governance.** Names, phone numbers, emails, companies, roles, attendance and prompt content should only be collected with an approved notice, minimum-data rules, restricted access and retention/deletion procedures.
+- **Trainer, programme and institutional statements need owner approval.** Profiles, credentials, schedules, logos, claims and resource links must be verified by the organiser before publication.
+- **Translations need human review.** Iban content is explicitly marked in source as requiring native-speaker validation.
+- **Certificate issuance is not accreditation.** Attendance-gated generation does not establish external recognition or qualification.
 
-| Variable | Purpose | Default |
-|---|---|---|
-| `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` | Shared backend (see below) | unset → localStorage |
-| `VITE_ADMIN_PASSWORD` | Required password for `/admin`; set securely in the deployment environment | no public default |
-| `VITE_PUBLIC_URL` | Live origin used for QR links | current browser origin |
+## Recovery checklist
 
-### Enabling the shared backend (recommended for the live event)
+1. Obtain the exact deployed CEOnita source or deployment artifact, if a deployment exists.
+2. Compare it with this branch and record any live-only differences.
+3. Create a dedicated CEOnita repository from the audited source using a current-date recovery commit.
+4. Preserve a provenance note linking back to this branch and its commit history.
+5. Remove stale Attendify, ANGKASA, cooperative and ProgramOS labels.
+6. confirm authorised programme copy, trainer information, logos, folders and public URL.
+7. replace client-side administration with governed server-side access before real participant-data operations.
+8. build, test and document the final default-branch release.
 
-Without this, each device stores its own data locally — fine for a demo, but
-the admin on device A won't see participants who checked in on device B. For the
-real event where one supervisor watches everyone, enable Supabase:
+## Evidence boundary
 
-1. Create a free project at <https://supabase.com>.
-2. In the SQL Editor, run [`supabase/schema.sql`](supabase/schema.sql).
-3. Put the Project URL + anon key into `.env` (the two `VITE_SUPABASE_*` vars).
-4. Redeploy. The app auto-detects the env and switches backend — the admin
-   header shows **“Shared backend”** instead of **“On-device data.”**
-
----
-
-## Deployment (Netlify)
-
-1. Push this repo to GitHub and “Add new site → Import” in Netlify, **or** drag
-   the `dist/` folder into Netlify Drop.
-2. Build command `npm run build`, publish directory `dist` (already set in
-   `netlify.toml`, which also handles SPA deep-link routing).
-3. Add the environment variables from `.env` in **Site settings → Environment**.
-4. After deploy, set `VITE_PUBLIC_URL` to your live URL and re-generate QR codes
-   (below) so they point at production.
-
-Works the same on Vercel or any static host (ensure SPA fallback to
-`index.html`).
-
----
-
-## QR codes
-
-Two entry points:
-
-| QR | Links to | Use |
-|---|---|---|
-| **Check-In** | `/event/vdp-frontier-miri/check-in` | Registration counter |
-| **Portal** | `/event/vdp-frontier-miri` | General access, WhatsApp, slides |
-
-- **In-app:** visit `/qr` to view and download both as high-res PNGs.
-- **Scripted:** `node scripts/generate-qr.mjs https://your-live-url` writes
-  print-ready PNGs to `public/qr/`.
-
----
-
-## Admin
-
-- Set a strong `VITE_ADMIN_PASSWORD` in the protected deployment environment before launch.
-- Go to `/admin` and use the privately managed administrator credential.
-- Summary stats, group readiness averages, insight cards, participant table with
-  search/filter, per-participant detail (`/admin/participant/:id`), and **Export
-  CSV**.
-
----
-
-## Sample data
-
-On a fresh device, 20 realistic sample participants are seeded automatically so
-the dashboard is never empty during a demo (`src/data/seed.ts`). This runs only
-against localStorage and never against Supabase. To clear it, clear the browser's
-site data.
-
----
-
-## Project structure
-
-```
-src/
-  config/eventConfig.ts     # single source of truth for event branding/details
-  content/
-    programme.ts            # days, trainers, resources
-    assessment.ts           # KBT Readiness Index: indicators, questions, scale
-  data/
-    types.ts  store.ts  supabaseClient.ts  seed.ts
-  lib/  scoring.ts  csv.ts
-  components/                # AppShell, Brand, Icon, RadarChart, ScoreRing, QRCode…
-  context/                   # ParticipantContext, I18nContext (EN/BM)
-  pages/                     # Landing, CheckIn, Journey, Profile, Assessment,
-                             # Results, ActionPlan, Reflection, Resources, QR
-    admin/                   # AdminDashboard, AdminParticipant
-supabase/schema.sql
-scripts/generate-qr.mjs
-```
-
-See [`HANDOVER.md`](HANDOVER.md) for “how to change the event, resources, and
-create another event from the same platform.”
-
----
-
-## Status & Delivery Role
-
-**Status:** Pilot Ready — suitable for controlled demonstrations and stakeholder testing. A live multi-device programme requires the shared Supabase backend, securely managed administrator access, verified programme content, privacy notices, consent, retention rules and operational support.
-
-Product strategy, participant journey, programme workflow and solution direction are led by **Ts. Zaiwin Kassim**, together with the **KOBIS AI Prodigy Team**, using supervised AI-assisted development.
-
-Powered by **Attendify EventOS™** · An innovation by KOBIS Berhad
-*Smart Digital Solutions. Sustainable Impact.*
+This README describes inspected repository evidence only. It does not claim programme delivery, participant numbers, outcomes, revenue, credentials, affiliations, endorsements, accreditation or production readiness.
