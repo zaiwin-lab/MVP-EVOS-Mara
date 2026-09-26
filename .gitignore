@@ -14,3 +14,6 @@ npm-debug.log*
 
 # Deployable bundles built for drag-and-drop deploys (regenerate with vite build)
 *.zip
+
+# Verification screenshots from QA runs — artifacts, not source.
+qa-*.png
