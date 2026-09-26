@@ -272,8 +272,11 @@ export const eventConfig: EventConfig = {
   // — identified by the folder names themselves rather than by the order the
   // two links arrived in, since swapping them would send participants looking
   // for slides into the photo album.
-  moduleFolderUrl: "https://drive.google.com/drive/folders/1VPQAezBT7KWqm8BkBfz3z4TZMIFpUaev?usp=share_link",
-  galleryUrl: "https://drive.google.com/drive/folders/1dKhNq16Dte5dnjNcRknnTcp9JUAiFeSc?usp=share_link",
+  // CEOnita's own folders. Both must be set to "Anyone with the link"
+  // in Drive — created private, and a participant hitting a permission
+  // wall mid-programme is worse than no button at all.
+  moduleFolderUrl: "https://drive.google.com/drive/folders/1NtMg06KMYtRV0yuABVf2qzKcZcJc0XFB?usp=sharing",
+  galleryUrl: "https://drive.google.com/drive/folders/1scZMEYJ3U86UtLRo0O6-t9-kXV2ScDf-?usp=sharing",
   galleryImages: [],
   resourcesDriveUrl: "",
   enableDigitalOfficer: false,
