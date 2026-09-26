@@ -57,8 +57,8 @@ const COPY: ModeCopy = {
       },
       {
         icon: "users",
-        title: { bm: "Untuk Koperasi Anda", en: "For your co-operative", zh: "为贵合作社而设", iban: "Ke Koperasi Nuan" },
-        desc: { bm: `Maksimum ${eventConfig.maxPerCoop} wakil setiap koperasi digalakkan menyertai.`, en: `Up to ${eventConfig.maxPerCoop} representatives per co-operative are encouraged to attend.`, zh: `每家合作社建议最多派 ${eventConfig.maxPerCoop} 位代表参加。`, iban: `Maksimum ${eventConfig.maxPerCoop} wakil tiap koperasi dikeransing datai.` },
+        title: { bm: "Untuk Syarikat Anda", en: "For your business" },
+        desc: { bm: `Maksimum ${eventConfig.maxPerCoop} wakil setiap syarikat digalakkan menyertai.`, en: `Up to ${eventConfig.maxPerCoop} representatives per company are encouraged to attend.` },
       },
     ],
 };
@@ -145,10 +145,10 @@ export default function CheckIn() {
               <p className="mt-1 text-xs text-navy-400">{pick(c.cardNote)}</p>
 
               <div className="mt-5 space-y-4">
-                <Field label={t("fullName")} value={fullName} onChange={setFullName} placeholder="cth. Ahmad Firdaus bin Rahman" autoComplete="name" tidy />
-                <Field label={t("ciCoopName")} value={coopName} onChange={setCoopName} placeholder="cth. Koperasi Serba Guna Kuching Berhad" autoComplete="organization" tidy />
+                <Field label={t("fullName")} value={fullName} onChange={setFullName} placeholder="cth. Nurul Aisyah binti Rahman" autoComplete="name" tidy />
+                <Field label={t("ciCoopName")} value={coopName} onChange={setCoopName} placeholder="cth. Seri Wangi Enterprise Sdn Bhd" autoComplete="organization" tidy />
                 <Field label={t("mobileNumber")} value={mobile} onChange={setMobile} placeholder="cth. 012-345 6789" inputMode="tel" autoComplete="tel" />
-                <Field label={t("emailLabel")} value={email} onChange={setEmail} placeholder="anda@koperasi.com" type="email" inputMode="email" autoComplete="email" />
+                <Field label={t("emailLabel")} value={email} onChange={setEmail} placeholder="anda@syarikat.com" type="email" inputMode="email" autoComplete="email" />
                 <div>
                   <label className="field-label">{t("ciRole")}</label>
                   <select className="field-input" value={role} onChange={(e) => setRole(e.target.value)}>

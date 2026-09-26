@@ -229,7 +229,7 @@ export default function Attend() {
                     type="email"
                     inputMode="email"
                     autoComplete="email"
-                    placeholder="anda@koperasi.com"
+                    placeholder="anda@syarikat.com"
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
