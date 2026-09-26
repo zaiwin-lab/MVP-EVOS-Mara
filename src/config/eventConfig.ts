@@ -164,6 +164,11 @@ export interface EventConfig {
   intro: string;
   introLocalized: Record<string, string>;
   attendanceSessions: AttendanceSession[];
+  /**
+   * Palette this portal wears. Maps to a `:root[data-theme="…"]` block
+   * that redefines the Tailwind colour tokens. Omit for the default.
+   */
+  theme?: string;
   certificate: CertificateConfig;
 }
 
@@ -187,6 +192,7 @@ export const eventConfig: EventConfig = {
   // data. That is what VITE_EVENT_SLUG is for: rehearsing the whole flow on a
   // throwaway deployment without touching live registrations.
   slug: (import.meta.env.VITE_EVENT_SLUG as string | undefined)?.trim() || LIVE_SLUG,
+  theme: (import.meta.env.VITE_THEME as string | undefined)?.trim() || undefined,
   refPrefix: "POS",
   dates: "24 September 2026",
   time: "8:30 AM – 5:00 PM",

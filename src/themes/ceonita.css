@@ -1,0 +1,61 @@
+/* ─────────────────────────────────────────────────────────────
+   CEOnita Strategik — palette
+
+   Deep burgundy carries the weight, champagne is the one metal,
+   blush is reserved for section grounds. Rose appears as the tint
+   of the neutrals rather than as a fourth colour, which is what
+   keeps the result executive instead of "pink women's event".
+
+   Tailwind's navy/gold/sand/slate2 scales resolve to these, so no
+   component markup changes: `navy` means "the primary dark", and
+   here that dark is wine.
+   ───────────────────────────────────────────────────────────── */
+
+:root[data-theme="ceonita"] {
+  /* Primary dark — burgundy / wine */
+  --c-navy-50: 251 244 246;
+  --c-navy-100: 244 226 232;
+  --c-navy-200: 231 195 206;
+  --c-navy-300: 210 143 161;
+  --c-navy-400: 184 90 115;
+  --c-navy-500: 155 52 80;
+  --c-navy-600: 126 39 60;
+  --c-navy-700: 102 30 48;
+  --c-navy-800: 78 23 36;
+  --c-navy-900: 58 16 25;
+  --c-navy-950: 42 10 20;
+
+  /* Accent — champagne. Warm and desaturated, so it reads as
+     jewellery against the wine rather than as bright gold. */
+  --c-gold-50: 251 247 240;
+  --c-gold-100: 246 237 221;
+  --c-gold-200: 235 217 188;
+  --c-gold-300: 220 192 149;
+  --c-gold-400: 201 168 118;
+  --c-gold-500: 176 143 92;
+  --c-gold-600: 147 117 74;
+  --c-gold-700: 119 94 62;
+  --c-gold-800: 97 77 54;
+  --c-gold-900: 79 63 46;
+
+  /* Section grounds — blush */
+  --c-sand-50: 253 248 249;
+  --c-sand-100: 250 241 243;
+  --c-sand-200: 243 228 232;
+
+  /* Page furniture — neutrals warmed toward rose so nothing reads grey */
+  --c-slate2-page: 251 247 248;
+  --c-slate2-soft: 254 252 252;
+  --c-slate2-sunk: 245 237 239;
+  --c-slate2-line: 237 223 227;
+  --c-slate2-line2: 220 197 204;
+  --c-slate2-mut: 122 92 100;
+  --c-slate2-dim: 169 143 151;
+
+  --page: #fbf7f8;
+  --line: #eddfe3;
+
+  /* The signature gradient, in champagne rather than gold. */
+  --grad-gold: linear-gradient(100deg, #f2e2c6, #c9a876 46%, #e5d0ad);
+  --grad-btn: linear-gradient(100deg, #dcc095, #b08f5c 55%, #9a7c50);
+}
