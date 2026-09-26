@@ -1,61 +1,67 @@
 /* ─────────────────────────────────────────────────────────────
-   CEOnita Strategik — palette
+   CEOnita Strategik — "Rose Atelier" (direction A2)
 
-   Deep burgundy carries the weight, champagne is the one metal,
-   blush is reserved for section grounds. Rose appears as the tint
-   of the neutrals rather than as a fourth colour, which is what
-   keeps the result executive instead of "pink women's event".
+   Sampled from the approved logo and the A2 concept, not invented:
+   the logo runs a wine-to-rose gradient from #470019 through #AA194F
+   to #D49EB1, and the concept sets blush panels (#F1DDE3) against a
+   plum ground (#64334F).
+
+   A2 is the softer of the three directions — expressive rather than
+   corporate — so the plum sits lighter and warmer than a boardroom
+   navy would, and rose does real work instead of appearing as a tint.
 
    Tailwind's navy/gold/sand/slate2 scales resolve to these, so no
-   component markup changes: `navy` means "the primary dark", and
-   here that dark is wine.
+   component markup changes: `navy` is "the primary dark", here plum;
+   `gold` is "the accent", here rose.
    ───────────────────────────────────────────────────────────── */
 
 :root[data-theme="ceonita"] {
-  /* Primary dark — burgundy / wine */
-  --c-navy-50: 251 244 246;
-  --c-navy-100: 244 226 232;
-  --c-navy-200: 231 195 206;
-  --c-navy-300: 210 143 161;
-  --c-navy-400: 184 90 115;
-  --c-navy-500: 155 52 80;
-  --c-navy-600: 126 39 60;
-  --c-navy-700: 102 30 48;
-  --c-navy-800: 78 23 36;
-  --c-navy-900: 58 16 25;
-  --c-navy-950: 42 10 20;
+  /* Primary dark — plum. 700 is the concept's panel colour; the deeper
+     steps carry the header, footer and hero so panels read as raised. */
+  --c-navy-50: 249 242 245;
+  --c-navy-100: 239 224 231;
+  --c-navy-200: 220 195 208;
+  --c-navy-300: 194 156 176;
+  --c-navy-400: 169 117 144;
+  --c-navy-500: 143 85 117;
+  --c-navy-600: 122 68 98;
+  --c-navy-700: 100 51 79;
+  --c-navy-800: 85 34 60;
+  --c-navy-900: 71 27 49;
+  --c-navy-950: 58 21 40;
 
-  /* Accent — champagne. Warm and desaturated, so it reads as
-     jewellery against the wine rather than as bright gold. */
-  --c-gold-50: 251 247 240;
-  --c-gold-100: 246 237 221;
-  --c-gold-200: 235 217 188;
-  --c-gold-300: 220 192 149;
-  --c-gold-400: 201 168 118;
-  --c-gold-500: 176 143 92;
-  --c-gold-600: 147 117 74;
-  --c-gold-700: 119 94 62;
-  --c-gold-800: 97 77 54;
-  --c-gold-900: 79 63 46;
+  /* Accent — rose, straight off the logo's gradient. 200 is the
+     concept's blush panel; 500–700 are the logo's own inks. */
+  --c-gold-50: 253 245 248;
+  --c-gold-100: 250 232 238;
+  --c-gold-200: 241 221 227;
+  --c-gold-300: 227 183 198;
+  --c-gold-400: 201 127 155;
+  --c-gold-500: 181 48 93;
+  --c-gold-600: 170 25 79;
+  --c-gold-700: 140 14 61;
+  --c-gold-800: 121 9 52;
+  --c-gold-900: 105 6 44;
 
   /* Section grounds — blush */
-  --c-sand-50: 253 248 249;
-  --c-sand-100: 250 241 243;
-  --c-sand-200: 243 228 232;
+  --c-sand-50: 253 248 250;
+  --c-sand-100: 248 238 242;
+  --c-sand-200: 241 221 227;
 
-  /* Page furniture — neutrals warmed toward rose so nothing reads grey */
-  --c-slate2-page: 251 247 248;
-  --c-slate2-soft: 254 252 252;
-  --c-slate2-sunk: 245 237 239;
-  --c-slate2-line: 237 223 227;
-  --c-slate2-line2: 220 197 204;
-  --c-slate2-mut: 122 92 100;
-  --c-slate2-dim: 169 143 151;
+  /* Page furniture, warmed toward rose so nothing reads grey */
+  --c-slate2-page: 251 246 248;
+  --c-slate2-soft: 254 251 252;
+  --c-slate2-sunk: 246 235 240;
+  --c-slate2-line: 235 218 226;
+  --c-slate2-line2: 216 190 203;
+  --c-slate2-mut: 124 94 108;
+  --c-slate2-dim: 169 142 156;
 
-  --page: #fbf7f8;
-  --line: #eddfe3;
+  --page: #fbf6f8;
+  --line: #ebdae2;
 
-  /* The signature gradient, in champagne rather than gold. */
-  --grad-gold: linear-gradient(100deg, #f2e2c6, #c9a876 46%, #e5d0ad);
-  --grad-btn: linear-gradient(100deg, #dcc095, #b08f5c 55%, #9a7c50);
+  /* The logo's own gradient, for the headline and the accent motif. */
+  --grad-gold: linear-gradient(100deg, #d49eb1, #aa194f 46%, #bf446e);
+  /* Primary buttons are solid plum in the concept, not metal. */
+  --grad-btn: linear-gradient(100deg, #7a4462, #64334f 55%, #55223c);
 }
