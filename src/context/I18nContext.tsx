@@ -788,8 +788,8 @@ const DICT: Record<string, Localized> = {
     iban: "Daftar lalu ngaga check-in ke program.",
   },
   ldProgrammeDesc: {
-    en: "The full running order for the day.",
-    bm: "Aliran penuh program sepanjang hari.",
+    en: "The full running order, both days.",
+    bm: "Aliran penuh program, kedua-dua hari.",
     zh: "当天的完整流程。",
     iban: "Aliran penuh program sehari nya.",
   },
