@@ -11,11 +11,12 @@ export interface LangMeta {
   short: string; // compact chip label
 }
 
+// CEOnita runs in Bahasa Melayu with English alongside. The Iban and
+// Chinese entries belonged to the Sarawak co-operative programme and
+// would read as leftovers on a Selangor leadership course.
 export const LANGS: LangMeta[] = [
-  { code: "en", label: "English", short: "EN" },
   { code: "bm", label: "Bahasa Melayu", short: "BM" },
-  { code: "zh", label: "中文", short: "中" },
-  { code: "iban", label: "Bahasa Iban", short: "IB" },
+  { code: "en", label: "English", short: "EN" },
 ];
 
 export type Localized = Partial<Record<Lang, string>>;
@@ -423,7 +424,7 @@ const DICT: Record<string, Localized> = {
   metaParticipants: { en: "{n} Participants", bm: "{n} Peserta", zh: "{n} 位参与者", iban: "{n} Peserta" },
   metaLimitedPlaces: { en: "Limited places", bm: "Tempat Terhad", zh: "名额有限", iban: "Endur Mimit" },
   metaReps: { en: "{n} Representatives", bm: "{n} Wakil", zh: "{n} 位代表", iban: "{n} Wakil" },
-  metaPerCoop: { en: "Per co-operative", bm: "Setiap Koperasi", zh: "每家合作社", iban: "Tiap Koperasi" },
+  metaPerCoop: { bm: "Setiap Syarikat", en: "Per company" },
   homeAria: { en: "ProgramOS Lite — Home", bm: "ProgramOS Lite — Utama", zh: "ProgramOS Lite — 首页", iban: "ProgramOS Lite — Utama" },
 
   // ── In-page QR scanner ──
@@ -570,7 +571,7 @@ const DICT: Record<string, Localized> = {
   // ── Site chrome ──
   headerCta: { en: "Register / Sign In", bm: "Daftar / Log Masuk", zh: "注册／登录", iban: "Daftar / Login" },
   headerCtaShort: { en: "Register", bm: "Daftar", zh: "注册", iban: "Daftar" },
-  wordmarkSub: { en: "For Co-operatives", bm: "Untuk Koperasi", zh: "为合作社而设", iban: "Ke Koperasi" },
+  wordmarkSub: { bm: "Strategik", en: "Strategik" },
   footerTagline: {
     en: "AI Does Not Replace People — It Empowers Co-operatives.",
     bm: "AI Bukan Menggantikan Manusia, Tetapi Memperkasa Koperasi.",
@@ -609,7 +610,7 @@ const DICT: Record<string, Localized> = {
     zh: "您需要的一切，都在这里。",
     iban: "Semua utai ti dikinginka nuan, ba siti endur.",
   },
-  ldAreasEyebrow: { en: "6 co-op work areas", bm: "6 Bidang Utama Koperasi", zh: "合作社 6 大核心领域", iban: "6 Bidang Utama Koperasi" },
+  ldAreasEyebrow: { bm: "6 Bidang Perniagaan", en: "6 business areas" },
   ldAreasTitle: {
     en: "{n} practical prompts, built for co-operatives",
     bm: "{n} prompt praktikal, disusun untuk koperasi",
@@ -698,8 +699,8 @@ const DICT: Record<string, Localized> = {
   navModules: { en: "Modules & Resources", bm: "Modul & Sumber", zh: "模块与资源", iban: "Modul & Bahan" },
   ldCheckInCta: { en: "Check In", bm: "Daftar Kehadiran", zh: "签到", iban: "Daftar Kehadiran" },
   ldOpenHub: { en: "Open the Prompt Hub", bm: "Buka Prompt Hub", zh: "打开提示中心", iban: "Muka Prompt Hub" },
-  ldTodayEyebrow: { en: "Today", bm: "Hari Ini", zh: "今天", iban: "Sehari Tu" },
-  ldTodayTitle: { en: "Today's Programme", bm: "Program Hari Ini", zh: "今日课程", iban: "Program Sehari Tu" },
+  ldTodayEyebrow: { bm: "Atur Cara", en: "Programme" },
+  ldTodayTitle: { bm: "Atur Cara Program", en: "Programme Schedule" },
   ldToolkitEyebrow: { en: "Your AI toolkit", bm: "AI Toolkit Anda", zh: "您的 AI 工具包", iban: "AI Toolkit Nuan" },
   ldToolkitTitle: {
     en: "Choose the area closest to your work",
@@ -817,6 +818,10 @@ const DICT: Record<string, Localized> = {
     iban: "Slide, template enggau bahan rujukan program — semua dalam siti folder Google Drive.",
   },
 
+  pgDay: { bm: "Hari {n}", en: "Day {n}" },
+  pgDay1Date: { bm: "28 September 2026 · Isnin", en: "28 September 2026 · Monday" },
+  pgDay2Date: { bm: "29 September 2026 · Selasa", en: "29 September 2026 · Tuesday" },
+
   footerBuiltBy: {
     en: "Designed & Built by KOBIS Berhad",
     bm: "Direka & Dibina oleh KOBIS Berhad",
@@ -824,10 +829,8 @@ const DICT: Record<string, Localized> = {
     iban: "Direka & Digaga KOBIS Berhad",
   },
   footerRights: {
-    en: "© 2026 ProgramOS Lite. All rights reserved.",
-    bm: "© 2026 ProgramOS Lite. Hak cipta terpelihara.",
-    zh: "© 2026 ProgramOS Lite. 版权所有。",
-    iban: "© 2026 ProgramOS Lite. Hak cipta ditagang.",
+    bm: "© 2026 CEOnita Strategik. Hak cipta terpelihara.",
+    en: "© 2026 CEOnita Strategik. All rights reserved.",
   },
 
   // ── Work area page ──
@@ -939,7 +942,7 @@ const DICT: Record<string, Localized> = {
   },
 
   // ── Check-in / registration form ──
-  ciCoopName: { en: "Co-op Name", bm: "Nama Koperasi", zh: "合作社名称", iban: "Nama Koperasi" },
+  ciCoopName: { bm: "Nama Syarikat / Organisasi", en: "Company / organisation" },
   ciRole: { en: "Role", bm: "Peranan", zh: "职务", iban: "Pengawa" },
   ciPickRole: { en: "Choose your role…", bm: "Pilih peranan anda…", zh: "选择您的职务…", iban: "Pilih pengawa nuan…" },
   ciYourRef: { en: "Your reference", bm: "Rujukan Anda", zh: "您的参考编号", iban: "Rujukan Nuan" },

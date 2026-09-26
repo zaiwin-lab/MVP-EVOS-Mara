@@ -173,90 +173,68 @@ export interface EventConfig {
 }
 
 /** The real event. Anything else means this build is a rehearsal. */
-export const LIVE_SLUG = "angkasa-ai-coop-2026";
+export const LIVE_SLUG = "ceonita-strategik-2026";
 
 export const eventConfig: EventConfig = {
-  product: "ProgramOS",
-  module: "Lite",
-  tagline: "Transformasi Digital & AI untuk Koperasi",
-  eventName: "Transformasi Digital & AI untuk Koperasi",
-  eventNameLocal: "Digital & AI Transformation for Co-operatives",
+  product: "CEOnita",
+  module: "Strategik",
+  tagline: "Transformasi Kepimpinan Wanita Dalam Ekosistem Ekonomi MADANI",
+  eventName: "CEOnita Strategik",
+  eventNameLocal: "Transformasi Kepimpinan Wanita Dalam Ekosistem Ekonomi MADANI",
   eventNameLocalized: {
-    bm: "Transformasi Digital & AI untuk Koperasi",
-    en: "Digital & AI Transformation for Co-operatives",
-    zh: "合作社数字与 AI 转型课程",
-    iban: "Transformasi Digital & AI ke Koperasi",
+    bm: "Transformasi Kepimpinan Wanita Dalam Ekosistem Ekonomi MADANI",
+    en: "Women's Leadership Transformation in the MADANI Economy",
   },
-  // Every Supabase query filters on this, so a build with a different slug
-  // shares the database but cannot see — or be seen by — the real event's
-  // data. That is what VITE_EVENT_SLUG is for: rehearsing the whole flow on a
-  // throwaway deployment without touching live registrations.
+  // Every Supabase query filters on this, so CEOnita shares the database
+  // with the other portals but cannot see — or be seen by — their data.
   slug: (import.meta.env.VITE_EVENT_SLUG as string | undefined)?.trim() || LIVE_SLUG,
-  theme: (import.meta.env.VITE_THEME as string | undefined)?.trim() || undefined,
-  refPrefix: "POS",
-  dates: "24 September 2026",
-  time: "8:30 AM – 5:00 PM",
-  weekday: "Khamis / Thursday",
-  venue: "Hotel Serapi, Kuching",
-  venueCity: "Kuching, Sarawak",
-  organiser: "ANGKASA Sarawak",
+  theme: (import.meta.env.VITE_THEME as string | undefined)?.trim() || "ceonita",
+  refPrefix: "CEO",
+  dates: "28–29 September 2026",
+  time: "2 hari · 28–29 September 2026",
+  weekday: "Isnin & Selasa / Monday & Tuesday",
+  venue: "Mines Beach Resort, Selangor",
+  venueCity: "Seri Kembangan, Selangor",
+  organiser: "CEOnita Strategik",
   collaborator: "KOBIS Berhad",
   collaboratorUrl: "https://www.kobisberhad.com",
   expectedParticipants: 30,
   maxPerCoop: 2,
   heroKicker: {
-    bm: "Program Pembangunan", en: "Development Programme",
-    zh: "发展课程", iban: "Program Pemansang",
+    bm: "Kepimpinan Wanita · 2026",
+    en: "Women's Leadership · 2026",
   },
   heroLines: [
-    { bm: "TRANSFORMASI", en: "DIGITAL & AI", zh: "数字与 AI", iban: "TRANSFORMASI" },
-    { bm: "DIGITAL & AI", en: "TRANSFORMATION", zh: "转型", iban: "DIGITAL & AI" },
-    { bm: "UNTUK KOPERASI", en: "FOR CO-OPERATIVES", zh: "赋能合作社", iban: "KE KOPERASI" },
+    { bm: "TRANSFORMASI", en: "TRANSFORMING" },
+    { bm: "KEPIMPINAN WANITA", en: "WOMEN'S LEADERSHIP" },
+    { bm: "EKONOMI MADANI", en: "IN THE MADANI ECONOMY" },
   ],
   heroSubline: {
-    bm: "Operasi Lebih Cekap · Pemasaran Lebih Hebat · Hasil Lebih Baik",
-    en: "Leaner Operations · Stronger Marketing · Better Results",
-    zh: "营运更高效 · 营销更有力 · 成果更出色",
-    iban: "Pengawa Lancar Agi · Pemasaran Kuat Agi · Hasil Manah Agi",
+    bm: "Daripada pengurus kepada pemimpin strategik bertaraf C-Suite.",
+    en: "From manager to strategic, C-Suite-ready leader.",
   },
   motto: {
-    bm: "Ilmu Digital. Koperasi Berdaya. Masa Depan Bersama.",
-    en: "Digital Know-How. Empowered Co-operatives. A Shared Future.",
-    zh: "数字素养。赋能合作社。共享未来。",
-    iban: "Penemu Digital. Koperasi Bekuasa. Jemah Ila Sama.",
+    bm: "Berani Bersinar. Bersedia Memimpin.",
+    en: "Bold Enough to Shine. Ready to Lead.",
   },
   brandStrip: {
-    bm: "AI untuk Koperasi · Mudah · Praktikal · Impak Sebenar",
-    en: "AI for Co-operatives · Simple · Practical · Real Impact",
-    zh: "合作社的 AI · 简单 · 实用 · 真实影响",
-    iban: "AI ke Koperasi · Mudah · Praktikal · Impak Amat",
+    bm: "Kepimpinan Strategik · Business Acumen · Digital & AI",
+    en: "Strategic Leadership · Business Acumen · Digital & AI",
   },
-  footer: "ProgramOS Lite — Inisiatif bersama ANGKASA, KOBIS Berhad & SDEC",
-  footerSecondary: "Smart Digital Solutions. Sustainable Impact.",
-  copyright: "© 2026 ProgramOS Lite. Inisiatif bersama ANGKASA × KOBIS Berhad × SDEC.",
-  hashtags: ["#AIuntukKoperasi", "#ProgramOSLite", "#BersamaKoperasi", "#MasaDepanBersama"],
-  partners: [
-    {
-      name: "ANGKASA", url: "https://www.angkasa.coop", logo: asset("/logos/angkasa.png"), logoScale: 2.45,
-      role: { bm: "Penganjur", en: "Organiser", zh: "主办单位", iban: "Penganjur" },
-    },
-    {
-      name: "KOBIS Berhad", url: "https://www.kobisberhad.com", logo: asset("/logos/kobis.png"), logoScale: 1.4,
-      role: { bm: "Kolaborator Strategik", en: "Strategic Collaborator", zh: "战略协作伙伴", iban: "Kolaborator Strategik" },
-    },
-    {
-      name: "SDEC", url: "https://sdec.com.my", logo: asset("/logos/sdec.png"), logoScale: 1.7,
-      role: { bm: "Rakan Pendigitalan", en: "Digitalisation Partner", zh: "数码化伙伴", iban: "Rakan Pendigitalan" },
-    },
-  ],
+  footer: "CEOnita Strategik — Transformasi Kepimpinan Wanita",
+  footerSecondary: "Berani Bersinar. Bersedia Memimpin.",
+  copyright: "© 2026 CEOnita Strategik. Hak cipta terpelihara.",
+  hashtags: ["#CEOnitaStrategik", "#KepimpinanWanita", "#EkonomiMADANI", "#BeraniBersinar"],
+  // No programme partners or sponsors have been supplied, and none are
+  // invented here. Add them when the organiser confirms them.
+  partners: [],
   roleOptions: [
-    { value: "Anggota Koperasi", label: { bm: "Anggota Koperasi", en: "Co-op member", zh: "合作社会员", iban: "Anggota Koperasi" } },
-    { value: "Anggota Lembaga (ALK)", label: { bm: "Anggota Lembaga (ALK)", en: "Board member (ALK)", zh: "董事会成员（ALK）", iban: "Anggota Lembaga (ALK)" } },
-    { value: "Pengurus / Kakitangan", label: { bm: "Pengurus / Kakitangan", en: "Manager / staff", zh: "经理／职员", iban: "Pengurus / Pengawa" } },
-    { value: "Setiausaha", label: { bm: "Setiausaha", en: "Secretary", zh: "秘书", iban: "Setiausaha" } },
-    { value: "Bendahari", label: { bm: "Bendahari", en: "Treasurer", zh: "财政", iban: "Bendahari" } },
-    { value: "Pengerusi", label: { bm: "Pengerusi", en: "Chairperson", zh: "主席", iban: "Pengerusi" } },
-    { value: "Lain-lain", label: { bm: "Lain-lain", en: "Other", zh: "其他", iban: "Bukai" } },
+    { value: "Usahawan / Pemilik Perniagaan", label: { bm: "Usahawan / Pemilik Perniagaan", en: "Entrepreneur / business owner" } },
+    { value: "CEO / Pengarah Urusan", label: { bm: "CEO / Pengarah Urusan", en: "CEO / Managing Director" } },
+    { value: "Ahli Lembaga Pengarah", label: { bm: "Ahli Lembaga Pengarah", en: "Board member" } },
+    { value: "Pengurus Kanan", label: { bm: "Pengurus Kanan", en: "Senior manager" } },
+    { value: "Pemimpin NGO Ekonomi", label: { bm: "Pemimpin NGO Ekonomi", en: "Economic NGO leader" } },
+    { value: "Lain-lain", label: { bm: "Lain-lain", en: "Other" } },
   ],
   resources: [
     {
@@ -277,7 +255,7 @@ export const eventConfig: EventConfig = {
     {
       id: "prompts", icon: "spark", url: "",
       title: { bm: "Pakej Prompt AI", en: "AI Prompt Pack", zh: "AI 提示包", iban: "Pakej Prompt AI" },
-      desc: { bm: "Koleksi prompt siap guna untuk koperasi.", en: "A ready-made prompt collection for co-operatives.", zh: "为合作社准备的现成提示集。", iban: "Kumpul prompt ti sedia dikena ke koperasi." },
+      desc: { bm: "Koleksi prompt siap guna untuk perniagaan anda.", en: "A ready-made prompt collection for your business.", zh: "为合作社准备的现成提示集。", iban: "Kumpul prompt ti sedia dikena ke koperasi." },
     },
     {
       id: "videos", icon: "book", url: "",
@@ -300,15 +278,16 @@ export const eventConfig: EventConfig = {
   resourcesDriveUrl: "",
   enableDigitalOfficer: false,
   intro:
-    "ProgramOS Lite membantu koperasi menerap AI dalam operasi harian — mudah, praktikal dan berimpak. Daftar kehadiran, nilai kesiapsiagaan AI koperasi anda, terokai 60 prompt praktikal merentas 6 bidang utama, dan rancang perjalanan 90 hari anda.",
+    "CEOnita Strategik membina pemimpin wanita yang bersedia membuat keputusan bertaraf C-Suite — kepimpinan strategik, business acumen, Digital & AI, komunikasi dan rundingan. Daftar kehadiran, terokai 60 prompt AI untuk perniagaan anda, dan bina roadmap kepimpinan 90 hari anda.",
   introLocalized: {
     bm:
-      "ProgramOS Lite membantu koperasi menerap AI dalam operasi harian — mudah, praktikal dan berimpak. Daftar kehadiran, nilai kesiapsiagaan AI koperasi anda, terokai 60 prompt praktikal merentas 6 bidang utama, dan rancang perjalanan 90 hari anda.",
+      "CEOnita Strategik membina pemimpin wanita yang bersedia membuat keputusan bertaraf C-Suite — kepimpinan strategik, business acumen, Digital & AI, komunikasi dan rundingan. Daftar kehadiran, terokai 60 prompt AI untuk perniagaan anda, dan bina roadmap kepimpinan 90 hari anda.",
     en:
-      "ProgramOS Lite helps co-operatives adopt AI in daily operations — simple, practical and impactful. Check in, assess your co-op's AI readiness, explore 60 practical prompts across 6 key work areas, and plan your 90-day journey.",
+      "CEOnita Strategik builds women leaders ready to make C-Suite-level decisions — strategic leadership, business acumen, Digital & AI, communication and negotiation. Check in, explore 60 AI prompts for your business, and build your 90-day leadership roadmap.",
   },
   attendanceSessions: [
-    { id: "main", label: "Sesi Program", date: "24 September 2026", weekday: "Khamis / Thursday" },
+    { id: "day1", label: "Hari 1", date: "28 September 2026", weekday: "Isnin / Monday" },
+    { id: "day2", label: "Hari 2", date: "29 September 2026", weekday: "Selasa / Tuesday" },
   ],
   certificate: {
     // The organiser's artwork. Measured off the supplied file: the upper gold

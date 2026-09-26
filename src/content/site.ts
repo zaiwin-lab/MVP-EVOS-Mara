@@ -41,6 +41,8 @@ export interface Speaker {
 }
 
 export interface AgendaItem {
+  /** 1 or 2 — CEOnita runs over two days and the timeline groups by it. */
+  day: 1 | 2;
   time: string;
   title: Localized;
   desc: Localized;
@@ -50,141 +52,146 @@ export interface AgendaItem {
   speakerLabel?: Localized;
 }
 
-// The official programme for 24 September 2026 at Hotel Serapi, Kuching.
+// The official CEOnita Strategik programme, 28–29 September 2026 at Mines
+// Beach Resort, Selangor. Taken from the organiser's ATURCARA PROGRAM.
 //
-// There is no opening speech: after registration the day begins directly with
-// the first session. The Chairman of ANGKASA Sarawak attends the closing only,
-// as an invited guest rather than a speaker or trainer.
+// No trainer is named against a session: the running order supplied does not
+// assign them, and guessing would put the wrong name in front of a room.
 //
 // Descriptions are one line. This is a timeline read on a phone between
 // sessions, not a brochure.
 export const AGENDA: AgendaItem[] = [
   {
+    day: 1,
+    time: "08:00 – 09:00",
+    title: { bm: "Pendaftaran & Minum Pagi", en: "Registration & Morning Refreshments" },
+    desc: { bm: "", en: "" },
+  },
+  {
+    day: 1,
+    time: "09:00 – 09:30",
+    title: { bm: "Sesi Suai Kenal & Strategic Networking", en: "Icebreaker & Strategic Networking" },
+    desc: { bm: "", en: "" },
+  },
+  {
+    day: 1,
+    time: "09:30 – 10:30",
+    title: { bm: "MODUL 1: Minda CEO & Leadership Gap Assessment", en: "MODULE 1: CEO Mindset & Leadership Gap Assessment" },
+    desc: { bm: "Pemikiran C-Suite, analisis jurang kepimpinan dan kedudukan kepimpinan peribadi.", en: "C-Suite thinking, leadership gap analysis and personal leadership positioning." },
+  },
+  {
+    day: 1,
+    time: "10:30 – 10:45",
+    title: { bm: "Minum Pagi", en: "Morning Break" },
+    desc: { bm: "", en: "" },
+  },
+  {
+    day: 1,
+    time: "10:45 – 12:30",
+    title: { bm: "MODUL 2: Transformasi Digital & AI", en: "MODULE 2: Digital & AI Transformation" },
+    desc: { bm: "Menjadi CEO digital yang progresif — penggunaan praktikal Digital & AI dalam kepimpinan perniagaan.", en: "Becoming a progressive digital CEO — practical use of Digital & AI in business leadership." },
+  },
+  {
+    day: 1,
+    time: "12:30 – 14:00",
+    title: { bm: "Makan Tengah Hari, Solat & Daftar Masuk Hotel", en: "Lunch, Prayers & Hotel Check-In" },
+    desc: { bm: "", en: "" },
+  },
+  {
+    day: 1,
+    time: "14:00 – 15:45",
+    title: { bm: "MODUL 3: Automasi Perniagaan & Produktiviti dengan Teknologi", en: "MODULE 3: Business Automation & Productivity Through Technology" },
+    desc: { bm: "Strategic business mapping, penambahbaikan proses dan peluang automasi.", en: "Strategic business mapping, process improvement and automation opportunities." },
+  },
+  {
+    day: 1,
+    time: "15:45 – 16:00",
+    title: { bm: "Minum Petang", en: "Afternoon Break" },
+    desc: { bm: "", en: "" },
+  },
+  {
+    day: 1,
+    time: "16:00 – 17:00",
+    title: { bm: "Strategic SWOT & Decision Making — ERIC Theory", en: "Strategic SWOT & Decision Making — ERIC Theory" },
+    desc: { bm: "Analisis SWOT strategik dan keputusan perniagaan menggunakan ERIC Theory.", en: "Strategic SWOT analysis and business decision-making using ERIC Theory." },
+  },
+  {
+    day: 1,
+    time: "17:00 – 20:00",
+    title: { bm: "Refleksi, Networking & Rehat", en: "Reflection, Networking & Rest" },
+    desc: { bm: "", en: "" },
+  },
+  {
+    day: 1,
+    time: "20:00 – 22:00",
+    title: { bm: "Analisis Makro & Business Acumen dalam Ekosistem Ekonomi MADANI", en: "Macro Analysis & Business Acumen in the MADANI Economy" },
+    desc: { bm: "Analisa makro, peluang dan risiko, serta business acumen untuk pemimpin wanita.", en: "Macro analysis, opportunities and risks, and business acumen for women leaders." },
+  },
+  {
+    day: 1,
+    time: "22:00",
+    title: { bm: "Tamat Hari Pertama", en: "End of Day One" },
+    desc: { bm: "", en: "" },
+  },
+  {
+    day: 2,
+    time: "07:30 – 08:30",
+    title: { bm: "Sarapan & Networking", en: "Breakfast & Networking" },
+    desc: { bm: "", en: "" },
+  },
+  {
+    day: 2,
     time: "08:30 – 09:00",
-    title: {
-      bm: "Ketibaan & Pendaftaran",
-      en: "Registration & Check-In",
-      zh: "报到与签到",
-      iban: "Datai & Pendaftaran",
-    },
-    desc: {
-      bm: "Peserta tiba dan mendaftar.",
-      en: "Participants arrive and register.",
-      zh: "参加者抵达并报到。",
-      iban: "Peserta datai lalu daftar.",
-    },
+    title: { bm: "Morning Reflection & Leadership Activation", en: "Morning Reflection & Leadership Activation" },
+    desc: { bm: "", en: "" },
   },
   {
-    time: "09:00 – 10:00",
-    title: {
-      bm: "Koperasi Bersedia Menghadapi Masa Hadapan",
-      en: "Future-Ready Co-operatives",
-      zh: "面向未来的合作社",
-      iban: "Koperasi Sedia Ngadap Maya Ila",
-    },
-    speakers: [{ name: "Encik Zaiwin Kasim", org: "KOBIS Berhad" }],
-    desc: {
-      bm: "Pendigitalan, AI dan hala tuju koperasi menghadapi masa hadapan.",
-      en: "Digitalisation, AI and how co-operatives can begin preparing for the future.",
-      zh: "数字化、AI，以及合作社如何着手为未来做准备。",
-      iban: "Pendigitalan, AI enggau jalai koperasi ngadap maya ila.",
-    },
+    day: 2,
+    time: "09:00 – 10:30",
+    title: { bm: "Komunikasi Strategik & High-Level Negotiation", en: "Strategic Communication & High-Level Negotiation" },
+    desc: { bm: "Komunikasi strategik dan kemahiran rundingan.", en: "Strategic communication and negotiation skills." },
   },
   {
-    time: "10:00 – 10:15",
-    title: { bm: "Minum Pagi", en: "Morning Break", zh: "上午茶点", iban: "Ngirup Pagi" },
-    desc: { bm: "", en: "", zh: "", iban: "" },
+    day: 2,
+    time: "10:30 – 10:45",
+    title: { bm: "Minum Pagi", en: "Morning Break" },
+    desc: { bm: "", en: "" },
   },
   {
-    time: "10:15 – 12:15",
-    title: {
-      bm: "Perkongsian SDEC",
-      en: "SDEC Sharing Session",
-      zh: "SDEC 分享环节",
-      iban: "Perkongsi SDEC",
-    },
-    speakers: [
-      { name: "Encik Muhammad Arif" },
-      { name: "Encik Abdul Khalik" },
-    ],
-    desc: {
-      bm: "Ekosistem Digital & AI untuk Koperasi.",
-      en: "The digital and AI ecosystem for co-operatives.",
-      zh: "面向合作社的数字与 AI 生态系统。",
-      iban: "Ekosistem Digital & AI ke Koperasi.",
-    },
+    day: 2,
+    time: "10:45 – 12:30",
+    title: { bm: "Komunikasi Strategik & High-Level Negotiation — Sambungan", en: "Strategic Communication & High-Level Negotiation — Continued" },
+    desc: { bm: "High-impact presentation, pitching dan simulasi rundingan.", en: "High-impact presentation, pitching and negotiation simulation." },
   },
   {
-    time: "12:15 – 13:15",
-    title: { bm: "Makan Tengah Hari", en: "Lunch Break", zh: "午餐", iban: "Makai Tengah Hari" },
-    desc: { bm: "", en: "", zh: "", iban: "" },
+    day: 2,
+    time: "12:30 – 14:00",
+    title: { bm: "Networking Lunch & Rehat", en: "Networking Lunch & Rest" },
+    desc: { bm: "", en: "" },
   },
   {
-    time: "13:15 – 14:15",
-    title: {
-      bm: "AI Praktikal untuk Koperasi",
-      en: "Practical AI for Co-operatives",
-      zh: "合作社的实用 AI",
-      iban: "AI Praktikal ke Koperasi",
-    },
-    speakers: [{ name: "Encik Mohd Rusyairi" }],
-    desc: {
-      bm: "Aplikasi AI praktikal untuk kegunaan koperasi.",
-      en: "Practical AI applications for everyday co-operative work.",
-      zh: "可用于合作社日常工作的实用 AI 应用。",
-      iban: "Aplikasi AI praktikal ke pengawa koperasi.",
-    },
+    day: 2,
+    time: "14:00 – 15:45",
+    title: { bm: "Simulasi Boardroom & High-Stakes Decision Making", en: "Boardroom Simulation & High-Stakes Decision Making" },
+    desc: { bm: "Kepimpinan boardroom, pengurusan krisis dan risiko — kajian kes dan main peranan.", en: "Boardroom leadership, crisis and risk management — case study and role play." },
   },
   {
-    time: "14:15 – 15:15",
-    title: {
-      bm: "Bengkel Transformasi",
-      en: "Transformation Workshop",
-      zh: "转型工作坊",
-      iban: "Bengkel Transformasi",
-    },
-    desc: {
-      bm: "Kenal pasti cabaran & bina penyelesaian bersama.",
-      en: "Identify the challenges and build solutions together.",
-      zh: "找出挑战，共同构建解决方案。",
-      iban: "Ngelala penanggul lalu ngaga penyelesai enggau pangan diri.",
-    },
+    day: 2,
+    time: "15:45 – 16:00",
+    title: { bm: "Minum Petang", en: "Afternoon Break" },
+    desc: { bm: "", en: "" },
   },
   {
-    time: "15:15 – 15:30",
-    title: { bm: "Minum Petang", en: "Afternoon Break", zh: "下午茶点", iban: "Ngirup Lemai" },
-    desc: { bm: "", en: "", zh: "", iban: "" },
+    day: 2,
+    time: "16:00 – 16:30",
+    title: { bm: "Executive Action Plan", en: "Executive Action Plan" },
+    desc: { bm: "Pelan tindakan kepimpinan peribadi dan roadmap strategik 90 hari.", en: "Personal leadership action plan and the 90-day strategic roadmap." },
   },
   {
-    time: "15:30 – 16:30",
-    title: {
-      bm: "Bina Pelan Tindakan",
-      en: "Build an Action Plan",
-      zh: "制定行动方案",
-      iban: "Ngaga Pelan Pengawa",
-    },
-    desc: {
-      bm: "Langkah seterusnya untuk koperasi anda.",
-      en: "The next steps for your co-operative.",
-      zh: "贵合作社接下来的步骤。",
-      iban: "Langkah ti datai ke koperasi nuan.",
-    },
-  },
-  {
+    day: 2,
     time: "16:30 – 17:00",
-    title: {
-      bm: "Penyampaian Sijil & Majlis Penutupan",
-      en: "Certificate Presentation & Closing Ceremony",
-      zh: "颁发证书与闭幕仪式",
-      iban: "Nyerahka Sijil & Majlis Nutup",
-    },
-    speakers: [
-      {
-        name: "Encik Wan Azizan bin Wan Zainal Abidin",
-        org: "Pengerusi ANGKASA Negeri Sarawak",
-      },
-    ],
-    desc: { bm: "", en: "", zh: "", iban: "" },
+    title: { bm: "Penyelarasan & Penutup", en: "Wrap-Up & Closing" },
+    desc: { bm: "Rumusan program, refleksi peserta, survey, sesi bergambar dan penutup.", en: "Programme summary, participant reflection, survey, group photo and closing." },
   },
 ];
 
@@ -339,45 +346,24 @@ export interface Pillar {
 // Three institutional pillars in the footer band.
 export const PILLARS: Pillar[] = [
   {
-    title: {
-      bm: "Koperasi Lebih Kukuh",
-      en: "Stronger Cooperatives",
-      zh: "更强大的合作社",
-      iban: "Koperasi Agi Kering",
-    },
+    title: { bm: "Pemimpin Lebih Yakin", en: "More Confident Leaders" },
     desc: {
-      bm: "Melalui ilmu, teknologi dan kolaborasi.",
-      en: "Through knowledge, technology and collaboration.",
-      zh: "透过知识、科技与协作。",
-      iban: "Ngena penemu, teknologi enggau kaul.",
+      bm: "Minda CEO, kedudukan kepimpinan dan keyakinan boardroom.",
+      en: "CEO mindset, leadership positioning and boardroom confidence.",
     },
   },
   {
-    title: {
-      bm: "Masa Depan Lebih Bijak",
-      en: "A Smarter Future",
-      zh: "更智慧的未来",
-      iban: "Jemah Ila Agi Pintar",
-    },
+    title: { bm: "Perniagaan Lebih Kukuh", en: "Stronger Businesses" },
     desc: {
-      bm: "Bersama AI untuk impak sebenar.",
-      en: "With AI, for real impact.",
-      zh: "与 AI 同行，创造真实影响。",
-      iban: "Enggau AI kena impak amat.",
+      bm: "Business acumen, keputusan strategik dan pertumbuhan.",
+      en: "Business acumen, strategic decisions and growth.",
     },
   },
   {
-    title: {
-      bm: "Masyarakat Lebih Sejahtera",
-      en: "A More Prosperous Society",
-      zh: "更繁荣的社会",
-      iban: "Raban Bansa Agi Likun",
-    },
+    title: { bm: "Ekonomi MADANI Lebih Inklusif", en: "A More Inclusive MADANI Economy" },
     desc: {
-      bm: "Koperasi memacu kemajuan bersama.",
-      en: "Cooperatives driving progress together.",
-      zh: "合作社共同推动进步。",
-      iban: "Koperasi mai pemansang enggau pangan diri.",
+      bm: "Penyertaan wanita bernilai tinggi dan mampan.",
+      en: "High-value, sustainable participation by women.",
     },
   },
 ];

@@ -1,12 +1,11 @@
 // ─────────────────────────────────────────────────────────────
-// PROGRAMME FACULTY
+// PROGRAMME FACULTY — CEOnita Strategik
 //
 // A trainer introduction, not a résumé. Each card carries a name, what they
-// lead on this programme, their designation and the areas they cover — enough
-// for a participant to know who is in front of them and why.
+// lead on this programme, their designation and the areas they cover.
 //
 // Nothing here goes beyond what the supplied profiles support. No portraits
-// were provided, so both cards use initials rather than an invented likeness.
+// were provided, so the cards use initials rather than an invented likeness.
 // ─────────────────────────────────────────────────────────────
 
 import type { Localized } from "../context/I18nContext";
@@ -29,60 +28,55 @@ export interface Trainer {
 
 export const TRAINERS: Trainer[] = [
   {
-    id: "zaiwin",
-    name: "Ahmad Zaiwin bin Mohd Kassim",
+    id: "roszie",
+    name: "Coach Hjh Roszie Amir",
     role: {
-      bm: "Jurulatih Utama · Transformasi Digital & AI",
-      en: "Lead Trainer · Digital & AI Transformation",
-      zh: "首席讲师 · 数字与 AI 转型",
-      iban: "Pengajar Utama · Transformasi Digital & AI",
-    },
-    designation: ["Chairman, KOBIS Berhad", "Koperasi Pro Belia Inovatif Sarawak Berhad"],
-    profile: {
-      bm: "Membawa rangka strategik program ini — transformasi digital, penerapan AI secara praktikal, dan bagaimana koperasi boleh bermula dengan satu bidang kerja yang relevan sebelum berkembang lebih jauh.",
-      en: "Leads the programme's strategic framing on digital transformation, practical AI adoption and how co-operatives can begin with one relevant work area before expanding further.",
-      zh: "负责本课程的策略框架：数字转型、务实的 AI 导入，以及合作社如何先从一个相关的工作领域起步，再逐步扩展。",
-      iban: "Mai rangka strategik program tu — transformasi digital, ngena AI enggau chara praktikal, enggau baka ni koperasi ulih berengkah ari siti bidang pengawa ti ngena sebedau nambah agi.",
-    },
-    focusAreas: [
-      { bm: "Transformasi Digital & AI", en: "Digital & AI Transformation", zh: "数字与 AI 转型", iban: "Transformasi Digital & AI" },
-      { bm: "AI Praktikal untuk Koperasi", en: "Practical AI for Co-operatives", zh: "合作社的实用 AI", iban: "AI Praktikal ke Koperasi" },
-      { bm: "Produktiviti AI & Prompting", en: "AI Productivity & Prompting", zh: "AI 生产力与提示撰写", iban: "Produktiviti AI & Prompting" },
-      { bm: "Inovasi Perniagaan & Proses", en: "Business & Process Innovation", zh: "业务与流程创新", iban: "Inovasi Pengawa & Proses" },
-      { bm: "Strategi Digital", en: "Digital Strategy", zh: "数字策略", iban: "Strategi Digital" },
-      { bm: "Transformasi Koperasi", en: "Co-operative Transformation", zh: "合作社转型", iban: "Transformasi Koperasi" },
-    ],
-    photo: "",
-    initials: "AZ",
-  },
-  {
-    id: "rusyairi",
-    name: "Mohd Rusyairi bin Haji Abu Bakar",
-    role: {
-      bm: "Jurulatih · AI untuk Pemasaran & Penjenamaan Digital",
-      en: "Trainer · AI Marketing & Digital Branding",
-      zh: "讲师 · AI 营销与数字品牌",
-      iban: "Pengajar · AI ke Pemasaran & Penjenamaan Digital",
+      bm: "Jurulatih Utama · Strategi Perniagaan & Kepimpinan",
+      en: "Lead Trainer · Business Strategy & Leadership",
     },
     designation: [
-      "Digital Strategy, Marketing & Communications Practitioner",
-      "Board Member & Digital Director, KOBIS Berhad",
+      "Hajah Roszilalita binti Abdul Rahim",
+      "Pakar Strategi Perniagaan · Jurulatih Industri · Mentor Usahawan",
     ],
     profile: {
-      bm: "Berpengalaman dalam strategi digital, penjenamaan, perhubungan awam dan komunikasi program, dengan pengalaman langsung membangunkan inisiatif pemasaran, jangkauan dan perniagaan digital merentas program komuniti, institusi dan keusahawanan.",
-      en: "Experienced in digital strategy, branding, public relations and programme communications, with hands-on experience developing marketing, outreach and digital business initiatives across community, institutional and entrepreneurial programmes.",
-      zh: "在数字策略、品牌、公共关系与项目传播方面经验丰富，并实际参与社区、机构与创业项目中的营销、推广及数字业务举措。",
-      iban: "Bisi pengalaman ba strategi digital, penjenamaan, perhubungan mensia mayuh enggau komunikasi program, enggau pengalaman ngaga pengawa pemasaran, jangkauan enggau bisnes digital ba program komuniti, institusi enggau keusahawanan.",
+      bm: "Lebih 20,000 usahawan dilatih dan lebih 2,000 pemilik perniagaan dibimbing secara rapat, dengan lebih RM15 juta pembiayaan startup dan PKS berjaya difasilitasi. National Productivity Champion Leader (Malaysia Productivity Corporation), Adjunct Associate Professor, perunding berdaftar MARA dan jurulatih bertauliah HRD Corp.",
+      en: "More than 20,000 entrepreneurs trained and over 2,000 business owners closely mentored, having helped facilitate more than RM15 million in startup and SME funding. National Productivity Champion Leader (Malaysia Productivity Corporation), Adjunct Associate Professor, registered MARA consultant and HRD Corp certified trainer.",
     },
     focusAreas: [
-      { bm: "AI untuk Pemasaran & Kandungan", en: "AI for Marketing & Content", zh: "AI 营销与内容", iban: "AI ke Pemasaran & Kandungan" },
-      { bm: "Strategi Pemasaran Digital", en: "Digital Marketing Strategy", zh: "数字营销策略", iban: "Strategi Pemasaran Digital" },
-      { bm: "Penjenamaan & Komunikasi", en: "Branding & Communications", zh: "品牌与传播", iban: "Penjenamaan & Komunikasi" },
-      { bm: "Media Sosial & Kandungan Kreatif", en: "Social Media & Creative Content", zh: "社交媒体与创意内容", iban: "Media Sosial & Kandungan Kreatif" },
-      { bm: "Penglibatan & Jangkauan Pelanggan", en: "Customer Engagement & Outreach", zh: "客户互动与推广", iban: "Penglibatan & Jangkauan Pelanggan" },
-      { bm: "Pertumbuhan & Pengkomersialan", en: "Business Growth & Commercialisation", zh: "业务增长与商业化", iban: "Pemansang & Pengkomersialan" },
+      { bm: "Strategi Perniagaan", en: "Business Strategy" },
+      { bm: "Kepimpinan", en: "Leadership" },
+      { bm: "Business Model Canvas", en: "Business Model Canvas" },
+      { bm: "Business Forensics", en: "Business Forensics" },
+      { bm: "Penjenamaan & Pemasaran", en: "Branding & Marketing" },
+      { bm: "Transformasi Digital & AI", en: "Digital Transformation & AI" },
+      { bm: "Costing & Pricing", en: "Costing & Pricing" },
+      { bm: "Finance for Non-Finance", en: "Finance for Non-Finance" },
+      { bm: "Business Pitching & Growth", en: "Business Pitching & Growth" },
     ],
     photo: "",
-    initials: "MR",
+    initials: "RA",
+  },
+  {
+    id: "zuraidah",
+    name: "Dato' Zuraidah Atan",
+    role: {
+      bm: "Tokoh Wanita · Penasihat Strategik Peringkat Lembaga",
+      en: "Woman Leader · Board-Level Strategic Advisor",
+    },
+    designation: [
+      "Corporate Leader · Board-Level Strategic Advisor",
+    ],
+    profile: {
+      bm: "Pemimpin korporat dengan pengalaman lembaga pengarah merentas institusi utama Malaysia, termasuk Universiti Utara Malaysia, NCB Holdings Berhad, Northport Malaysia Berhad dan Kenanga Islamic Investors Berhad, serta pengalaman lembaga terdahulu bersama Bursa Malaysia, Bank Rakyat, MBSB dan Petron Malaysia. Turut dikenali atas sumbangan kepada kepimpinan sosial dan kepimpinan wanita.",
+      en: "A corporate leader with board experience across major Malaysian institutions, including Universiti Utara Malaysia, NCB Holdings Berhad, Northport Malaysia Berhad and Kenanga Islamic Investors Berhad, with former board experience at Bursa Malaysia, Bank Rakyat, MBSB and Petron Malaysia. Also recognised for her contribution to social leadership and women's leadership.",
+    },
+    focusAreas: [
+      { bm: "Sesi Bersama Tokoh", en: "Session With a Leader" },
+      { bm: "Refleksi Kepimpinan", en: "Leadership Reflection" },
+      { bm: "Interaksi Mentor–Mentee", en: "Mentor–Mentee Interaction" },
+      { bm: "Pendedahan Kepimpinan Korporat", en: "Corporate Leadership Exposure" },
+    ],
+    photo: "",
+    initials: "ZA",
   },
 ];

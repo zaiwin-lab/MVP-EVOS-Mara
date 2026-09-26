@@ -22,15 +22,19 @@ export function ProgramWordmark({ inverted = false }: { inverted?: boolean }) {
   const { t } = useI18n();
   return (
     <Link to="/" className="group flex shrink-0 flex-col leading-none" aria-label={t("homeAria")}>
+      {/* The logo set in type: "CEO" upright, "nita" in the same face's
+          italic and joined to it, which is the whole idea of the mark.
+          Baskerville's italic does the feminine half of the lockup, so no
+          second typeface is needed. */}
       <span
-        className={`font-display text-[17px] font-extrabold tracking-[-0.025em] sm:text-[19px] ${
-          inverted ? "text-white" : "text-navy-950"
+        className={`font-display text-[21px] font-bold tracking-[-0.01em] sm:text-[23px] ${
+          inverted ? "text-white" : "text-navy-900"
         }`}
       >
-        Digital <span className="text-gold-400">&amp; AI</span>
+        CEO<span className={`italic ${inverted ? "text-gold-300" : "text-gold-600"}`}>nita</span>
       </span>
       <span
-        className={`mt-[3px] text-[10.5px] font-bold uppercase tracking-[0.22em] sm:text-[11px] ${
+        className={`mt-[3px] text-[10.5px] font-bold uppercase tracking-[0.3em] sm:text-[11px] ${
           inverted ? "text-white/45" : "text-slate2-dim"
         }`}
       >
@@ -39,6 +43,7 @@ export function ProgramWordmark({ inverted = false }: { inverted?: boolean }) {
     </Link>
   );
 }
+
 
 /** Small text chips for the three partners (no invented logos). */
 export function PartnerStrip({ className = "" }: { className?: string }) {
