@@ -12,7 +12,7 @@ export interface LangMeta {
 }
 
 // CEOnita runs in Bahasa Melayu with English alongside. The Iban and
-// Chinese entries belonged to the Sarawak co-operative programme and
+// Chinese entries belonged to the Sarawak business programme and
 // would read as leftovers on a Selangor leadership course.
 export const LANGS: LangMeta[] = [
   { code: "bm", label: "Bahasa Melayu", short: "BM" },
@@ -573,8 +573,8 @@ const DICT: Record<string, Localized> = {
   headerCtaShort: { en: "Register", bm: "Daftar", zh: "注册", iban: "Daftar" },
   wordmarkSub: { bm: "Strategik", en: "Strategik" },
   footerTagline: {
-    en: "AI Does Not Replace People — It Empowers Co-operatives.",
-    bm: "AI Bukan Menggantikan Manusia, Tetapi Memperkasa Koperasi.",
+    en: "AI Does Not Replace People — It Empowers Leaders.",
+    bm: "AI Bukan Menggantikan Manusia, Tetapi Memperkasa Pemimpin.",
     zh: "AI 不是取代人，而是赋能合作社。",
     iban: "AI Ukai Nganti Mensia, Tang Meri Kuasa Ngagai Koperasi.",
   },
@@ -588,8 +588,8 @@ const DICT: Record<string, Localized> = {
     iban: "Semua berengkah ari siti endur",
   },
   ldFeatDesc: {
-    en: "Check in, measure where your co-op stands, then work through prompts built for the job in front of you.",
-    bm: "Daftar kehadiran, ukur kedudukan koperasi anda, kemudian gunakan prompt yang dibina untuk kerja di hadapan anda.",
+    en: "Check in, measure where your business stands, then work through prompts built for the job in front of you.",
+    bm: "Daftar kehadiran, ukur kedudukan perniagaan anda, kemudian gunakan prompt yang dibina untuk kerja di hadapan anda.",
     zh: "先签到，评估贵合作社的现况，再用为您手上工作而设的提示。",
     iban: "Daftar kehadiran, ukur penatai koperasi nuan, udah nya kena prompt ti digaga ke pengawa ti bisi di mua nuan.",
   },
@@ -612,14 +612,14 @@ const DICT: Record<string, Localized> = {
   },
   ldAreasEyebrow: { bm: "6 Bidang Perniagaan", en: "6 business areas" },
   ldAreasTitle: {
-    en: "{n} practical prompts, built for co-operatives",
-    bm: "{n} prompt praktikal, disusun untuk koperasi",
+    en: "{n} practical prompts, built for businesses",
+    bm: "{n} prompt praktikal, disusun untuk pemimpin perniagaan",
     zh: "{n} 个实用提示，专为合作社而设",
     iban: "{n} prompt praktikal, digaga ke koperasi",
   },
   ldAreasDesc: {
-    en: "Each area holds 10 prompt missions designed for practical co-op use.",
-    bm: "Setiap bidang mengandungi 10 prompt mission yang direka khas untuk kegunaan koperasi secara praktikal.",
+    en: "Each area holds 10 prompt missions designed for practical business use.",
+    bm: "Setiap bidang mengandungi 10 prompt mission yang direka khas untuk kegunaan perniagaan secara praktikal.",
     zh: "每个领域包含 10 个提示任务，专为合作社的实际运用而设计。",
     iban: "Tiap bidang bisi 10 prompt mission ti digaga ke pengguna koperasi ti praktikal.",
   },
@@ -641,8 +641,8 @@ const DICT: Record<string, Localized> = {
   pgEyebrow: { en: "Programme", bm: "Program", zh: "课程", iban: "Program" },
   pgTitle: { en: "The One-Day Programme Flow", bm: "Aliran Program Sehari", zh: "一日课程流程", iban: "Aliran Program Sehari" },
   pgIntro: {
-    en: "A light, practical programme that walks co-operatives into AI step by step — at your own pace.",
-    bm: "Program praktikal dan ringan yang membimbing koperasi menerap AI langkah demi langkah — mengikut rentak anda.",
+    en: "A light, practical programme that walks businesses into AI step by step — at your own pace.",
+    bm: "Program praktikal dan ringan yang membimbing pemimpin menerap AI langkah demi langkah — mengikut rentak anda.",
     zh: "一个轻量而实用的课程，带领合作社一步步导入 AI——按自己的节奏前进。",
     iban: "Program praktikal sereta ringan ti mimpin koperasi ngena AI selangkah-selangkah — nitihka rentak nuan empu.",
   },
@@ -658,15 +658,15 @@ const DICT: Record<string, Localized> = {
   phEyebrow: { en: "AI Prompt Hub · 6 Work Areas", bm: "AI Prompt Hub · 6 Bidang Utama", zh: "AI 提示中心 · 6 大领域", iban: "AI Prompt Hub · 6 Bidang Utama" },
   phTitle: { en: "Choose Your Work Area", bm: "Pilih Bidang Utama Anda", zh: "选择您的核心领域", iban: "Pilih Bidang Utama Nuan" },
   phIntro: {
-    en: "Each area holds a set of AI prompts put together to help co-operatives work more easily, faster and more effectively — {n} prompts in all.",
-    bm: "Setiap bidang mengandungi koleksi prompt AI yang disusun khas untuk membantu koperasi bekerja dengan lebih mudah, cepat dan berkesan — {n} prompt kesemuanya.",
+    en: "Each area holds a set of AI prompts put together to help businesses work more easily, faster and more effectively — {n} prompts in all.",
+    bm: "Setiap bidang mengandungi koleksi prompt AI yang disusun khas untuk membantu anda memimpin dan mengurus perniagaan dengan lebih yakin — {n} prompt kesemuanya.",
     zh: "每个领域都收录了一组 AI 提示，帮助合作社更轻松、更快速、更有效地工作——共 {n} 个提示。",
     iban: "Tiap bidang bisi kumpul prompt AI ti digaga kena nulung koperasi bekereja enggau mudah, chelap sereta beguna agi — {n} prompt semua.",
   },
   phStep1: { en: "Choose an area", bm: "Pilih Bidang", zh: "选择领域", iban: "Pilih Bidang" },
   phStep1Desc: {
-    en: "Pick the one area most relevant to what your co-op needs.",
-    bm: "Pilih satu bidang yang paling relevan dengan keperluan koperasi anda.",
+    en: "Pick the one area most relevant to what your business needs.",
+    bm: "Pilih satu bidang yang paling relevan dengan keperluan perniagaan anda.",
     zh: "选出与贵合作社需求最相关的一个领域。",
     iban: "Pilih siti bidang ti pemadu ngena enggau pengingin koperasi nuan.",
   },
@@ -733,8 +733,8 @@ const DICT: Record<string, Localized> = {
   // ── After the programme (foot of each work area) ──
   waAfterTitle: { en: "Carry on after the programme", bm: "Teruskan Selepas Program", zh: "课程之后继续", iban: "Teruska Udah Program" },
   waAfterNote: {
-    en: "Use it as your co-operative needs and at your own pace.",
-    bm: "Gunakan mengikut keperluan dan rentak koperasi anda.",
+    en: "Use it as your business needs and at your own pace.",
+    bm: "Gunakan mengikut keperluan dan rentak perniagaan anda.",
     zh: "按合作社的需要与节奏使用即可。",
     iban: "Kena iya nitihka pengingin enggau rentak koperasi nuan.",
   },
@@ -839,8 +839,8 @@ const DICT: Record<string, Localized> = {
   waTried: { en: "{a}/{b} tried", bm: "{a}/{b} telah dicuba", zh: "已尝试 {a}/{b}", iban: "{a}/{b} udah diuji" },
   waViewPrompt: { en: "View prompt", bm: "Lihat Prompt", zh: "查看提示", iban: "Peda Prompt" },
   waTip: {
-    en: "Tip: treat what the prompt gives you as a starting point and adjust it to your co-op. Small prompt, big impact!",
-    bm: "Petua: Gunakan hasil prompt ini sebagai titik permulaan dan sesuaikan mengikut keperluan koperasi anda. Kecilkan Prompt, Besarkan Impak!",
+    en: "Tip: treat what the prompt gives you as a starting point and adjust it to your business. Small prompt, big impact!",
+    bm: "Petua: Gunakan hasil prompt ini sebagai titik permulaan dan sesuaikan mengikut keperluan perniagaan anda. Kecilkan Prompt, Besarkan Impak!",
     zh: "小贴士：把提示生成的内容当作起点，再按贵合作社的需要调整。小提示，大影响！",
     iban: "Petua: Kena utai ti ulih ari prompt tu nyadi pun, lalu ubah nitihka pengingin koperasi nuan. Prompt mit, impak besai!",
   },
@@ -920,8 +920,8 @@ const DICT: Record<string, Localized> = {
   msChooseArea: { en: "Choose an area", bm: "Pilih Bidang", zh: "选择领域", iban: "Pilih Bidang" },
   msAddMore: { en: "Add more", bm: "Tambah lagi", zh: "添加更多", iban: "Tambah agi" },
   msNoPrompts: {
-    en: "No prompts used yet. Open the Prompt Hub, fill in your co-op details and press “Generate My Prompt” — it will appear here.",
-    bm: "Belum ada prompt digunakan. Buka Prompt Hub, isi butiran koperasi anda dan tekan “Jana Prompt Saya” — ia akan muncul di sini.",
+    en: "No prompts used yet. Open the Prompt Hub, fill in your business details and press “Generate My Prompt” — it will appear here.",
+    bm: "Belum ada prompt digunakan. Buka Prompt Hub, isi butiran perniagaan anda dan tekan “Jana Prompt Saya” — ia akan muncul di sini.",
     zh: "您还没有使用过任何提示。打开提示中心，填写合作社资料并按「生成我的提示」——它就会出现在这里。",
     iban: "Apin bisi prompt dikena. Buka Prompt Hub, isi penerang koperasi nuan lalu tekan “Ngaga Prompt Aku” — iya deka pegari ditu.",
   },
@@ -1027,8 +1027,8 @@ const DICT: Record<string, Localized> = {
   j9Eyebrow: { en: "90-Day Prompt Exploration Journey", bm: "90-Day Prompt Exploration Journey", zh: "90 天提示探索旅程", iban: "Pejalai Nguji Prompt 90 Hari" },
   j9Title: { en: "The 90-Day Journey", bm: "Perjalanan 90 Hari", zh: "90 天旅程", iban: "Pejalai 90 Hari" },
   j9Intro: {
-    en: "Step by step, at your own pace. Start small, learn together, and find where AI can help your co-op.",
-    bm: "Langkah demi langkah, mengikut rentak anda. Mulakan kecil, belajar bersama, dan temui peluang AI untuk koperasi anda.",
+    en: "Step by step, at your own pace. Start small, learn together, and find where AI can help your business.",
+    bm: "Langkah demi langkah, mengikut rentak anda. Mulakan kecil, belajar bersama, dan temui peluang AI untuk perniagaan anda.",
     zh: "一步一步，按自己的节奏。从小处着手，一起学习，找到 AI 能帮上忙的地方。",
     iban: "Selangkah-selangkah, nitihka rentak nuan empu. Berengkah ari utai mit, belajar sama, lalu ngiga peluang AI ke koperasi nuan.",
   },
@@ -1098,7 +1098,7 @@ const STORAGE_KEY = "attendify:lang";
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   // Bahasa Melayu is the default: this programme runs in BM for ANGKASA
-  // Sarawak co-operatives, and it is the language every string is written
+  // Sarawak businesses, and it is the language every string is written
   // in first. Visitors switch from the header and the choice is remembered.
   const [lang, setLangState] = useState<Lang>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
